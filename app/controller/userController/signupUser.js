@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY, TokenExpiryTime, } = require('../../../config');
 const { hashPassword, } = require('../../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { UserModel, } = require('../../models');
+const { UserModel, TokenModel, } = require('../../models');
 const { DataSuccessfullyCreated,
     EmailOrPhoneNumberInUse, } = require('../../util/messages');
 const { signupSchema, } = require('../../validator');
@@ -74,6 +74,12 @@ async function signupUser(req, res) {
         token,
         savedData,
     });
+
+    await new TokenModel({
+        user: savedData._id,
+        token,
+        loginTime: Date.now(),
+    }).save();
 }
 
 module.exports = {

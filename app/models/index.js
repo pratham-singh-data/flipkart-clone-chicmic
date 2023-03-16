@@ -6,6 +6,7 @@ const { UserModel, } = require(`./userModel`);
 const { CategoryModel, } = require(`./categoryModel`);
 const { ListingModel, } = require(`./listingModel`);
 const { ReviewModel, } = require(`./reviewModel`);
+const { TokenModel, } = require(`./tokenModel`);
 
 module.exports = {
     AddressModel,
@@ -16,4 +17,5 @@ module.exports = {
     CategoryModel,
     ListingModel,
     ReviewModel,
+    TokenModel,
 };
