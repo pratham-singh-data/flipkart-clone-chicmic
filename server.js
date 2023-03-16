@@ -1,12 +1,13 @@
 require(`dotenv`).config();
 const mongoConnect = require('./app/startup/mongoStartup');
 const express = require(`express`);
-const { userRouter, } = require('./app/router');
+const { userRouter, createRouter, } = require('./app/router');
 
 const app = express();
 app.use(express.json());
 
 app.use(`/user`, userRouter);
+app.use(`/create`, createRouter);
 
 /** Initialises server */
 async function startupServer() {

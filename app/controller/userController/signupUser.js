@@ -31,12 +31,6 @@ async function signupUser(req, res) {
     body.password = hashPassword(body.password);
 
     // generate values
-    body.addresses = [];
-    body.reviews = [];
-    body.cart = [];
-    body.wishlist = [];
-    body.deliveries = [];
-    body.orderHistory = [];
     body.memberSince = Date.now();
 
     // check that both phone number and email are unique
