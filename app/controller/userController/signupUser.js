@@ -4,6 +4,8 @@ const { SECRET_KEY, TokenExpiryTime, } = require('../../../config');
 const { hashPassword, } = require('../../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { UserModel, } = require('../../models');
+const { DataSuccessfullyCreated,
+    EmailOrPhoneNumberInUse, } = require('../../util/messages');
 const { signupSchema, } = require('../../validator');
 
 /** Signs up a new user
@@ -51,7 +53,7 @@ async function signupUser(req, res) {
     })) {
         localResponder({
             statusCode: 403,
-            message: `The given email or phone number is already in use.`,
+            message: EmailOrPhoneNumberInUse,
         });
 
         return;
@@ -68,7 +70,7 @@ async function signupUser(req, res) {
 
     localResponder({
         statusCode: 201,
-        message: `Data successfully created.`,
+        message: DataSuccessfullyCreated,
         token,
         savedData,
     });
