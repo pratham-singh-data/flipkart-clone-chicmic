@@ -16,9 +16,9 @@ class UserValidationError extends Error {
 
 /** Retrive user data and throw an error if the given permissions do not follow
  * @param {String} id id of user to retrieve
- * @param {Boolean} allowBuyer Is admin allowed
- * @param {Boolean} allowAdmin Is admin allowed
- * @param {Boolean} allowAgent Is agent allowed
+ * @param {Boolean} allowBuyer Is buyer allowed; default true
+ * @param {Boolean} allowAdmin Is admin allowed; default true
+ * @param {Boolean} allowAgent Is agent allowed; default true
  * @return {Object} user data from database
  */
 async function retrieveAndValidateUser(id,

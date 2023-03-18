@@ -2,7 +2,7 @@ const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
 const categorySchema = new Schema({
     name: String,
-    orders: [ ObjectId, ],
+    listings: [ ObjectId, ],
 });
 
 const CategoryModel = model(`categories`, categorySchema);

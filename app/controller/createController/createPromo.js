@@ -4,16 +4,16 @@ const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { retrieveAndValidateUser, } =
 require('../../helper/retrieveAndValidateUser');
-const { CategoryModel, } = require('../../models');
+const { PromoModel, UserModel, } = require('../../models');
 const { DataSuccessfullyCreated,
     CredentialsCouldNotBeVerified, } = require('../../util/messages');
-const { createCategorySchema, } = require('../../validator');
+const { createPromoSchema, } = require('../../validator');
 
-/** Creates a category in database
+/** Creates a promo in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function createCategory(req, res) {
+async function createPromo(req, res) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -46,7 +46,7 @@ async function createCategory(req, res) {
     let body;
 
     try {
-        body = Joi.attempt(req.body, createCategorySchema);
+        body = Joi.attempt(req.body, createPromoSchema);
     } catch (err) {
         localResponder({
             statusCode: 400,
@@ -56,19 +56,19 @@ async function createCategory(req, res) {
         return;
     }
 
-    // only create if a category of the same name does not already exist
-    if (await CategoryModel.findOne(body).exec()) {
-        localResponder({
-            statusCode: 400,
-            message: `This category already exists.`,
-        });
-
-        return;
-    }
-
+    // generate data
+    body.clicks = body.views = 0;
+    body.user = id;
 
     // save to database
-    const savedData = await new CategoryModel(body).save();
+    const savedData = await new PromoModel(body).save();
+
+    // update user database
+    await UserModel.updateOne({ _id: id, }, {
+        $push: {
+            promos: savedData.id,
+        },
+    });
 
     localResponder({
         statusCode: 201,
@@ -78,5 +78,5 @@ async function createCategory(req, res) {
 }
 
 module.exports = {
-    createCategory,
+    createPromo,
 };

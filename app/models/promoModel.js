@@ -1,9 +1,11 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
 const promoSchema = new Schema({
-    user: [ ObjectId, ],
+    user: ObjectId,
+    promo: String,
+    promoImage: String,
     views: Number,
-    click: Number,
+    clicks: Number,
     priority: Number,
 });
 
