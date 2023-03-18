@@ -5,7 +5,6 @@ const couponSchema = new Schema({
     couponName: String,
     validity: Number,
     sinceWhen: Date,
-    orders: [ ObjectId, ],
     applicability: [ ObjectId, ],
 });
 

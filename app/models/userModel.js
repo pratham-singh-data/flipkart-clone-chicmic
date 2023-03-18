@@ -7,13 +7,9 @@ const userSchema = new Schema({
     email: String,
     password: String,
     phoneNumber: String,
-    addresses: [ ObjectId, ],
-    reviews: [ ObjectId, ],
     cart: [ ObjectId, ],
     wishlist: [ ObjectId, ],
     type: String,
-    deliveries: [ ObjectId, ],
-    orderHistory: [ ObjectId, ],
     memberSince: Date,
 });
 

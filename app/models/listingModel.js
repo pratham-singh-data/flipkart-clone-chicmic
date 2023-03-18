@@ -13,11 +13,8 @@ const listingSchema = new Schema({
     price: Number,
     stock: Number,
     flipKartAssured: Boolean,
-    orders: [ ObjectId, ],
     deliveryTypes: [ deliverySchema, ],
     averageRating: Number,
-    buyers: [ ObjectId, ],
-    reviews: [ ObjectId, ],
     sinceWhen: Date,
     category: [ ObjectId, ],
 });

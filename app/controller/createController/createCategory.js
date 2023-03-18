@@ -66,7 +66,6 @@ async function createCategory(req, res) {
         return;
     }
 
-
     // save to database
     const savedData = await new CategoryModel(body).save();
 

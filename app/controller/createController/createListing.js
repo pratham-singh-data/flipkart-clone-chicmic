@@ -81,17 +81,6 @@ async function createListing(req, res) {
     // save to database
     const savedData = await new ListingModel(body).save();
 
-    // update categories
-    await CategoryModel.updateMany({
-        _id: {
-            $in: body.category,
-        },
-    }, {
-        $push: {
-            listings: savedData._id,
-        },
-    });
-
     localResponder({
         statusCode: 201,
         message: DataSuccessfullyCreated,
