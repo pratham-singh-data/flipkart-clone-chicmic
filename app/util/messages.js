@@ -10,4 +10,5 @@ module.exports = {
     AgentDisallow: `User type agent cannot perform this operation.`,
     InvalidCategoriesDetected: `Some categories in input do not exist.`,
     InvalidListingsDetected: `Some Listings in input do not exist.`,
+    CouponCodeRegistered: `This coupon code is already registered.`,
 };

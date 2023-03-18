@@ -6,7 +6,8 @@ const { retrieveAndValidateUser, } =
 require('../../helper/retrieveAndValidateUser');
 const { DataSuccessfullyCreated,
     CredentialsCouldNotBeVerified,
-    InvalidListingsDetected, } = require('../../util/messages');
+    InvalidListingsDetected,
+    CouponCodeRegistered, } = require('../../util/messages');
 const { createCouponSchema, } = require('../../validator');
 const { CouponModel, ListingModel, } = require(`../../models`);
 
@@ -71,6 +72,18 @@ async function createCoupon(req, res) {
         localResponder({
             statusCode: 400,
             message: InvalidListingsDetected,
+        });
+
+        return;
+    }
+
+    // only save if thecoupon code is unique
+    if (await CouponModel.find({
+        couponCode: body.couponCode,
+    }).exec()) {
+        localResponder({
+            statusCode: 400,
+            message: CouponCodeRegistered,
         });
 
         return;
