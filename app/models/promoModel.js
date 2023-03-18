@@ -2,6 +2,7 @@ const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
 const promoSchema = new Schema({
     user: ObjectId,
+    promoTitle: String,
     promo: String,
     promoImage: String,
     views: Number,

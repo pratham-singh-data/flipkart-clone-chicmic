@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { ListingModel, } = require('../../models');
-const { NonExtistentCoupon, } = require('../../util/messages');
+const { NonExtistentListing, } = require('../../util/messages');
 
 /** reads the specified listing from params
  * @param {Request} req Express request object
@@ -15,7 +15,7 @@ async function readListing(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentCoupon,
+            message: NonExtistentListing,
         });
 
         return;

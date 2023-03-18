@@ -13,4 +13,5 @@ module.exports = {
     CouponCodeRegistered: `This coupon code is already registered.`,
     NonExtistentListing: `Specified listing does not exist.`,
     NonExtistentCoupon: `Specified coupon does not exist.`,
+    NonExtistentPromo: `Specified promo does not exist.`,
 };

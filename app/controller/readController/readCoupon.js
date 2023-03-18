@@ -1,32 +1,32 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { PromoModel, } = require('../../models');
-const { NonExtistentPromo, } = require('../../util/messages');
+const { CouponModel, } = require('../../models');
+const { NonExtistentCoupon, } = require('../../util/messages');
 
-/** reads the specified promo from params
+/** reads coupon of given id
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function readPromo(req, res) {
+async function readCoupon(req, res) {
     const id = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
-    const data = await PromoModel.findById(id).exec();
+    const data = await CouponModel.findById(id).exec();
 
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentPromo,
+            message: NonExtistentCoupon,
         });
 
         return;
     }
 
     localResponder({
-        statusCode: 400,
+        statusCode: 200,
         data,
     });
 }
 
 module.exports = {
-    readPromo,
+    readCoupon,
 };

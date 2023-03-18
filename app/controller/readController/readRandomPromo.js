@@ -8,9 +8,12 @@ const { PromoModel, } = require('../../models');
 async function readRandomPromo(req, res) {
     const localResponder = generateLocalSendResponse(res);
 
-    const data = await PromoModel.find().exec();
+    const data = await PromoModel.find({}, {
+        _id: true,
+        priority: true,
+    }).exec();
 
-    
+    console.log(data);
 }
 
 module.exports = {

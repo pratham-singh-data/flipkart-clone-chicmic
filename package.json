@@ -15,7 +15,8 @@
     "joi": "^17.8.4",
     "joi-password-complexity": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.2"
+    "mongoose": "^7.0.2",
+    "querystring": "^0.2.1"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
