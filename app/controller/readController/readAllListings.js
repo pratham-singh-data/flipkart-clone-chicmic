@@ -5,6 +5,8 @@
  */
 async function readAllListings(req, res) {
 
+
+    
 }
 
 module.exports = {

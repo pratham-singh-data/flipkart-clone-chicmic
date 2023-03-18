@@ -1,21 +1,21 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { ListingModel, } = require('../../models');
-const { NonExtistentCoupon, } = require('../../util/messages');
+const { PromoModel, } = require('../../models');
+const { NonExtistentListing, } = require('../../util/messages');
 
-/** reads the specified listing from params
+/** reads the specified promo from params
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function readListing(req, res) {
+async function readPromo(req, res) {
     const id = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
-    const data = await ListingModel.findById(id).exec();
+    const data = await PromoModel.findById(id).exec();
 
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentCoupon,
+            message: NonExtistentListing,
         });
 
         return;
@@ -28,5 +28,5 @@ async function readListing(req, res) {
 }
 
 module.exports = {
-    readListing,
+    readPromo,
 };

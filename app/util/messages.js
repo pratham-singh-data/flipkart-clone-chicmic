@@ -11,4 +11,6 @@ module.exports = {
     InvalidCategoriesDetected: `Some categories in input do not exist.`,
     InvalidListingsDetected: `Some Listings in input do not exist.`,
     CouponCodeRegistered: `This coupon code is already registered.`,
+    NonExtistentListing: `Specified listing does not exist.`,
+    NonExtistentCoupon: `Specified coupon does not exist.`,
 };
