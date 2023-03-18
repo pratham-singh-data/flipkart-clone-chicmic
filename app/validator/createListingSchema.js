@@ -19,7 +19,7 @@ const createListingSchema = Joi.object({
         return (inp1.type === inp2.type &&
         inp1.deliveryCharge === inp2.deliveryCharge &&
         inp1.time === inp2.time);
-    }).required(),
+    }).min(1).required(),
 });
 
 module.exports = {

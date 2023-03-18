@@ -9,4 +9,5 @@ module.exports = {
     AdminDisallow: `User type admin cannot perform this operation.`,
     AgentDisallow: `User type agent cannot perform this operation.`,
     InvalidCategoriesDetected: `Some categories in input do not exist.`,
+    InvalidListingsDetected: `Some Listings in input do not exist.`,
 };

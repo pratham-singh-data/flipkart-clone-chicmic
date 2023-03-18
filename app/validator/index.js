@@ -3,6 +3,7 @@ const { loginSchema, } = require(`./loginSchema`);
 const { createCategorySchema, } = require(`./createCategorySchema`);
 const { createPromoSchema, } = require(`./createPromoSchema`);
 const { createListingSchema, } = require(`./createListingSchema`);
+const { createCouponSchema, } = require(`./createCouponSchema`);
 
 module.exports = {
     signupSchema,
@@ -10,4 +11,5 @@ module.exports = {
     createCategorySchema,
     createPromoSchema,
     createListingSchema,
+    createCouponSchema,
 };
