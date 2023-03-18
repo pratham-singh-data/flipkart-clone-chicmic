@@ -11,7 +11,6 @@ const userSchema = new Schema({
     reviews: [ ObjectId, ],
     cart: [ ObjectId, ],
     wishlist: [ ObjectId, ],
-    promos: [ ObjectId, ],
     type: String,
     deliveries: [ ObjectId, ],
     orderHistory: [ ObjectId, ],

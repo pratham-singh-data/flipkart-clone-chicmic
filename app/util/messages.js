@@ -8,4 +8,5 @@ module.exports = {
     BuyerDisallow: `User type buyer cannot perform this operation.`,
     AdminDisallow: `User type admin cannot perform this operation.`,
     AgentDisallow: `User type agent cannot perform this operation.`,
+    InvalidCategoriesDetected: `Some categories in input do not exist.`,
 };

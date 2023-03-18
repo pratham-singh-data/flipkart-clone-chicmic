@@ -3,6 +3,7 @@ const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 const deliverySchema = new Schema({
     type: String,
     deliveryTime: Number,
+    deliveryTimeUnits: String,
     deliveryCharge: Number,
 });
 
@@ -13,7 +14,7 @@ const listingSchema = new Schema({
     stock: Number,
     flipKartAssured: Boolean,
     orders: [ ObjectId, ],
-    deliveryTypes: deliverySchema,
+    deliveryTypes: [ deliverySchema, ],
     averageRating: Number,
     buyers: [ ObjectId, ],
     reviews: [ ObjectId, ],

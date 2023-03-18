@@ -4,16 +4,17 @@ const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { retrieveAndValidateUser, } =
 require('../../helper/retrieveAndValidateUser');
-const { PromoModel, } = require('../../models');
+const { CategoryModel, ListingModel, } = require('../../models');
 const { DataSuccessfullyCreated,
-    CredentialsCouldNotBeVerified, } = require('../../util/messages');
-const { createPromoSchema, } = require('../../validator');
+    CredentialsCouldNotBeVerified,
+    InvalidCategoriesDetected, } = require('../../util/messages');
+const { createListingSchema, } = require('../../validator');
 
-/** Creates a promo in database
+/** Creates a listing in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function createPromo(req, res) {
+async function createListing(req, res) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -46,7 +47,7 @@ async function createPromo(req, res) {
     let body;
 
     try {
-        body = Joi.attempt(req.body, createPromoSchema);
+        body = Joi.attempt(req.body, createListingSchema);
     } catch (err) {
         localResponder({
             statusCode: 400,
@@ -56,12 +57,29 @@ async function createPromo(req, res) {
         return;
     }
 
+    // confirm that all categories exist
+    const categories = await CategoryModel.find({
+        _id: {
+            $in: body.category,
+        },
+    }).exec();
+
+    if (categories.length !== body.category.length) {
+        localResponder({
+            statusCode: 400,
+            message: InvalidCategoriesDetected,
+        });
+
+        return;
+    }
+
     // generate data
-    body.clicks = body.views = 0;
-    body.user = id;
+    body.seler = id;
+    body.averageRating = 0;
+    body.sinceWhen = Date.now();
 
     // save to database
-    const savedData = await new PromoModel(body).save();
+    const savedData = await new ListingModel(body).save();
 
     localResponder({
         statusCode: 201,
@@ -71,5 +89,5 @@ async function createPromo(req, res) {
 }
 
 module.exports = {
-    createPromo,
+    createListing,
 };
