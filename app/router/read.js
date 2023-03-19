@@ -4,7 +4,8 @@ const { readListing,
     readPromo,
     readAllPromos,
     readRandomPromo,
-    readCoupon, } = require('../controller/readController');
+    readCoupon,
+    readCategories, } = require('../controller/readController');
 
 // eslint-disable-next-line new-cap
 const readRouter = Router();
@@ -15,5 +16,6 @@ readRouter.get(`/promo/random`, readRandomPromo);
 readRouter.get(`/promo/:id`, readPromo);
 readRouter.get(`/promos`, readAllPromos);
 readRouter.get(`/coupon/:id`, readCoupon);
+readRouter.get(`/categories`, readCategories);
 
 module.exports = readRouter;
