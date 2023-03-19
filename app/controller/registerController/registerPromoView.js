@@ -3,11 +3,11 @@ const { PromoModel, } = require('../../models');
 const { NonExtistentPromo,
     DataSuccessfullyUpdated, } = require('../../util/messages');
 
-/** Register promo click
+/** Register promo view
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function registerPromoClick(req, res) {
+async function registerPromoView(req, res) {
     const localResponder = generateLocalSendResponse(res);
     const id = req.params.id;
 
@@ -28,7 +28,7 @@ async function registerPromoClick(req, res) {
         _id: id,
     }, {
         $set: {
-            clicks: data.clicks + 1,
+            views: data.views + 1,
         },
     }).exec();
 
@@ -39,5 +39,5 @@ async function registerPromoClick(req, res) {
 }
 
 module.exports = {
-    registerPromoClick,
+    registerPromoView,
 };

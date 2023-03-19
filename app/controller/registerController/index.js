@@ -3,6 +3,7 @@ const { addToWishlist, } = require(`./addToWishlist`);
 const { registerDelivery, } = require(`./registerDeliver`);
 const { registerAddress, } = require(`./registerAddress`);
 const { registerPromoClick, } = require(`./registerPromoClick`);
+const { registerPromoView, } = require(`./registerPromoView`);
 
 module.exports = {
     addToCart,
@@ -10,4 +11,5 @@ module.exports = {
     registerDelivery,
     registerAddress,
     registerPromoClick,
+    registerPromoView,
 };
