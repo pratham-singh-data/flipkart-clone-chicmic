@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { OrderModel, } = require(`../../models`);
-const { NonExtistentOrder, } = require('../../util/messages');
+const { NonExistentOrder, } = require('../../util/messages');
 
 /** Reads order of given id
  * @param {Request} req Express request object
@@ -15,7 +15,7 @@ async function readOrder(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentOrder,
+            message: NonExistentOrder,
         });
 
         return;

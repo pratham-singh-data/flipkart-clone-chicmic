@@ -5,7 +5,7 @@ const { generateLocalSendResponse, } = require('../../helper/responder');
 const { PromoModel, } = require('../../models');
 const { DataSuccessfullyUpdated,
     CredentialsCouldNotBeVerified,
-    NonExtistentPromo,
+    NonExistentPromo,
     PromoDoesNotBelong, } = require('../../util/messages');
 const { createPromoSchema, } = require('../../validator');
 
@@ -50,7 +50,7 @@ async function updatePromo(req, res) {
     if (! promoData) {
         localResponder({
             statusCode: 400,
-            message: NonExtistentPromo,
+            message: NonExistentPromo,
         });
 
         return;

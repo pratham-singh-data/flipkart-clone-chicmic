@@ -1,13 +1,13 @@
 const { verify, } = require('jsonwebtoken');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { ListingModel, UserModel, CouponModel, } = require('../../models');
-const { NonExtistentListing,
+const { NonExistentListing,
     CredentialsCouldNotBeVerified,
     ItemOutOfStock,
     ItemAddedToCart,
     CouponExpired,
     CouponDoesNotApply,
-    NonExtistentCoupon, } = require('../../util/messages');
+    NonExistentCoupon, } = require('../../util/messages');
 const { SECRET_KEY, } = require(`../../../config`);
 const Joi = require('joi');
 const { addToCartSchema, } = require('../../validator');
@@ -41,7 +41,7 @@ async function addToCart(req, res) {
         if (! couponData) {
             localResponder({
                 statusCode: 400,
-                message: NonExtistentCoupon,
+                message: NonExistentCoupon,
             });
 
             return;
@@ -89,7 +89,7 @@ async function addToCart(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentListing,
+            message: NonExistentListing,
         });
 
         return;

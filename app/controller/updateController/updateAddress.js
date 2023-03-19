@@ -3,7 +3,7 @@ const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { AddressModel, } = require('../../models');
-const { NonExtistentAddress,
+const { NonExistentAddress,
     AddressDoesNotBelong,
     DataSuccessfullyUpdated,
     CredentialsCouldNotBeVerified, } = require('../../util/messages');
@@ -50,7 +50,7 @@ async function updateAddress(req, res) {
     if (! addressData) {
         localResponder({
             statusCode: 400,
-            message: NonExtistentAddress,
+            message: NonExistentAddress,
         });
 
         return;

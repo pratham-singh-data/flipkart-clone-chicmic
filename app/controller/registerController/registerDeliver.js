@@ -4,7 +4,7 @@ const { generateLocalSendResponse, } = require('../../helper/responder');
 const { retrieveAndValidateUser, } =
 require('../../helper/retrieveAndValidateUser');
 const { CredentialsCouldNotBeVerified,
-    NonExtistentOrder,
+    NonExistentOrder,
     OrderAlreadyDelivered,
     DataSuccessfullyUpdated, } = require('../../util/messages');
 const { OrderModel, } = require(`../../models`);
@@ -49,7 +49,7 @@ async function registerDelivery(req, res) {
     if (! orderData) {
         localResponder({
             statusCode: 400,
-            message: NonExtistentOrder,
+            message: NonExistentOrder,
         });
 
         return;

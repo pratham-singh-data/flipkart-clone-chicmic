@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { PromoModel, } = require('../../models');
-const { NonExtistentPromo,
+const { NonExistentPromo,
     DataSuccessfullyUpdated, } = require('../../util/messages');
 
 /** Register promo view
@@ -17,7 +17,7 @@ async function registerPromoView(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentPromo,
+            message: NonExistentPromo,
         });
 
         return;

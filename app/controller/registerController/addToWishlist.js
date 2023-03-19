@@ -1,7 +1,7 @@
 const { verify, } = require('jsonwebtoken');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { ListingModel, UserModel, } = require('../../models');
-const { NonExtistentListing,
+const { NonExistentListing,
     CredentialsCouldNotBeVerified,
     ItemAddedToWishlist, } = require('../../util/messages');
 const { SECRET_KEY, } = require(`../../../config`);
@@ -34,7 +34,7 @@ async function addToWishlist(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentListing,
+            message: NonExistentListing,
         });
 
         return;

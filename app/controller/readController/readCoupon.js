@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { CouponModel, } = require('../../models');
-const { NonExtistentCoupon, } = require('../../util/messages');
+const { NonExistentCoupon, } = require('../../util/messages');
 
 /** reads coupon of given id
  * @param {Request} req Express request object
@@ -15,7 +15,7 @@ async function readCoupon(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentCoupon,
+            message: NonExistentCoupon,
         });
 
         return;

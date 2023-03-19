@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { PromoModel, } = require('../../models');
-const { NonExtistentPromo, } = require('../../util/messages');
+const { NonExistentPromo, } = require('../../util/messages');
 
 /** reads the specified promo from params
  * @param {Request} req Express request object
@@ -15,7 +15,7 @@ async function readPromo(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentPromo,
+            message: NonExistentPromo,
         });
 
         return;

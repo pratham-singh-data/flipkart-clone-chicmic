@@ -1,6 +1,6 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { AddressModel, } = require(`../../models`);
-const { NonExtistentAddress, } = require('../../util/messages');
+const { NonExistentAddress, } = require('../../util/messages');
 
 /** Reads address of given id
  * @param {Request} req Express request object
@@ -15,7 +15,7 @@ async function readAddress(req, res) {
     if (! data) {
         localResponder({
             statusCode: 404,
-            message: NonExtistentAddress,
+            message: NonExistentAddress,
         });
 
         return;
