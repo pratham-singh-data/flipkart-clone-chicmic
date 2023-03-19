@@ -2,18 +2,18 @@ const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { AddressModel, } = require('../../models');
-const { NonExtistentAddress,
-    AddressDoesNotBelong,
-    DataSuccessfullyUpdated,
-    CredentialsCouldNotBeVerified, } = require('../../util/messages');
-const { registerAddressSchema, } = require('../../validator');
+const { PromoModel, } = require('../../models');
+const { DataSuccessfullyUpdated,
+    CredentialsCouldNotBeVerified,
+    NonExtistentPromo,
+    PromoDoesNotBelong, } = require('../../util/messages');
+const { createPromoSchema, } = require('../../validator');
 
-/** Updates an address in the database; id from query
+/** Updates an promo in the database; id from query
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function updateAddress(req, res) {
+async function updatePromo(req, res) {
     const localResponder = generateLocalSendResponse(res);
     const idToUpdate = req.params.id;
 
@@ -35,7 +35,7 @@ async function updateAddress(req, res) {
     let body;
 
     try {
-        body = Joi.attempt(req.body, registerAddressSchema);
+        body = Joi.attempt(req.body, createPromoSchema);
     } catch (err) {
         localResponder({
             statusCode: 400,
@@ -45,28 +45,28 @@ async function updateAddress(req, res) {
         return;
     }
 
-    const addressData = await AddressModel.findById(idToUpdate).exec();
+    const promoData = await PromoModel.findById(idToUpdate).exec();
 
-    if (! addressData) {
+    if (! promoData) {
         localResponder({
             statusCode: 400,
-            message: NonExtistentAddress,
+            message: NonExtistentPromo,
         });
 
         return;
     }
 
     // can only update if address belongs to current user
-    if (String(addressData.user) !== id) {
+    if (String(promoData.user) !== id) {
         localResponder({
             statusCode: 403,
-            message: AddressDoesNotBelong,
+            message: PromoDoesNotBelong,
         });
 
         return;
     }
 
-    await AddressModel.updateOne({
+    await PromoModel.updateOne({
         _id: idToUpdate,
     }, {
         $set: body,
@@ -80,5 +80,5 @@ async function updateAddress(req, res) {
 }
 
 module.exports = {
-    updateAddress,
+    updatePromo,
 };

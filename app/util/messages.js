@@ -24,4 +24,5 @@ module.exports = {
     CouponExpired: `This coupon has expired.`,
     OrderAlreadyDelivered: `This order has already been delivered.`,
     AddressDoesNotBelong: `Given address does not belong to user.`,
+    PromoDoesNotBelong: `Given promo does not belong to user.`,
 };
