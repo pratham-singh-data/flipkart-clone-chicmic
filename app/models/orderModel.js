@@ -6,13 +6,11 @@ const itemSchema = new Schema({
 });
 
 const orderSchema = new Schema({
-    seller: ObjectId,
-    listing: ObjectId,
+    buyer: ObjectId,
     items: itemSchema,
     orderedWhen: Date,
     deliveryTime: Date,
     deliveryAgent: ObjectId,
-    coupon: ObjectId,
 });
 
 const OrderModel = model(`orders`, orderSchema);

@@ -1,5 +1,6 @@
 module.exports = {
     DataSuccessfullyCreated: `Data successfully created.`,
+    DataSuccessfullyUpdated: `Data successfully updated.`,
     EmailOrPhoneNumberInUse:
     `The given email or phone number is already in use.`,
     CredentialsCouldNotBeVerified: `Credentials could not be verified.`,
@@ -13,10 +14,12 @@ module.exports = {
     CouponCodeRegistered: `This coupon code is already registered.`,
     NonExtistentListing: `Specified listing does not exist.`,
     NonExtistentCoupon: `Specified coupon does not exist.`,
+    NonExtistentOrder: `Specified order does not exist.`,
     NonExtistentPromo: `Specified promo does not exist.`,
     ItemOutOfStock: `Item out of stock.`,
     ItemAddedToCart: `Item added to cart.`,
     ItemAddedToWishlist: `Item added to wishlist.`,
     CouponDoesNotApply: `This coupon does not apply to this listing.`,
     CouponExpired: `This coupon has expired.`,
+    OrderAlreadyDelivered: `This order has already been delivered.`,
 };
