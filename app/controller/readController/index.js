@@ -8,6 +8,7 @@ const { readCategories, } = require(`./readCategories`);
 const { readAllCoupons, } = require(`./readAllCoupons`);
 const { readAllAddresses, } = require(`./readAllAddresses`);
 const { readAddress, } = require(`./readAddress`);
+const { readUser, } = require(`./readUser`);
 
 module.exports = {
     readListing,
@@ -20,4 +21,5 @@ module.exports = {
     readAllCoupons,
     readAllAddresses,
     readAddress,
+    readUser,
 };
