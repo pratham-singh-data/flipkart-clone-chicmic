@@ -1,18 +1,15 @@
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { CategoryModel, } = require(`../../models`);
+const { CouponModel, } = require(`../../models`);
 
-/** Reads all categoriess from database
+/** Reads all coupons from database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function readCategories(req, res) {
+async function readAllCoupons(req, res) {
     const localResponder = generateLocalSendResponse(res);
 
-    // read from database
-    const data = (await CategoryModel.find({}, {
-        _id: false,
-        name: true,
-    }).exec()).map((inp) => inp.name);
+    // save to database
+    const data = await CouponModel.find().exec();
 
     localResponder({
         statusCode: 200,
@@ -21,5 +18,5 @@ async function readCategories(req, res) {
 }
 
 module.exports = {
-    readCategories,
+    readAllCoupons,
 };

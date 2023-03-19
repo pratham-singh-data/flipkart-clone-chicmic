@@ -5,6 +5,7 @@ const { readAllPromos, } = require(`./readAllPromos`);
 const { readRandomPromo, } = require(`./readRandomPromo`);
 const { readCoupon, } = require(`./readCoupon`);
 const { readCategories, } = require(`./readCategories`);
+const { readAllCoupons, } = require(`./readAllCoupons`);
 
 module.exports = {
     readListing,
@@ -14,4 +15,5 @@ module.exports = {
     readRandomPromo,
     readCoupon,
     readCategories,
+    readAllCoupons,
 };
