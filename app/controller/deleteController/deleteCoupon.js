@@ -3,16 +3,16 @@ const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../../helper/retrieveAndValidateUser');
-const { PromoModel, } = require('../../models');
+const { CouponModel, } = require('../../models');
 const { CredentialsCouldNotBeVerified,
     NonExistentPromo,
     DataSuccessfullyDeleted, } = require('../../util/messages');
 
-/** Delete promo frpm database
+/** Delete coupon frpm database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function deletePromo(req, res) {
+async function deleteCoupon(req, res) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -42,7 +42,7 @@ async function deletePromo(req, res) {
         return;
     }
 
-    if (! await PromoModel.findById(idToDelete).exec()) {
+    if (! await CouponModel.findById(idToDelete).exec()) {
         localResponder({
             statusCode: 404,
             message: NonExistentPromo,
@@ -51,7 +51,7 @@ async function deletePromo(req, res) {
         return;
     }
 
-    await PromoModel.deleteOne({
+    await CouponModel.deleteOne({
         _id: idToDelete,
     }).exec();
 
@@ -62,5 +62,5 @@ async function deletePromo(req, res) {
 }
 
 module.exports = {
-    deletePromo,
+    deleteCoupon,
 };
