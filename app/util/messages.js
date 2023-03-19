@@ -16,10 +16,12 @@ module.exports = {
     NonExtistentCoupon: `Specified coupon does not exist.`,
     NonExtistentOrder: `Specified order does not exist.`,
     NonExtistentPromo: `Specified promo does not exist.`,
+    NonExtistentAddress: `Specified address does not exist.`,
     ItemOutOfStock: `Item out of stock.`,
     ItemAddedToCart: `Item added to cart.`,
     ItemAddedToWishlist: `Item added to wishlist.`,
     CouponDoesNotApply: `This coupon does not apply to this listing.`,
     CouponExpired: `This coupon has expired.`,
     OrderAlreadyDelivered: `This order has already been delivered.`,
+    AddressDoesNotBelong: `Given address does not belong to user.`,
 };

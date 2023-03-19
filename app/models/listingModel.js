@@ -10,6 +10,8 @@ const deliverySchema = new Schema({
 const listingSchema = new Schema({
     seller: ObjectId,
     title: String,
+    listingImage: String,
+    description: String,
     price: Number,
     stock: Number,
     flipKartAssured: Boolean,
