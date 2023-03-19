@@ -1,21 +1,36 @@
-const Joi = require(`joi`);
-const jwt = require('jsonwebtoken');
-const { SECRET_KEY, TokenExpiryTime, } = require('../../../config');
+const Joi = require('joi');
+const { verify, } = require('jsonwebtoken');
+const { SECRET_KEY, } = require('../../../config');
 const { hashPassword, } = require('../../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { UserModel, TokenModel, } = require('../../models');
-const { DataSuccessfullyCreated,
+const { UserModel, } = require('../../models');
+const { CredentialsCouldNotBeVerified,
+    DataSuccessfullyUpdated,
     EmailOrPhoneNumberInUse, } = require('../../util/messages');
 const { signupSchema, } = require('../../validator');
 
-/** Signs up a new user
+/** Updates user data
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function signupUser(req, res) {
+async function updateUser(req, res) {
     const localResponder = generateLocalSendResponse(res);
 
-    // validate input
+    // just in case the token expired between calls
+    let id;
+
+    try {
+        ({ id, } = verify(req.headers.token, SECRET_KEY));
+    } catch (err) {
+        localResponder({
+            statusCode: 403,
+            message: CredentialsCouldNotBeVerified,
+        });
+
+        return;
+    }
+
+    // validate body
     let body;
 
     try {
@@ -25,13 +40,9 @@ async function signupUser(req, res) {
             statusCode: 400,
             message: err.message,
         });
+
         return;
     }
-
-    body.password = hashPassword(body.password);
-
-    // generate values
-    body.memberSince = Date.now();
 
     // check that both phone number and email are unique
     if (await UserModel.findOne({
@@ -44,6 +55,10 @@ async function signupUser(req, res) {
                 email: body.email,
             },
         ],
+
+        _id: {
+            $ne: id,
+        },
     }).exec()) {
         localResponder({
             statusCode: 403,
@@ -53,29 +68,21 @@ async function signupUser(req, res) {
         return;
     }
 
-    // save in database
-    const savedData = await new UserModel(body).save();
-
-    const token = jwt.sign({
-        id: savedData._id,
-    }, SECRET_KEY, {
-        expiresIn: TokenExpiryTime,
-    });
+    await UserModel.updateOne({
+        _id: id,
+    }, {
+        $set: {
+            ...body,
+            password: hashPassword(body.password),
+        },
+    }).exec();
 
     localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        token,
-        savedData,
+        statusCode: 200,
+        message: DataSuccessfullyUpdated,
     });
-
-    await new TokenModel({
-        user: savedData._id,
-        token,
-        loginTime: Date.now(),
-    }).save();
 }
 
 module.exports = {
-    signupUser,
+    updateUser,
 };
