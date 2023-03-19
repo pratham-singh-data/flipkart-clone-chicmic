@@ -1,5 +1,10 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
+const itemSchema = new Schema({
+    id: ObjectId,
+    count: Number,
+});
+
 const userSchema = new Schema({
     firstname: String,
     lastname: String,
@@ -7,7 +12,7 @@ const userSchema = new Schema({
     email: String,
     password: String,
     phoneNumber: String,
-    cart: [ ObjectId, ],
+    cart: [ itemSchema, ],
     wishlist: [ ObjectId, ],
     type: String,
     memberSince: Date,

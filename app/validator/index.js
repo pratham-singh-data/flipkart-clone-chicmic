@@ -4,6 +4,7 @@ const { createCategorySchema, } = require(`./createCategorySchema`);
 const { createPromoSchema, } = require(`./createPromoSchema`);
 const { createListingSchema, } = require(`./createListingSchema`);
 const { createCouponSchema, } = require(`./createCouponSchema`);
+const { addToCartSchema, } = require(`./addToCartSchema`);
 
 module.exports = {
     signupSchema,
@@ -12,4 +13,5 @@ module.exports = {
     createPromoSchema,
     createListingSchema,
     createCouponSchema,
+    addToCartSchema,
 };

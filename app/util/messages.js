@@ -14,4 +14,7 @@ module.exports = {
     NonExtistentListing: `Specified listing does not exist.`,
     NonExtistentCoupon: `Specified coupon does not exist.`,
     NonExtistentPromo: `Specified promo does not exist.`,
+    ItemOutOfStock: `Item out of stock.`,
+    ItemAddedToCart: `Item added to cart.`,
+    ItemAddedToWishlist: `Item added to wishlist.`,
 };
