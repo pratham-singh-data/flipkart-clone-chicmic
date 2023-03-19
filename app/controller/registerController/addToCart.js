@@ -1,10 +1,13 @@
 const { verify, } = require('jsonwebtoken');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { ListingModel, UserModel, } = require('../../models');
+const { ListingModel, UserModel, CouponModel, } = require('../../models');
 const { NonExtistentListing,
     CredentialsCouldNotBeVerified,
     ItemOutOfStock,
-    ItemAddedToCart, } = require('../../util/messages');
+    ItemAddedToCart,
+    CouponExpired,
+    CouponDoesNotApply,
+    NonExtistentCoupon, } = require('../../util/messages');
 const { SECRET_KEY, } = require(`../../../config`);
 const Joi = require('joi');
 const { addToCartSchema, } = require('../../validator');
@@ -28,6 +31,42 @@ async function addToCart(req, res) {
         });
 
         return;
+    }
+
+    // verify coupon if given
+    if (body.coupon) {
+        const couponData = await CouponModel.findById(body.coupon).exec();
+
+        // if coupon doex not exist
+        if (! couponData) {
+            localResponder({
+                statusCode: 400,
+                message: NonExtistentCoupon,
+            });
+
+            return;
+        }
+
+        // check that coupon is valid for this listing
+        if (! couponData.applicability.includes(body.id)) {
+            localResponder({
+                statusCode: 400,
+                message: CouponDoesNotApply,
+            });
+
+            return;
+        }
+
+        // check that coupon is still valid
+        if (couponData.sinceWhen.setDate(couponData.sinceWhen.getDate() +
+            couponData.validity) < Date.now()) {
+            localResponder({
+                statusCode: 400,
+                message: CouponExpired,
+            });
+
+            return;
+        }
     }
 
     // just in case the token expired between calls
