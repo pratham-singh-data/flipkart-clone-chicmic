@@ -1,6 +1,7 @@
 module.exports = {
     DataSuccessfullyCreated: `Data successfully created.`,
     DataSuccessfullyUpdated: `Data successfully updated.`,
+    DataSuccessfullyDeleted: `Data successfully deleted.`,
     EmailOrPhoneNumberInUse:
     `The given email or phone number is already in use.`,
     CredentialsCouldNotBeVerified: `Credentials could not be verified.`,

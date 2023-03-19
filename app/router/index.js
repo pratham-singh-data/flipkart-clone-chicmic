@@ -3,6 +3,7 @@ const createRouter = require(`./create`);
 const readRouter = require(`./read`);
 const registerRouter = require(`./register`);
 const updateRouter = require(`./update`);
+const deleteRouter = require(`./delete`);
 
 module.exports = {
     userRouter,
@@ -10,4 +11,5 @@ module.exports = {
     readRouter,
     registerRouter,
     updateRouter,
+    deleteRouter,
 };

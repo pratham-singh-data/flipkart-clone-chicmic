@@ -5,7 +5,8 @@ const { userRouter,
     createRouter,
     readRouter,
     registerRouter,
-    updateRouter, } = require('./app/router');
+    updateRouter,
+    deleteRouter, } = require('./app/router');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(`/create`, createRouter);
 app.use(`/read`, readRouter);
 app.use(`/register`, registerRouter);
 app.use(`/update`, updateRouter);
+app.use(`/delete`, deleteRouter);
 
 /** Initialises server */
 async function startupServer() {
