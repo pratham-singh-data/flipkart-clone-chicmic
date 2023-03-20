@@ -4,7 +4,8 @@ const { deletePromo,
     deleteListing,
     deleteOrder,
     deleteAddress,
-    deleteUser, } = require('../controller/deleteController');
+    deleteUser,
+    deleteReview, } = require('../controller/deleteController');
 const { checkToken, } = require('../middleware/checkToken');
 const { handleError, } = require('../middleware/globalErrorHandler');
 
@@ -17,5 +18,6 @@ deleteRouter.delete(`/listing/:id`, checkToken, deleteListing);
 deleteRouter.delete(`/order/:id`, checkToken, deleteOrder);
 deleteRouter.delete(`/address/:id`, checkToken, deleteAddress);
 deleteRouter.delete(`/user`, checkToken, deleteUser);
+deleteRouter.delete(`/review/:id`, checkToken, deleteReview);
 
 module.exports = deleteRouter;
