@@ -11,6 +11,7 @@ const { readAddress, } = require(`./readAddress`);
 const { readUser, } = require(`./readUser`);
 const { readOrder, } = require(`./readOrder`);
 const { readAllOrders, } = require(`./readAllOrders`);
+const { readReviews, } = require(`./readReviews`);
 
 module.exports = {
     readListing,
@@ -26,4 +27,5 @@ module.exports = {
     readUser,
     readOrder,
     readAllOrders,
+    readReviews,
 };

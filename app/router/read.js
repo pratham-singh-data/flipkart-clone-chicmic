@@ -11,7 +11,8 @@ const { readListing,
     readAddress,
     readUser,
     readOrder,
-    readAllOrders, } = require('../controller/readController');
+    readAllOrders,
+    readReviews, } = require('../controller/readController');
 const { checkToken, } = require('../middleware/checkToken');
 const { handleError, } = require('../middleware/globalErrorHandler');
 
@@ -31,5 +32,6 @@ readRouter.get(`/address/:id`, checkToken, readAddress, handleError);
 readRouter.get(`/user`, checkToken, readUser, handleError);
 readRouter.get(`/order/:id`, readOrder, handleError);
 readRouter.get(`/orders`, checkToken, readAllOrders, handleError);
+readRouter.get(`/reviews/:id`, readReviews);
 
 module.exports = readRouter;
