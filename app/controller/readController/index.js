@@ -12,6 +12,7 @@ const { readUser, } = require(`./readUser`);
 const { readOrder, } = require(`./readOrder`);
 const { readAllOrders, } = require(`./readAllOrders`);
 const { readReviews, } = require(`./readReviews`);
+const { readAverageRating, } = require(`./readAverageRating`);
 
 module.exports = {
     readListing,
@@ -28,4 +29,5 @@ module.exports = {
     readOrder,
     readAllOrders,
     readReviews,
+    readAverageRating,
 };
