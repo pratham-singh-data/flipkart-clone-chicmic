@@ -8,7 +8,7 @@ const { userRouter,
     updateRouter,
     deleteRouter, } = require('./app/router');
 const { handleError, } = require('./app/middleware/globalErrorHandler');
-const { sendResponse, } = require('./app/helper/responder');
+const { NotFoundController, } = require('./app/controller/globals');
 
 const app = express();
 app.use(express.json());
@@ -35,15 +35,3 @@ startupServer().then(() => {
 }).catch((err) => {
     console.log(`Error starting server:\n${err.message}`);
 });
-
-
-/** Handles a non existent endpoint being accessed
- * @param {Request} req Express request object
- * @param {Response} res Express response object
- */
-function NotFoundController(req, res) {
-    sendResponse(res, {
-        statusCode: 404,
-        message: `This endpoint does not exist.`,
-    });
-}
