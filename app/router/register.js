@@ -4,7 +4,8 @@ const { addToCart,
     registerDelivery,
     registerAddress,
     registerPromoClick,
-    registerPromoView, } = require('../controller/registerController');
+    registerPromoView,
+    registerReview, } = require('../controller/registerController');
 const { checkToken, } = require('../middleware/checkToken');
 const { handleError, } = require('../middleware/globalErrorHandler');
 
@@ -23,5 +24,6 @@ registerRouter.patch(`/delivery/:id`,
 registerRouter.post(`/address`, checkToken, registerAddress, handleError);
 registerRouter.patch(`/promoClick/:id`, registerPromoClick, handleError);
 registerRouter.patch(`/promoView/:id`, registerPromoView, handleError);
+registerRouter.post(`/review`, checkToken, registerReview);
 
 module.exports = registerRouter;

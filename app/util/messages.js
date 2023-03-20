@@ -27,4 +27,6 @@ module.exports = {
     AddressDoesNotBelong: `Given address does not belong to the current user.`,
     PromoDoesNotBelong: `Given promo does not belong to the current user.`,
     OrderDoesNotBelong: `Given order does not belong to the current user.`,
+    CanOnlyReviewOnceBought:
+        `You can only review a product that you have bought.`,
 };

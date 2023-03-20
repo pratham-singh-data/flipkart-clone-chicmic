@@ -7,7 +7,7 @@ const itemSchema = new Schema({
 
 const orderSchema = new Schema({
     buyer: ObjectId,
-    items: itemSchema,
+    items: [ itemSchema, ],
     orderedWhen: Date,
     deliveryTime: Date,
     deliveryAgent: ObjectId,

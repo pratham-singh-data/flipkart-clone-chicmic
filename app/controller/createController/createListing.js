@@ -75,7 +75,6 @@ async function createListing(req, res) {
 
     // generate data
     body.seller = id;
-    body.averageRating = 0;
     body.sinceWhen = Date.now();
 
     // save to database
