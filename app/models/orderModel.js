@@ -1,8 +1,9 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
 const itemSchema = new Schema({
-    item: ObjectId,
-    itemCount: Number,
+    id: ObjectId,
+    count: Number,
+    coupon: ObjectId,
 });
 
 const orderSchema = new Schema({

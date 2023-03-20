@@ -32,4 +32,6 @@ module.exports = {
     CanOnlyReviewOnceBought:
         `You can only review a product that you have bought.`,
     IdCannotBeCast: `id in params cannot be cast into a MongoDB ObjectID`,
+    EmptyCart: `No items in cart`,
+    PaymentNotCompleted: `Payment not completed`,
 };

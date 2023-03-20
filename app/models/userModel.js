@@ -3,6 +3,7 @@ const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 const itemSchema = new Schema({
     id: ObjectId,
     count: Number,
+    coupon: ObjectId,
 });
 
 const userSchema = new Schema({
