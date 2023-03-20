@@ -2,7 +2,7 @@ const Joi = require(`joi`);
 const passwordComplexity = require(`joi-password-complexity`);
 
 const loginSchema = Joi.object({
-    email: Joi.string().email().required(),
+    email: Joi.string().email().max(1000).required(),
     password: passwordComplexity({
         min: 8,
         max: 20,

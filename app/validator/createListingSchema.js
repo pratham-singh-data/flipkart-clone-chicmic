@@ -1,15 +1,17 @@
 const Joi = require(`joi`);
+const { ObjectIDRegex, } = require('../util/constants');
 
 const createListingSchema = Joi.object({
     title: Joi.string().min(1).max(100).required(),
-    description: Joi.string().min(1).required(),
+    description: Joi.string().min(1).max(999999).required(),
     listingImage: Joi.string().min(1).required(),
     price: Joi.number().min(1).required(),
     stock: Joi.number().min(1).required(),
     flipKartAssured: Joi.boolean().required(),
-    category: Joi.array().items(Joi.string().min(1)).unique().required(),
+    category: Joi.array().items(
+        Joi.string().regex(ObjectIDRegex)).unique().required(),
     deliveryTypes: Joi.array().items(Joi.object({
-        type: Joi.string().min(1).required(),
+        type: Joi.string().min(1).max(1000).required(),
         deliveryCharge: Joi.number().min(0).required(),
         deliveryTime: Joi.number().min(1).required(),
         deliveryTimeUnits: Joi.string().valid(`Years`,
