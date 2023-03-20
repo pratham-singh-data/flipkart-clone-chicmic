@@ -1,7 +1,7 @@
 const Joi = require(`joi`);
 
 const createListingSchema = Joi.object({
-    title: Joi.string().min(1).required(),
+    title: Joi.string().min(1).max(100).required(),
     description: Joi.string().min(1).required(),
     listingImage: Joi.string().min(1).required(),
     price: Joi.number().min(1).required(),

@@ -31,4 +31,5 @@ module.exports = {
     ReviewDoesNotBelong: `Given review does not belong to the current user.`,
     CanOnlyReviewOnceBought:
         `You can only review a product that you have bought.`,
+    IdCannotBeCast: `id in params cannot be cast into a MongoDB ObjectID`,
 };
