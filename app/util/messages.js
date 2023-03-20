@@ -24,7 +24,7 @@ module.exports = {
     CouponDoesNotApply: `This coupon does not apply to this listing.`,
     CouponExpired: `This coupon has expired.`,
     OrderAlreadyDelivered: `This order has already been delivered.`,
-    AddressDoesNotBelong: `Given address does not belong to user.`,
-    PromoDoesNotBelong: `Given promo does not belong to user.`,
-    OrderDoesNotBelong: `Given order does not belong to user.`,
+    AddressDoesNotBelong: `Given address does not belong to the current user.`,
+    PromoDoesNotBelong: `Given promo does not belong to the current user.`,
+    OrderDoesNotBelong: `Given order does not belong to the current user.`,
 };

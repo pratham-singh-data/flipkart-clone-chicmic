@@ -1,18 +1,17 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { OrderModel, } = require('../../models');
+const { AddressModel, } = require('../../models');
 const { CredentialsCouldNotBeVerified,
     DataSuccessfullyDeleted,
-    OrderDoesNotBelong,
-    OrderAlreadyDelivered,
-    NonExistentOrder, } = require('../../util/messages');
+    NonExistentAddress,
+    AddressDoesNotBelong, } = require('../../util/messages');
 
-/** Deletes an undelivered order from database
+/** Deletes an address belonging to the current user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function deleteOrder(req, res) {
+async function deleteAddress(req, res) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -30,38 +29,28 @@ async function deleteOrder(req, res) {
         return;
     }
 
-    const orderData = await OrderModel.findById(idToDelete).exec();
+    const addressData = await AddressModel.findById(idToDelete).exec();
 
-    if (! orderData) {
+    if (! addressData) {
         localResponder({
             statusCode: 404,
-            message: NonExistentOrder,
+            message: NonExistentAddress,
         });
 
         return;
     }
 
     // do not permit if order does not belong to current user
-    if (String(orderData.buyer) !== id) {
+    if (String(addressData.user) !== id) {
         localResponder({
             statusCode: 403,
-            message: OrderDoesNotBelong,
+            message: AddressDoesNotBelong,
         });
 
         return;
     }
 
-    // do notr allow if order has been delivered
-    if (orderData.deliveryTime) {
-        localResponder({
-            statusCode: 403,
-            message: OrderAlreadyDelivered,
-        });
-
-        return;
-    }
-
-    await OrderModel.deleteOne({
+    await AddressModel.deleteOne({
         _id: idToDelete,
     }).exec();
 
@@ -72,5 +61,5 @@ async function deleteOrder(req, res) {
 }
 
 module.exports = {
-    deleteOrder,
+    deleteAddress,
 };
