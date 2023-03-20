@@ -10,7 +10,8 @@ const { readListing,
     readAllAddresses,
     readAddress,
     readUser,
-    readOrder, } = require('../controller/readController');
+    readOrder,
+    readAllOrders, } = require('../controller/readController');
 const { checkToken, } = require('../middleware/checkToken');
 
 // eslint-disable-next-line new-cap
@@ -28,5 +29,6 @@ readRouter.get(`/addresses`, checkToken, readAllAddresses);
 readRouter.get(`/address/:id`, checkToken, readAddress);
 readRouter.get(`/user`, checkToken, readUser);
 readRouter.get(`/order/:id`, readOrder);
+readRouter.get(`/orders`, checkToken, readAllOrders);
 
 module.exports = readRouter;
