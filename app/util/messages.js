@@ -26,4 +26,5 @@ module.exports = {
     OrderAlreadyDelivered: `This order has already been delivered.`,
     AddressDoesNotBelong: `Given address does not belong to user.`,
     PromoDoesNotBelong: `Given promo does not belong to user.`,
+    OrderDoesNotBelong: `Given order does not belong to user.`,
 };
