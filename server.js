@@ -6,7 +6,8 @@ const { userRouter,
     readRouter,
     registerRouter,
     updateRouter,
-    deleteRouter, } = require('./app/router');
+    deleteRouter,
+    uploadRouter, } = require('./app/router');
 const { handleError, } = require('./app/middleware/globalErrorHandler');
 const { NotFoundController, } = require('./app/controller/globals');
 
@@ -19,6 +20,7 @@ app.use(`/read`, readRouter);
 app.use(`/register`, registerRouter);
 app.use(`/update`, updateRouter);
 app.use(`/delete`, deleteRouter);
+app.use(`/upload`, uploadRouter);
 
 app.all(`*`, NotFoundController, handleError);
 app.use(handleError);

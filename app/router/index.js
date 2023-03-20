@@ -4,6 +4,7 @@ const readRouter = require(`./read`);
 const registerRouter = require(`./register`);
 const updateRouter = require(`./update`);
 const deleteRouter = require(`./delete`);
+const uploadRouter = require(`./upload`);
 
 module.exports = {
     userRouter,
@@ -12,4 +13,5 @@ module.exports = {
     registerRouter,
     updateRouter,
     deleteRouter,
+    uploadRouter,
 };
