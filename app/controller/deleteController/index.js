@@ -3,6 +3,7 @@ const { deleteCoupon, } = require(`./deleteCoupon`);
 const { deleteListing, } = require(`./deleteListing`);
 const { deleteOrder, } = require(`./deleteOrder`);
 const { deleteAddress, } = require(`./deleteAddress`);
+const { deleteUser, } = require(`./deleteUser`);
 
 module.exports = {
     deletePromo,
@@ -10,4 +11,5 @@ module.exports = {
     deleteListing,
     deleteOrder,
     deleteAddress,
+    deleteUser,
 };
