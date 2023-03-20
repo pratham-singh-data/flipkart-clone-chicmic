@@ -2,18 +2,20 @@ const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
-const { OrderModel, ReviewModel, } = require('../../models');
+const { ReviewModel, } = require('../../models');
 const { CredentialsCouldNotBeVerified,
-    CanOnlyReviewOnceBought,
-    DataSuccessfullyCreated, } = require('../../util/messages');
-const { registerReviewSchema, } = require('../../validator');
+    NonExistentReview,
+    ReviewDoesNotBelong,
+    DataSuccessfullyUpdated, } = require('../../util/messages');
+const { updateReviewSchema, } = require('../../validator');
 
-/** Registers a review for a product that the current user has bought.
+/** Update review of given id in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  */
-async function registerReview(req, res) {
+async function updateReview(req, res) {
     const localResponder = generateLocalSendResponse(res);
+    const idToUpdate = req.params.id;
 
     // just in case the token expired between calls
     let id;
@@ -33,7 +35,7 @@ async function registerReview(req, res) {
     let body;
 
     try {
-        body = Joi.attempt(req.body, registerReviewSchema);
+        body = Joi.attempt(req.body, updateReviewSchema);
     } catch (err) {
         localResponder({
             statusCode: 400,
@@ -43,40 +45,38 @@ async function registerReview(req, res) {
         return;
     }
 
-    // check that the user has bought this product
-    const orderHistory = await OrderModel.findOne({
-        'buyer': id,
-        'items': {
-            $elemMatch: {
-                item: body.listing,
-            },
-        },
-    });
+    const reviewData = await ReviewModel.findById(idToUpdate).exec();
 
-    // user can only review a product that they have bought
-    if (! orderHistory) {
+    if (! reviewData) {
         localResponder({
-            statusCode: 403,
-            message: CanOnlyReviewOnceBought,
+            statusCode: 404,
+            message: NonExistentReview,
         });
 
         return;
     }
 
-    // generate data
-    body.user = id;
-    body.date = Date.now();
+    if (String(reviewData.user) !== id) {
+        localResponder({
+            statusCode: 403,
+            message: ReviewDoesNotBelong,
+        });
 
-    // save to database
-    const savedData = await new ReviewModel(body).save();
+        return;
+    }
+
+    await ReviewModel.updateOne({
+        _id: idToUpdate,
+    }, {
+        $set: body,
+    });
 
     localResponder({
         statusCode: 200,
-        message: DataSuccessfullyCreated,
-        savedData,
+        message: DataSuccessfullyUpdated,
     });
 }
 
 module.exports = {
-    registerReview,
+    updateReview,
 };

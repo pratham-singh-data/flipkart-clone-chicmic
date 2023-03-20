@@ -18,6 +18,7 @@ module.exports = {
     NonExistentOrder: `Specified order does not exist.`,
     NonExistentPromo: `Specified promo does not exist.`,
     NonExistentAddress: `Specified address does not exist.`,
+    NonExistentReview: `Specified review does not exist.`,
     ItemOutOfStock: `Item out of stock.`,
     ItemAddedToCart: `Item added to cart.`,
     ItemAddedToWishlist: `Item added to wishlist.`,
@@ -27,6 +28,7 @@ module.exports = {
     AddressDoesNotBelong: `Given address does not belong to the current user.`,
     PromoDoesNotBelong: `Given promo does not belong to the current user.`,
     OrderDoesNotBelong: `Given order does not belong to the current user.`,
+    ReviewDoesNotBelong: `Given review does not belong to the current user.`,
     CanOnlyReviewOnceBought:
         `You can only review a product that you have bought.`,
 };
