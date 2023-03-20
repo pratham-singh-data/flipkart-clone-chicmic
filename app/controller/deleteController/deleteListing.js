@@ -42,7 +42,11 @@ async function deleteListing(req, res) {
         return;
     }
 
-    if (! await ListingModel.findById(idToDelete).exec()) {
+    // listing musr exist and belong to the current user
+    if (! await ListingModel.findOne({
+        _id: idToDelete,
+        seller: id,
+    }).exec()) {
         localResponder({
             statusCode: 404,
             message: NonExistentListing,
