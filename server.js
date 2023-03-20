@@ -7,6 +7,8 @@ const { userRouter,
     registerRouter,
     updateRouter,
     deleteRouter, } = require('./app/router');
+const { handleError, } = require('./app/middleware/globalErrorHandler');
+const { sendResponse, } = require('./app/helper/responder');
 
 const app = express();
 app.use(express.json());
@@ -17,6 +19,9 @@ app.use(`/read`, readRouter);
 app.use(`/register`, registerRouter);
 app.use(`/update`, updateRouter);
 app.use(`/delete`, deleteRouter);
+
+app.all(`*`, NotFoundController, handleError);
+app.use(handleError);
 
 /** Initialises server */
 async function startupServer() {
@@ -30,3 +35,15 @@ startupServer().then(() => {
 }).catch((err) => {
     console.log(`Error starting server:\n${err.message}`);
 });
+
+
+/** Handles a non existent endpoint being accessed
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ */
+function NotFoundController(req, res) {
+    sendResponse(res, {
+        statusCode: 404,
+        message: `This endpoint does not exist.`,
+    });
+}

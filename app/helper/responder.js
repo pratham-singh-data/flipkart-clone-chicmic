@@ -16,5 +16,6 @@ function generateLocalSendResponse(res) {
 }
 
 module.exports = {
+    sendResponse,
     generateLocalSendResponse,
 };

@@ -11,8 +11,9 @@ const { CredentialsCouldNotBeVerified,
 /** Delete listing frpm database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function deleteListing(req, res) {
+async function deleteListing(req, res, next) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -42,27 +43,29 @@ async function deleteListing(req, res) {
         return;
     }
 
-    // listing musr exist and belong to the current user
-    if (! await ListingModel.findOne({
-        _id: idToDelete,
-        seller: id,
-    }).exec()) {
-        localResponder({
-            statusCode: 404,
-            message: NonExistentListing,
+    try {
+        if (! await ListingModel.findOne({
+            _id: idToDelete,
+            seller: id,
+        }).exec()) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentListing,
+            });
+            return;
+        }
+
+        await ListingModel.deleteOne({
+            _id: idToDelete,
         });
 
-        return;
+        localResponder({
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
+        });
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    await ListingModel.deleteOne({
-        _id: idToDelete,
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
 }
 
 module.exports = {
