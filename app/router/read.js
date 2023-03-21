@@ -16,27 +16,25 @@ const { readListing,
     readAverageRating, } = require('../controller/readController');
 const { checkIdParam, } = require('../middleware/checkIdParam');
 const { checkToken, } = require('../middleware/checkToken');
-const { handleError, } = require('../middleware/globalErrorHandler');
 
 // eslint-disable-next-line new-cap
 const readRouter = Router();
 
-readRouter.get(`/listings`, readAllListings, handleError);
-readRouter.get(`/listing/:id`, checkIdParam, readListing, handleError);
-readRouter.get(`/promo/random`, readRandomPromo, handleError);
-readRouter.get(`/promo/:id`, checkIdParam, readPromo, handleError);
-readRouter.get(`/promos`, readAllPromos, handleError);
-readRouter.get(`/coupon/:id`, checkIdParam, readCoupon, handleError);
-readRouter.get(`/coupons`, readAllCoupons, handleError);
-readRouter.get(`/categories`, readCategories, handleError);
-readRouter.get(`/addresses`, checkToken, readAllAddresses, handleError);
+readRouter.get(`/listings`, readAllListings);
+readRouter.get(`/listing/:id`, checkIdParam, readListing);
+readRouter.get(`/promo/random`, readRandomPromo);
+readRouter.get(`/promo/:id`, checkIdParam, readPromo);
+readRouter.get(`/promos`, readAllPromos);
+readRouter.get(`/coupon/:id`, checkIdParam, readCoupon);
+readRouter.get(`/coupons`, readAllCoupons);
+readRouter.get(`/categories`, readCategories);
+readRouter.get(`/addresses`, checkToken, readAllAddresses);
 readRouter.get(`/address/:id`, checkToken,
     checkIdParam,
-    readAddress,
-    handleError);
-readRouter.get(`/user`, checkToken, readUser, handleError);
-readRouter.get(`/order/:id`, checkIdParam, readOrder, handleError);
-readRouter.get(`/orders`, checkToken, readAllOrders, handleError);
+    readAddress);
+readRouter.get(`/user`, checkToken, readUser);
+readRouter.get(`/order/:id`, checkIdParam, readOrder);
+readRouter.get(`/orders`, checkToken, readAllOrders);
 readRouter.get(`/reviews/:id`, checkIdParam, readReviews);
 readRouter.get(`/averageRating/:id`, checkIdParam, readAverageRating);
 

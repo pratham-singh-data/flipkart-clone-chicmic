@@ -8,29 +8,24 @@ const { addToCart,
     registerReview, } = require('../controller/registerController');
 const { checkIdParam, } = require('../middleware/checkIdParam');
 const { checkToken, } = require('../middleware/checkToken');
-const { handleError, } = require('../middleware/globalErrorHandler');
 
 // eslint-disable-next-line new-cap
 const registerRouter = Router();
 
-registerRouter.patch(`/addToCart`, checkToken, addToCart, handleError);
+registerRouter.patch(`/addToCart`, checkToken, addToCart);
 registerRouter.patch(`/addToWishlist/:id`,
     checkToken, checkIdParam,
-    addToWishlist,
-    handleError);
+    addToWishlist);
 registerRouter.patch(`/delivery/:id`,
     checkToken, checkIdParam,
-    registerDelivery,
-    handleError);
-registerRouter.post(`/address`, checkToken, registerAddress, handleError);
+    registerDelivery);
+registerRouter.post(`/address`, checkToken, registerAddress);
 registerRouter.patch(`/promoClick/:id`,
     checkIdParam,
-    registerPromoClick,
-    handleError);
+    registerPromoClick);
 registerRouter.patch(`/promoView/:id`,
     checkIdParam,
-    registerPromoView,
-    handleError);
+    registerPromoView);
 registerRouter.post(`/review`, checkToken, registerReview);
 
 module.exports = registerRouter;
