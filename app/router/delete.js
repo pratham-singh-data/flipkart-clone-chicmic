@@ -12,16 +12,14 @@ const { checkToken, } = require('../middleware/checkToken');
 // eslint-disable-next-line new-cap
 const deleteRouter = Router();
 
-deleteRouter.delete(`/promo/:id`, checkToken,
-    checkIdParam,
-    deletePromo);
-deleteRouter.delete(`/coupon/:id`, checkToken,
-    checkIdParam,
-    deleteCoupon);
-deleteRouter.delete(`/listing/:id`, checkToken, checkIdParam, deleteListing);
-deleteRouter.delete(`/order/:id`, checkToken, checkIdParam, deleteOrder);
-deleteRouter.delete(`/address/:id`, checkToken, checkIdParam, deleteAddress);
+deleteRouter.param(`id`, checkIdParam);
+
+deleteRouter.delete(`/promo/:id`, checkToken, deletePromo);
+deleteRouter.delete(`/coupon/:id`, checkToken, deleteCoupon);
+deleteRouter.delete(`/listing/:id`, checkToken, deleteListing);
+deleteRouter.delete(`/order/:id`, checkToken, deleteOrder);
+deleteRouter.delete(`/address/:id`, checkToken, deleteAddress);
 deleteRouter.delete(`/user`, checkToken, deleteUser);
-deleteRouter.delete(`/review/:id`, checkToken, checkIdParam, deleteReview);
+deleteRouter.delete(`/review/:id`, checkToken, deleteReview);
 
 module.exports = deleteRouter;

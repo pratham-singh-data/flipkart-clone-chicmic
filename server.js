@@ -22,7 +22,7 @@ app.use(`/update`, updateRouter);
 app.use(`/delete`, deleteRouter);
 app.use(`/upload`, uploadRouter);
 
-app.all(`*`, NotFoundController, handleError);
+app.all(`*`, NotFoundController);
 app.use(handleError);
 
 /** Initialises server */

@@ -19,23 +19,22 @@ const { checkToken, } = require('../middleware/checkToken');
 
 // eslint-disable-next-line new-cap
 const readRouter = Router();
+readRouter.param(`id`, checkIdParam);
 
 readRouter.get(`/listings`, readAllListings);
-readRouter.get(`/listing/:id`, checkIdParam, readListing);
+readRouter.get(`/listing/:id`, readListing);
 readRouter.get(`/promo/random`, readRandomPromo);
-readRouter.get(`/promo/:id`, checkIdParam, readPromo);
+readRouter.get(`/promo/:id`, readPromo);
 readRouter.get(`/promos`, readAllPromos);
-readRouter.get(`/coupon/:id`, checkIdParam, readCoupon);
+readRouter.get(`/coupon/:id`, readCoupon);
 readRouter.get(`/coupons`, readAllCoupons);
 readRouter.get(`/categories`, readCategories);
 readRouter.get(`/addresses`, checkToken, readAllAddresses);
-readRouter.get(`/address/:id`, checkToken,
-    checkIdParam,
-    readAddress);
+readRouter.get(`/address/:id`, checkToken, readAddress);
 readRouter.get(`/user`, checkToken, readUser);
-readRouter.get(`/order/:id`, checkIdParam, readOrder);
+readRouter.get(`/order/:id`, readOrder);
 readRouter.get(`/orders`, checkToken, readAllOrders);
-readRouter.get(`/reviews/:id`, checkIdParam, readReviews);
-readRouter.get(`/averageRating/:id`, checkIdParam, readAverageRating);
+readRouter.get(`/reviews/:id`, readReviews);
+readRouter.get(`/averageRating/:id`, readAverageRating);
 
 module.exports = readRouter;
