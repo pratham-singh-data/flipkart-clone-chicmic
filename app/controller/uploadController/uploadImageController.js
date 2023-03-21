@@ -1,6 +1,7 @@
 const multer = require('multer');
 const { sendResponse, } = require('../../helper/responder');
-const { ImageDatabaseURL, } = require('../../util/constants');
+const { ImageDatabaseURL,
+    AllowedImageMimes, } = require('../../util/constants');
 const uuid = require(`uuid`);
 
 const storage = multer.diskStorage({
@@ -21,6 +22,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage,
+
+    fileFilter: (req, file, cb) => {
+        if (! AllowedImageMimes.includes(file.mimetype)) {
+            cb(null, false);
+
+            sendResponse(req.res, {
+                statusCode: 400,
+                message: `File type ${file.mimetype} not allowed`,
+            });
+
+            return;
+        }
+
+        cb(null, true);
+    },
 });
 
 /** Function to upload images and return their address
