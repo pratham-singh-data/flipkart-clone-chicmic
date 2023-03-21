@@ -10,8 +10,9 @@ const { AddressModel, } = require('../../models');
 /** Registers a user's address
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function registerAddress(req, res) {
+async function registerAddress(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -42,15 +43,19 @@ async function registerAddress(req, res) {
         return;
     }
 
-    // add to database
-    body.user = id;
-    const savedData = await new AddressModel(body).save();
+    try {
+        // add to database
+        body.user = id;
+        const savedData = await new AddressModel(body).save();
 
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
+        localResponder({
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
 }
 
 module.exports = {

@@ -12,8 +12,9 @@ const { signupSchema, } = require('../../validator');
 /** Updates user data
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -44,43 +45,47 @@ async function updateUser(req, res) {
         return;
     }
 
-    // check that both phone number and email are unique
-    if (await UserModel.findOne({
-        $or: [
-            {
-                phoneNumber: body.phoneNumber,
-            },
+    try {
+        // check that both phone number and email are unique
+        if (await UserModel.findOne({
+            $or: [
+                {
+                    phoneNumber: body.phoneNumber,
+                },
 
-            {
-                email: body.email,
-            },
-        ],
+                {
+                    email: body.email,
+                },
+            ],
 
-        _id: {
-            $ne: id,
-        },
-    }).exec()) {
+            _id: {
+                $ne: id,
+            },
+        }).exec()) {
+            localResponder({
+                statusCode: 403,
+                message: EmailOrPhoneNumberInUse,
+            });
+
+            return;
+        }
+
+        await UserModel.updateOne({
+            _id: id,
+        }, {
+            $set: {
+                ...body,
+                password: hashPassword(body.password),
+            },
+        }).exec();
+
         localResponder({
-            statusCode: 403,
-            message: EmailOrPhoneNumberInUse,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    await UserModel.updateOne({
-        _id: id,
-    }, {
-        $set: {
-            ...body,
-            password: hashPassword(body.password),
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

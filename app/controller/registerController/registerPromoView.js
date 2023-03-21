@@ -6,36 +6,41 @@ const { NonExistentPromo,
 /** Register promo view
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function registerPromoView(req, res) {
+async function registerPromoView(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const id = req.params.id;
 
-    // check that promo exists
-    const data = await PromoModel.findById(id).exec();
+    try {
+        // check that promo exists
+        const data = await PromoModel.findById(id).exec();
 
-    if (! data) {
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentPromo,
+            });
+
+            return;
+        }
+
+        // update database
+        await PromoModel.updateOne({
+            _id: id,
+        }, {
+            $set: {
+                views: data.views + 1,
+            },
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentPromo,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // update database
-    await PromoModel.updateOne({
-        _id: id,
-    }, {
-        $set: {
-            views: data.views + 1,
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

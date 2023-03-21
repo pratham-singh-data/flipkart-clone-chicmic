@@ -12,8 +12,9 @@ const { OrderModel, } = require(`../../models`);
 /** Registers an order's delivery
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function registerDelivery(req, res) {
+async function registerDelivery(req, res, next) {
     const orderId = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -43,42 +44,46 @@ async function registerDelivery(req, res) {
         return;
     }
 
-    const orderData = await OrderModel.findById(orderId).exec();
+    try {
+        const orderData = await OrderModel.findById(orderId).exec();
 
-    // check that the corresponding order exists
-    if (! orderData) {
+        // check that the corresponding order exists
+        if (! orderData) {
+            localResponder({
+                statusCode: 400,
+                message: NonExistentOrder,
+            });
+
+            return;
+        }
+
+        // order should not already be delivered.
+        if (orderData.deliveryTime) {
+            localResponder({
+                statusCode: 400,
+                message: OrderAlreadyDelivered,
+            });
+
+            return;
+        }
+
+        // update order
+        await OrderModel.updateOne({
+            _id: orderId,
+        }, {
+            $set: {
+                deliveryTime: Date.now(),
+                deliveryAgent: id,
+            },
+        }).exec();
+
         localResponder({
-            statusCode: 400,
-            message: NonExistentOrder,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // order should not already be delivered.
-    if (orderData.deliveryTime) {
-        localResponder({
-            statusCode: 400,
-            message: OrderAlreadyDelivered,
-        });
-
-        return;
-    }
-
-    // update order
-    await OrderModel.updateOne({
-        _id: orderId,
-    }, {
-        $set: {
-            deliveryTime: Date.now(),
-            deliveryAgent: id,
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

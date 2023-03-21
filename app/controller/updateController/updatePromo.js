@@ -12,8 +12,9 @@ const { createPromoSchema, } = require('../../validator');
 /** Updates an promo in the database; id from query
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function updatePromo(req, res) {
+async function updatePromo(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const idToUpdate = req.params.id;
 
@@ -45,38 +46,42 @@ async function updatePromo(req, res) {
         return;
     }
 
-    const promoData = await PromoModel.findById(idToUpdate).exec();
+    try {
+        const promoData = await PromoModel.findById(idToUpdate).exec();
 
-    if (! promoData) {
+        if (! promoData) {
+            localResponder({
+                statusCode: 400,
+                message: NonExistentPromo,
+            });
+
+            return;
+        }
+
+        // can only update if address belongs to current user
+        if (String(promoData.user) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: PromoDoesNotBelong,
+            });
+
+            return;
+        }
+
+        await PromoModel.updateOne({
+            _id: idToUpdate,
+        }, {
+            $set: body,
+        }).exec(),
+
+        // update database
         localResponder({
-            statusCode: 400,
-            message: NonExistentPromo,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // can only update if address belongs to current user
-    if (String(promoData.user) !== id) {
-        localResponder({
-            statusCode: 403,
-            message: PromoDoesNotBelong,
-        });
-
-        return;
-    }
-
-    await PromoModel.updateOne({
-        _id: idToUpdate,
-    }, {
-        $set: body,
-    }).exec(),
-
-    // update database
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

@@ -12,8 +12,9 @@ const { updateReviewSchema, } = require('../../validator');
 /** Update review of given id in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function updateReview(req, res) {
+async function updateReview(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const idToUpdate = req.params.id;
 
@@ -45,36 +46,40 @@ async function updateReview(req, res) {
         return;
     }
 
-    const reviewData = await ReviewModel.findById(idToUpdate).exec();
+    try {
+        const reviewData = await ReviewModel.findById(idToUpdate).exec();
 
-    if (! reviewData) {
-        localResponder({
-            statusCode: 404,
-            message: NonExistentReview,
+        if (! reviewData) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentReview,
+            });
+
+            return;
+        }
+
+        if (String(reviewData.user) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: ReviewDoesNotBelong,
+            });
+
+            return;
+        }
+
+        await ReviewModel.updateOne({
+            _id: idToUpdate,
+        }, {
+            $set: body,
         });
 
-        return;
-    }
-
-    if (String(reviewData.user) !== id) {
         localResponder({
-            statusCode: 403,
-            message: ReviewDoesNotBelong,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    await ReviewModel.updateOne({
-        _id: idToUpdate,
-    }, {
-        $set: body,
-    });
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

@@ -12,8 +12,9 @@ const { registerAddressSchema, } = require('../../validator');
 /** Updates an address in the database; id from query
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function updateAddress(req, res) {
+async function updateAddress(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const idToUpdate = req.params.id;
 
@@ -45,38 +46,42 @@ async function updateAddress(req, res) {
         return;
     }
 
-    const addressData = await AddressModel.findById(idToUpdate).exec();
+    try {
+        const addressData = await AddressModel.findById(idToUpdate).exec();
 
-    if (! addressData) {
+        if (! addressData) {
+            localResponder({
+                statusCode: 400,
+                message: NonExistentAddress,
+            });
+
+            return;
+        }
+
+        // can only update if address belongs to current user
+        if (String(addressData.user) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: AddressDoesNotBelong,
+            });
+
+            return;
+        }
+
+        await AddressModel.updateOne({
+            _id: idToUpdate,
+        }, {
+            $set: body,
+        }).exec(),
+
+        // update database
         localResponder({
-            statusCode: 400,
-            message: NonExistentAddress,
+            statusCode: 200,
+            message: DataSuccessfullyUpdated,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // can only update if address belongs to current user
-    if (String(addressData.user) !== id) {
-        localResponder({
-            statusCode: 403,
-            message: AddressDoesNotBelong,
-        });
-
-        return;
-    }
-
-    await AddressModel.updateOne({
-        _id: idToUpdate,
-    }, {
-        $set: body,
-    }).exec(),
-
-    // update database
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyUpdated,
-    });
 }
 
 module.exports = {

@@ -15,8 +15,9 @@ const { addToCartSchema, } = require('../../validator');
 /** Adds the listing id to cart
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function addToCart(req, res) {
+async function addToCart(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     let body;
@@ -33,42 +34,6 @@ async function addToCart(req, res) {
         return;
     }
 
-    // verify coupon if given
-    if (body.coupon) {
-        const couponData = await CouponModel.findById(body.coupon).exec();
-
-        // if coupon doex not exist
-        if (! couponData) {
-            localResponder({
-                statusCode: 400,
-                message: NonExistentCoupon,
-            });
-
-            return;
-        }
-
-        // check that coupon is valid for this listing
-        if (! couponData.applicability.includes(body.id)) {
-            localResponder({
-                statusCode: 400,
-                message: CouponDoesNotApply,
-            });
-
-            return;
-        }
-
-        // check that coupon is still valid
-        if (couponData.sinceWhen.setDate(couponData.sinceWhen.getDate() +
-            couponData.validity) < Date.now()) {
-            localResponder({
-                statusCode: 400,
-                message: CouponExpired,
-            });
-
-            return;
-        }
-    }
-
     // just in case the token expired between calls
     let id;
 
@@ -83,41 +48,81 @@ async function addToCart(req, res) {
         return;
     }
 
-    // check that listing exists
-    const data = await ListingModel.findById(body.id).exec();
+    try {
+        // verify coupon if given
+        if (body.coupon) {
+            const couponData = await CouponModel.findById(body.coupon).exec();
 
-    if (! data) {
-        localResponder({
-            statusCode: 404,
-            message: NonExistentListing,
-        });
+            // if coupon doex not exist
+            if (! couponData) {
+                localResponder({
+                    statusCode: 400,
+                    message: NonExistentCoupon,
+                });
 
-        return;
-    }
+                return;
+            }
 
-    // check that item is in stock
-    if (data.stock < body.count) {
+            // check that coupon is valid for this listing
+            if (! couponData.applicability.includes(body.id)) {
+                localResponder({
+                    statusCode: 400,
+                    message: CouponDoesNotApply,
+                });
+
+                return;
+            }
+
+            // check that coupon is still valid
+            if (couponData.sinceWhen.setDate(couponData.sinceWhen.getDate() +
+                couponData.validity) < Date.now()) {
+                localResponder({
+                    statusCode: 400,
+                    message: CouponExpired,
+                });
+
+                return;
+            }
+        }
+
+        // check that listing exists
+        const data = await ListingModel.findById(body.id).exec();
+
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentListing,
+            });
+
+            return;
+        }
+
+        // check that item is in stock
+        if (data.stock < body.count) {
+            localResponder({
+                statusCode: 400,
+                message: ItemOutOfStock,
+            });
+
+            return;
+        }
+
+        // register in database; stock will only reduce on checkout
+        await UserModel.updateOne({
+            _id: id,
+        }, {
+            $push: {
+                cart: body,
+            },
+        }).exec();
+
         localResponder({
             statusCode: 400,
-            message: ItemOutOfStock,
+            message: ItemAddedToCart,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // register in database; stock will only reduce on checkout
-    await UserModel.updateOne({
-        _id: id,
-    }, {
-        $push: {
-            cart: body,
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 400,
-        message: ItemAddedToCart,
-    });
 }
 
 module.exports = {

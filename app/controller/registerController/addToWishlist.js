@@ -9,8 +9,9 @@ const { SECRET_KEY, } = require(`../../../config`);
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function addToWishlist(req, res) {
+async function addToWishlist(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const idToAdd = req.params.id;
 
@@ -28,33 +29,37 @@ async function addToWishlist(req, res) {
         return;
     }
 
-    // check that listing exists
-    const data = await ListingModel.findById(idToAdd).exec();
+    try {
+        // check that listing exists
+        const data = await ListingModel.findById(idToAdd).exec();
 
-    if (! data) {
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentListing,
+            });
+
+            return;
+        }
+
+        // out of stock items may be added to wishlist
+
+        // register in database
+        await UserModel.updateOne({
+            _id: id,
+        }, {
+            $addToSet: {
+                wishlist: idToAdd,
+            },
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentListing,
+            statusCode: 400,
+            message: ItemAddedToWishlist,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // out of stock items may be added to wishlist
-
-    // register in database
-    await UserModel.updateOne({
-        _id: id,
-    }, {
-        $addToSet: {
-            wishlist: idToAdd,
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 400,
-        message: ItemAddedToWishlist,
-    });
 }
 
 module.exports = {
