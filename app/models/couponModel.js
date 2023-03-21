@@ -1,11 +1,26 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 
 const couponSchema = new Schema({
-    couponCode: String,
-    couponName: String,
-    validity: Number,
-    sinceWhen: Date,
-    discountPercentage: Number,
+    couponCode: {
+        type: String,
+        required: true,
+    },
+    couponName: {
+        type: String,
+        required: true,
+    },
+    validity: {
+        type: Number,
+        required: true,
+    },
+    sinceWhen: {
+        type: Date,
+        required: true,
+    },
+    discountPercentage: {
+        type: Number,
+        required: true,
+    },
     applicability: [ ObjectId, ],
 });
 

@@ -1,15 +1,13 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
-
-const itemSchema = new Schema({
-    id: ObjectId,
-    count: Number,
-    coupon: ObjectId,
-});
+const { itemSchema, } = require('./itemSchema');
 
 const orderSchema = new Schema({
     buyer: ObjectId,
     items: [ itemSchema, ],
-    orderedWhen: Date,
+    orderedWhen: {
+        type: Date,
+        default: Date.now,
+    },
     deliveryTime: Date,
     deliveryAgent: ObjectId,
 });

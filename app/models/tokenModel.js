@@ -1,9 +1,18 @@
 const { Schema, Types: { ObjectId, }, model, } = require('mongoose');
 
 const tokenSchema = new Schema({
-    user: ObjectId,
-    token: String,
-    loginTime: Date,
+    user: {
+        type: ObjectId,
+        required: true,
+    },
+    token: {
+        type: String,
+        required: true,
+    },
+    loginTime: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const TokenModel = model(`tokens`, tokenSchema);
