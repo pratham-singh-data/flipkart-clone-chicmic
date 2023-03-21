@@ -11,8 +11,9 @@ const { CredentialsCouldNotBeVerified,
 /** Delete coupon frpm database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function deleteCoupon(req, res) {
+async function deleteCoupon(req, res, next) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -42,23 +43,27 @@ async function deleteCoupon(req, res) {
         return;
     }
 
-    if (! await CouponModel.findById(idToDelete).exec()) {
+    try {
+        if (! await CouponModel.findById(idToDelete).exec()) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentPromo,
+            });
+
+            return;
+        }
+
+        await CouponModel.deleteOne({
+            _id: idToDelete,
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentPromo,
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    await CouponModel.deleteOne({
-        _id: idToDelete,
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
 }
 
 module.exports = {

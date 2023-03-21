@@ -8,19 +8,16 @@ const { deletePromo,
     deleteReview, } = require('../controller/deleteController');
 const { checkIdParam, } = require('../middleware/checkIdParam');
 const { checkToken, } = require('../middleware/checkToken');
-const { handleError, } = require('../middleware/globalErrorHandler');
 
 // eslint-disable-next-line new-cap
 const deleteRouter = Router();
 
 deleteRouter.delete(`/promo/:id`, checkToken,
     checkIdParam,
-    deletePromo,
-    handleError);
+    deletePromo);
 deleteRouter.delete(`/coupon/:id`, checkToken,
     checkIdParam,
-    deleteCoupon,
-    handleError);
+    deleteCoupon);
 deleteRouter.delete(`/listing/:id`, checkToken, checkIdParam, deleteListing);
 deleteRouter.delete(`/order/:id`, checkToken, checkIdParam, deleteOrder);
 deleteRouter.delete(`/address/:id`, checkToken, checkIdParam, deleteAddress);

@@ -10,8 +10,9 @@ const { CredentialsCouldNotBeVerified,
 /** Deletes an address belonging to the current user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function deleteAddress(req, res) {
+async function deleteAddress(req, res, next) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -29,35 +30,39 @@ async function deleteAddress(req, res) {
         return;
     }
 
-    const addressData = await AddressModel.findById(idToDelete).exec();
+    try {
+        const addressData = await AddressModel.findById(idToDelete).exec();
 
-    if (! addressData) {
+        if (! addressData) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentAddress,
+            });
+
+            return;
+        }
+
+        // do not permit if order does not belong to current user
+        if (String(addressData.user) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: AddressDoesNotBelong,
+            });
+
+            return;
+        }
+
+        await AddressModel.deleteOne({
+            _id: idToDelete,
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentAddress,
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // do not permit if order does not belong to current user
-    if (String(addressData.user) !== id) {
-        localResponder({
-            statusCode: 403,
-            message: AddressDoesNotBelong,
-        });
-
-        return;
-    }
-
-    await AddressModel.deleteOne({
-        _id: idToDelete,
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
 }
 
 module.exports = {

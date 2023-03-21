@@ -11,8 +11,9 @@ const { CredentialsCouldNotBeVerified,
 /** Deletes an undelivered order from database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function deleteOrder(req, res) {
+async function deleteOrder(req, res, next) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -30,45 +31,49 @@ async function deleteOrder(req, res) {
         return;
     }
 
-    const orderData = await OrderModel.findById(idToDelete).exec();
+    try {
+        const orderData = await OrderModel.findById(idToDelete).exec();
 
-    if (! orderData) {
+        if (! orderData) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentOrder,
+            });
+
+            return;
+        }
+
+        // do not permit if order does not belong to current user
+        if (String(orderData.buyer) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: OrderDoesNotBelong,
+            });
+
+            return;
+        }
+
+        // do notr allow if order has been delivered
+        if (orderData.deliveryTime) {
+            localResponder({
+                statusCode: 403,
+                message: OrderAlreadyDelivered,
+            });
+
+            return;
+        }
+
+        await OrderModel.deleteOne({
+            _id: idToDelete,
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentOrder,
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // do not permit if order does not belong to current user
-    if (String(orderData.buyer) !== id) {
-        localResponder({
-            statusCode: 403,
-            message: OrderDoesNotBelong,
-        });
-
-        return;
-    }
-
-    // do notr allow if order has been delivered
-    if (orderData.deliveryTime) {
-        localResponder({
-            statusCode: 403,
-            message: OrderAlreadyDelivered,
-        });
-
-        return;
-    }
-
-    await OrderModel.deleteOne({
-        _id: idToDelete,
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
 }
 
 module.exports = {

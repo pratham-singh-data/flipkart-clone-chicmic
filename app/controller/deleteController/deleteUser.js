@@ -8,8 +8,9 @@ const { CredentialsCouldNotBeVerified,
 /** Deletes the current user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -26,14 +27,18 @@ async function deleteUser(req, res) {
         return;
     }
 
-    await UserModel.deleteOne({
-        _id: id,
-    }).exec();
+    try {
+        await UserModel.deleteOne({
+            _id: id,
+        }).exec();
 
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
+        localResponder({
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
 }
 
 module.exports = {

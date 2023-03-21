@@ -10,8 +10,9 @@ const { CredentialsCouldNotBeVerified,
 /** Delete review frpm database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next functoion
  */
-async function deleteReview(req, res) {
+async function deleteReview(req, res, next) {
     const idToDelete = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
@@ -29,34 +30,38 @@ async function deleteReview(req, res) {
         return;
     }
 
-    const reviewData = await ReviewModel.findById(idToDelete).exec();
+    try {
+        const reviewData = await ReviewModel.findById(idToDelete).exec();
 
-    if (! reviewData) {
+        if (! reviewData) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentReview,
+            });
+
+            return;
+        }
+
+        if (String(reviewData.user) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: ReviewDoesNotBelong,
+            });
+
+            return;
+        }
+
+        await ReviewModel.deleteOne({
+            _id: idToDelete,
+        }).exec();
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentReview,
+            statusCode: 200,
+            message: DataSuccessfullyDeleted,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    if (String(reviewData.user) !== id) {
-        localResponder({
-            statusCode: 403,
-            message: ReviewDoesNotBelong,
-        });
-
-        return;
-    }
-
-    await ReviewModel.deleteOne({
-        _id: idToDelete,
-    }).exec();
-
-    localResponder({
-        statusCode: 200,
-        message: DataSuccessfullyDeleted,
-    });
 }
 
 module.exports = {
