@@ -1,10 +1,22 @@
 const Joi = require(`joi`);
+const { StringLengthMin,
+    StringLengthMax,
+    Priority, } = require('../util/constants');
 
 const createPromoSchema = Joi.object({
-    promoTitle: Joi.string().min(1).max(1000).required(),
-    promo: Joi.string().min(1).max(1000).required(),
-    promoImage: Joi.string().min(1).max(1000).required(),
-    priority: Joi.number().min(1).max(10).required(),
+    promoTitle: Joi.string().
+        min(StringLengthMin).
+        max(StringLengthMax.Normal).
+        required(),
+    promo: Joi.string().
+        min(StringLengthMin).
+        max(StringLengthMax.Normal).
+        required(),
+    promoImage: Joi.string().
+        min(StringLengthMin).
+        max(StringLengthMax.Normal).
+        required(),
+    priority: Joi.number().min(Priority.Min).max(Priority.Max).required(),
 });
 
 module.exports = {
