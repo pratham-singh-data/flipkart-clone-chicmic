@@ -5,26 +5,31 @@ const { NonExistentCoupon, } = require('../../util/messages');
 /** reads coupon of given id
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readCoupon(req, res) {
+async function readCoupon(req, res, next) {
     const id = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
-    const data = await CouponModel.findById(id).exec();
+    try {
+        const data = await CouponModel.findById(id).exec();
 
-    if (! data) {
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentCoupon,
+            });
+
+            return;
+        }
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentCoupon,
+            statusCode: 200,
+            data,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    localResponder({
-        statusCode: 200,
-        data,
-    });
 }
 
 module.exports = {

@@ -6,40 +6,45 @@ const { Types: { ObjectId, }, } = require(`mongoose`);
 /** reads average rating of a given listing
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readAverageRating(req, res) {
+async function readAverageRating(req, res, next) {
     const listingId = req.params.id;
     const localResponder = generateLocalSendResponse(res);
 
-    if (! await ListingModel.findById(listingId).exec()) {
-        localResponder({
-            statusCode: 404,
-            message: NonExistentListing,
-        });
-        return;
-    }
+    try {
+        if (! await ListingModel.findById(listingId).exec()) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentListing,
+            });
+            return;
+        }
 
-    const average = (await ReviewModel.aggregate([
-        {
-            $match: {
-                listing: new ObjectId(listingId),
-            },
-        },
-
-        {
-            $group: {
-                _id: `$listing`,
-                average: {
-                    $avg: `$rating`,
+        const average = (await ReviewModel.aggregate([
+            {
+                $match: {
+                    listing: new ObjectId(listingId),
                 },
             },
-        },
-    ]).exec())[0].average;
 
-    localResponder({
-        statusCode: 200,
-        average,
-    });
+            {
+                $group: {
+                    _id: `$listing`,
+                    average: {
+                        $avg: `$rating`,
+                    },
+                },
+            },
+        ]).exec())[0].average;
+
+        localResponder({
+            statusCode: 200,
+            average,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
 }
 
 module.exports = {

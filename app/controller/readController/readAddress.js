@@ -5,26 +5,31 @@ const { NonExistentAddress, } = require('../../util/messages');
 /** Reads address of given id
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next functione
  */
-async function readAddress(req, res) {
+async function readAddress(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const id = req.params.id;
 
-    const data = await AddressModel.findById(id).exec();
+    try {
+        const data = await AddressModel.findById(id).exec();
 
-    if (! data) {
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentAddress,
+            });
+
+            return;
+        }
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentAddress,
+            statusCode: 200,
+            data,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    localResponder({
-        statusCode: 200,
-        data,
-    });
 }
 
 module.exports = {

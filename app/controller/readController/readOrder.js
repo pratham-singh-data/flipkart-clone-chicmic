@@ -5,26 +5,31 @@ const { NonExistentOrder, } = require('../../util/messages');
 /** Reads order of given id
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readOrder(req, res) {
+async function readOrder(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
     const id = req.params.id;
 
-    const data = await OrderModel.findById(id).exec();
+    try {
+        const data = await OrderModel.findById(id).exec();
 
-    if (! data) {
+        if (! data) {
+            localResponder({
+                statusCode: 404,
+                message: NonExistentOrder,
+            });
+
+            return;
+        }
+
         localResponder({
-            statusCode: 404,
-            message: NonExistentOrder,
+            statusCode: 200,
+            data,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    localResponder({
-        statusCode: 200,
-        data,
-    });
 }
 
 module.exports = {

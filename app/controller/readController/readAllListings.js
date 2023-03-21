@@ -7,8 +7,9 @@ const { ListingModel, } = require('../../models');
  * you may send next, skip and category id in query
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readAllListings(req, res) {
+async function readAllListings(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     const query = querystring.parse(req.originalUrl.slice(
@@ -16,33 +17,37 @@ async function readAllListings(req, res) {
     const skip = query.skip ?? 0;
     const limit = query.limit ?? 10;
 
-    const agg = ListingModel.aggregate();
+    try {
+        const agg = ListingModel.aggregate();
 
-    // filter category
-    if (query.category) {
-        agg.match({
-            category: new ObjectId(query.category),
+        // filter category
+        if (query.category) {
+            agg.match({
+                category: new ObjectId(query.category),
+            });
+        }
+
+        // pagination
+        agg.append([
+            {
+                $skip: parseInt(skip),
+            },
+
+            {
+                $limit: parseInt(limit),
+            },
+        ]);
+
+        // execute query
+        const data = await agg.exec();
+
+        localResponder({
+            statusCode: 200,
+            data,
         });
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // pagination
-    agg.append([
-        {
-            $skip: parseInt(skip),
-        },
-
-        {
-            $limit: parseInt(limit),
-        },
-    ]);
-
-    // execute query
-    const data = await agg.exec();
-
-    localResponder({
-        statusCode: 200,
-        data,
-    });
 }
 
 module.exports = {

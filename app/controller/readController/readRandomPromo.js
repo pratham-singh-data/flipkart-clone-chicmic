@@ -4,8 +4,9 @@ const { PromoModel, } = require('../../models');
 /** reads a random promo from the database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readRandomPromo(req, res) {
+async function readRandomPromo(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     const data = await PromoModel.find({}, {

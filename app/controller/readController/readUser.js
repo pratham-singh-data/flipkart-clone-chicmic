@@ -8,8 +8,9 @@ const { CredentialsCouldNotBeVerified, } = require('../../util/messages');
 /** Reads a user's data; may only read the current user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readUser(req, res) {
+async function readUser(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -26,12 +27,16 @@ async function readUser(req, res) {
         return;
     }
 
-    const data = await retrieveAndValidateUser(id);
+    try {
+        const data = await retrieveAndValidateUser(id);
 
-    localResponder({
-        statusCode: 200,
-        data,
-    });
+        localResponder({
+            statusCode: 200,
+            data,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
 }
 
 module.exports = {

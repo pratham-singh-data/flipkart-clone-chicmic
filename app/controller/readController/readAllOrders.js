@@ -10,8 +10,9 @@ const { CredentialsCouldNotBeVerified, } = require('../../util/messages');
  * you may send next, skip and user (whether current user only) in query
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function readAllOrders(req, res) {
+async function readAllOrders(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     const query = querystring.parse(req.originalUrl.slice(
@@ -34,33 +35,37 @@ async function readAllOrders(req, res) {
         return;
     }
 
-    const agg = OrderModel.aggregate();
+    try {
+        const agg = OrderModel.aggregate();
 
-    // filter category
-    if (user !== `false`) {
-        agg.match({
-            buyer: new ObjectId(id),
+        // filter category
+        if (user !== `false`) {
+            agg.match({
+                buyer: new ObjectId(id),
+            });
+        }
+
+        // pagination
+        agg.append([
+            {
+                $skip: parseInt(skip),
+            },
+
+            {
+                $limit: parseInt(limit),
+            },
+        ]);
+
+        // execute query
+        const data = await agg.exec();
+
+        localResponder({
+            statusCode: 200,
+            data,
         });
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // pagination
-    agg.append([
-        {
-            $skip: parseInt(skip),
-        },
-
-        {
-            $limit: parseInt(limit),
-        },
-    ]);
-
-    // execute query
-    const data = await agg.exec();
-
-    localResponder({
-        statusCode: 200,
-        data,
-    });
 }
 
 module.exports = {
