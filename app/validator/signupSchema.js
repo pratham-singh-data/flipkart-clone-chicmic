@@ -14,7 +14,11 @@ const signupSchema = Joi.object({
         max(StringLengthMax.Normal).
         required(),
     gender: Joi.string().valid(`M`, `F`).required(),
-    email: Joi.string().email().max(StringLengthMax.Normal).required(),
+    email: Joi.string().
+        email().
+        lowercase().
+        max(StringLengthMax.Normal).
+        required(),
     phoneNumber: Joi.string().regex(PhoneNumberRegex).required(),
     type: Joi.string().valid(`buyer`, `admin`, `agent`).required(),
     password: passwordComplexity({

@@ -2,11 +2,11 @@ const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
 const { itemSchema, } = require('./itemSchema');
 
 const userSchema = new Schema({
-    firstname: {
+    firstName: {
         type: String,
         required: true,
     },
-    lastname: {
+    lastName: {
         type: String,
         required: true,
     },
