@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
         sendResponse(req.res, {
             statusCode: 201,
-            fileName: ImageDatabaseURL + `/` + fileName,
+            fileName: `${ImageDatabaseURL}/${fileName}`,
         });
     },
 });

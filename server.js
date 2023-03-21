@@ -10,6 +10,7 @@ const { userRouter,
     uploadRouter, } = require('./app/router');
 const { handleError, } = require('./app/middleware/globalErrorHandler');
 const { NotFoundController, } = require('./app/controller/globals');
+const { loggingErrorHandler, } = require('./app/util/loggingErrorHandler');
 
 const app = express();
 app.use(express.json());
@@ -37,3 +38,6 @@ startupServer().then(() => {
 }).catch((err) => {
     console.log(`Error starting server:\n${err.message}`);
 });
+
+process.on(`uncaughtException`, loggingErrorHandler);
+process.on(`unhandledRejection`, loggingErrorHandler);
