@@ -11,8 +11,9 @@ const { signupSchema, } = require('../../validator');
 /** Signs up a new user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function signupUser(req, res) {
+async function signupUser(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // validate input
@@ -33,47 +34,51 @@ async function signupUser(req, res) {
     // generate values
     body.memberSince = Date.now();
 
-    // check that both phone number and email are unique
-    if (await UserModel.findOne({
-        $or: [
-            {
-                phoneNumber: body.phoneNumber,
-            },
+    try {
+        // check that both phone number and email are unique
+        if (await UserModel.findOne({
+            $or: [
+                {
+                    phoneNumber: body.phoneNumber,
+                },
 
-            {
-                email: body.email,
-            },
-        ],
-    }).exec()) {
-        localResponder({
-            statusCode: 403,
-            message: EmailOrPhoneNumberInUse,
+                {
+                    email: body.email,
+                },
+            ],
+        }).exec()) {
+            localResponder({
+                statusCode: 403,
+                message: EmailOrPhoneNumberInUse,
+            });
+
+            return;
+        }
+
+        // save in database
+        const savedData = await new UserModel(body).save();
+
+        const token = jwt.sign({
+            id: savedData._id,
+        }, SECRET_KEY, {
+            expiresIn: TokenExpiryTime,
         });
 
-        return;
+        await new TokenModel({
+            user: savedData._id,
+            token,
+            loginTime: Date.now(),
+        }).save();
+
+        localResponder({
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            token,
+            savedData,
+        });
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // save in database
-    const savedData = await new UserModel(body).save();
-
-    const token = jwt.sign({
-        id: savedData._id,
-    }, SECRET_KEY, {
-        expiresIn: TokenExpiryTime,
-    });
-
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        token,
-        savedData,
-    });
-
-    await new TokenModel({
-        user: savedData._id,
-        token,
-        loginTime: Date.now(),
-    }).save();
 }
 
 module.exports = {

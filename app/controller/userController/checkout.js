@@ -16,8 +16,9 @@ const { CredentialsCouldNotBeVerified,
 /** checks out user cart
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function checkout(req, res) {
+async function checkout(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -34,88 +35,92 @@ async function checkout(req, res) {
         return;
     }
 
-    const userData = await retrieveAndValidateUser(id, true, true, true);
+    try {
+        const userData = await retrieveAndValidateUser(id, true, true, true);
 
-    // if cart is empty finish
-    if (userData.cart.length === 0) {
-        localResponder({
-            statusCode: 400,
-            message: EmptyCart,
-        });
+        // if cart is empty finish
+        if (userData.cart.length === 0) {
+            localResponder({
+                statusCode: 400,
+                message: EmptyCart,
+            });
 
-        return;
-    }
-
-    let paymentRequired = 0;
-    let index = 0;
-
-    for (const item of userData.cart) {
-        const listingData = await ListingModel.findById(item.id);
-
-        // if listing no longer exists then skip
-        if (! listingData) {
-            userData.cart.slice(index, 1);
-            continue;
+            return;
         }
 
-        // if stock is not sufficient skip
-        if (listingData.stock < item.count) {
-            userData.cart.slice(index, 1);
-            continue;
+        let paymentRequired = 0;
+        let index = 0;
+
+        for (const item of userData.cart) {
+            const listingData = await ListingModel.findById(item.id);
+
+            // if listing no longer exists then skip
+            if (! listingData) {
+                userData.cart.slice(index, 1);
+                continue;
+            }
+
+            // if stock is not sufficient skip
+            if (listingData.stock < item.count) {
+                userData.cart.slice(index, 1);
+                continue;
+            }
+
+            // reduce stock
+            listingData.stock -= item.count;
+
+            // reduce price by coupon
+            const couponData = await CouponModel.findById(item.coupon);
+
+            if (couponData) {
+                listingData.price -= (listingData.price *
+                    couponData.discountPercentage);
+            }
+
+            paymentRequired += listingData.price;
+
+            await ListingModel.updateOne({
+                _id: item.id,
+            }, {
+                $set: {
+                    stock: listingData.stock,
+                },
+            }).exec();
+
+            index++;
         }
 
-        // reduce stock
-        listingData.stock -= item.count;
+        if (! paymentGateway(paymentRequired)) {
+            localResponder({
+                statusCode: 402,
+                message: PaymentNotCompleted,
+            });
 
-        // reduce price by coupon
-        const couponData = await CouponModel.findById(item.coupon);
-
-        if (couponData) {
-            listingData.price -= (listingData.price *
-                couponData.discountPercentage);
+            return;
         }
 
-        paymentRequired += listingData.price;
+        const savedData = await new OrderModel({
+            buyer: id,
+            items: userData.cart,
+            orderedWhen: Date.now(),
+        }).save();
 
-        await ListingModel.updateOne({
-            _id: item.id,
+        await UserModel.updateOne({
+            _id: id,
         }, {
             $set: {
-                stock: listingData.stock,
+                cart: [],
             },
         }).exec();
 
-        index++;
-    }
-
-    if (! paymentGateway(paymentRequired)) {
         localResponder({
-            statusCode: 402,
-            message: PaymentNotCompleted,
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    const savedData = await new OrderModel({
-        buyer: id,
-        items: userData.cart,
-        orderedWhen: Date.now(),
-    }).save();
-
-    await UserModel.updateOne({
-        _id: id,
-    }, {
-        $set: {
-            cart: [],
-        },
-    }).exec();
-
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
 }
 
 module.exports = {

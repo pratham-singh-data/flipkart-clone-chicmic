@@ -11,8 +11,9 @@ const { loginSchema, } = require('../../validator');
 /** Logs in an existing user
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function loginUser(req, res) {
+async function loginUser(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // validate input
@@ -30,34 +31,38 @@ async function loginUser(req, res) {
 
     body.password = hashPassword(body.password);
 
-    // get user data
-    const userData = await UserModel.findOne(body).exec();
+    try {
+        // get user data
+        const userData = await UserModel.findOne(body).exec();
 
-    if (! userData) {
-        localResponder({
-            statusCode: 400,
-            message: CredentialsCouldNotBeVerified,
+        if (! userData) {
+            localResponder({
+                statusCode: 400,
+                message: CredentialsCouldNotBeVerified,
+            });
+            return;
+        }
+
+        const token = jwt.sign({
+            id: userData._id,
+        }, SECRET_KEY, {
+            expiresIn: TokenExpiryTime,
         });
-        return;
+
+        await new TokenModel({
+            user: userData._id,
+            token,
+            loginTime: Date.now(),
+        }).save();
+
+        localResponder({
+            statusCode: 200,
+            message: SuccessfulLogin,
+            token,
+        });
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    const token = jwt.sign({
-        id: userData._id,
-    }, SECRET_KEY, {
-        expiresIn: TokenExpiryTime,
-    });
-
-    localResponder({
-        statusCode: 200,
-        message: SuccessfulLogin,
-        token,
-    });
-
-    await new TokenModel({
-        user: userData._id,
-        token,
-        loginTime: Date.now(),
-    }).save();
 }
 
 module.exports = {
