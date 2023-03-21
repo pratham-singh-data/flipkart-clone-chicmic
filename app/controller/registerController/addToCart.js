@@ -9,8 +9,6 @@ const { NonExistentListing,
     CouponDoesNotApply,
     NonExistentCoupon, } = require('../../util/messages');
 const { SECRET_KEY, } = require(`../../../config`);
-const Joi = require('joi');
-const { addToCartSchema, } = require('../../validator');
 
 /** Adds the listing id to cart
  * @param {Request} req Express request object
@@ -20,19 +18,7 @@ const { addToCartSchema, } = require('../../validator');
 async function addToCart(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
-    let body;
-
-    // validate schema
-    try {
-        body = Joi.attempt(req.body, addToCartSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     // just in case the token expired between calls
     let id;

@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -8,7 +7,6 @@ const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered,
     DataSuccessfullyUpdated, } = require('../../util/messages');
-const { createCouponSchema, } = require('../../validator');
 const { CouponModel, ListingModel, } = require(`../../models`);
 
 /** Update coupon id in database
@@ -47,18 +45,7 @@ async function updateCoupon(req, res, next) {
     }
 
     // get data from body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, createCouponSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // confirm that all items in applicability exiss in listings

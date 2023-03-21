@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -8,7 +7,6 @@ const { DataSuccessfullyCreated,
     CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered, } = require('../../util/messages');
-const { createCouponSchema, } = require('../../validator');
 const { CouponModel, ListingModel, } = require(`../../models`);
 
 /** Creates a coupon in database
@@ -46,18 +44,7 @@ async function createCoupon(req, res, next) {
     }
 
     // get data from body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, createCouponSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     // generate data
     body.sinceWhen = Date.now();

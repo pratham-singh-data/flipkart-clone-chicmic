@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { hashPassword, } = require('../../helper/hashPassword');
@@ -7,7 +6,6 @@ const { UserModel, } = require('../../models');
 const { CredentialsCouldNotBeVerified,
     DataSuccessfullyUpdated,
     EmailOrPhoneNumberInUse, } = require('../../util/messages');
-const { signupSchema, } = require('../../validator');
 
 /** Updates user data
  * @param {Request} req Express request object
@@ -32,18 +30,7 @@ async function updateUser(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, signupSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // check that both phone number and email are unique

@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -8,7 +7,6 @@ const { CategoryModel, ListingModel, } = require('../../models');
 const { DataSuccessfullyCreated,
     CredentialsCouldNotBeVerified,
     InvalidCategoriesDetected, } = require('../../util/messages');
-const { createListingSchema, } = require('../../validator');
 
 /** Creates a listing in database
  * @param {Request} req Express request object
@@ -45,18 +43,7 @@ async function createListing(req, res, next) {
     }
 
     // get data from body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, createListingSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // confirm that all categories exist

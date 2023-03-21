@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -7,7 +6,6 @@ const { DataSuccessfullyUpdated,
     CredentialsCouldNotBeVerified,
     NonExistentPromo,
     PromoDoesNotBelong, } = require('../../util/messages');
-const { createPromoSchema, } = require('../../validator');
 
 /** Updates an promo in the database; id from query
  * @param {Request} req Express request object
@@ -33,18 +31,7 @@ async function updatePromo(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, createPromoSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         const promoData = await PromoModel.findById(idToUpdate).exec();

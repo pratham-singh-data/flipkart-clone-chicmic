@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -6,7 +5,6 @@ const { OrderModel, ReviewModel, } = require('../../models');
 const { CredentialsCouldNotBeVerified,
     CanOnlyReviewOnceBought,
     DataSuccessfullyCreated, } = require('../../util/messages');
-const { registerReviewSchema, } = require('../../validator');
 
 /** Registers a review for a product that the current user has bought.
  * @param {Request} req Express request object
@@ -31,18 +29,7 @@ async function registerReview(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, registerReviewSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // check that the user has bought this product

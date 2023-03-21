@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -7,7 +6,6 @@ const { NonExistentAddress,
     AddressDoesNotBelong,
     DataSuccessfullyUpdated,
     CredentialsCouldNotBeVerified, } = require('../../util/messages');
-const { registerAddressSchema, } = require('../../validator');
 
 /** Updates an address in the database; id from query
  * @param {Request} req Express request object
@@ -33,18 +31,7 @@ async function updateAddress(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, registerAddressSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         const addressData = await AddressModel.findById(idToUpdate).exec();

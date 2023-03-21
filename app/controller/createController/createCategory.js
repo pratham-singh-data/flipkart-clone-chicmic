@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -7,7 +6,6 @@ require('../../helper/retrieveAndValidateUser');
 const { CategoryModel, } = require('../../models');
 const { DataSuccessfullyCreated,
     CredentialsCouldNotBeVerified, } = require('../../util/messages');
-const { createCategorySchema, } = require('../../validator');
 
 /** Creates a category in database
  * @param {Request} req Express request object
@@ -44,18 +42,7 @@ async function createCategory(req, res, next) {
     }
 
     // get data from body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, createCategorySchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // only create if a category of the same name does not already exist

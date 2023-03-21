@@ -3,8 +3,6 @@ const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
 const { CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated, } = require('../../util/messages');
-const { registerAddressSchema, } = require('../../validator');
-const Joi = require('joi');
 const { AddressModel, } = require('../../models');
 
 /** Registers a user's address
@@ -30,18 +28,7 @@ async function registerAddress(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, registerAddressSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         // add to database

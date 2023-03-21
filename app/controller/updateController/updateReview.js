@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../../config');
 const { generateLocalSendResponse, } = require('../../helper/responder');
@@ -7,7 +6,6 @@ const { CredentialsCouldNotBeVerified,
     NonExistentReview,
     ReviewDoesNotBelong,
     DataSuccessfullyUpdated, } = require('../../util/messages');
-const { updateReviewSchema, } = require('../../validator');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -33,18 +31,7 @@ async function updateReview(req, res, next) {
     }
 
     // validate body
-    let body;
-
-    try {
-        body = Joi.attempt(req.body, updateReviewSchema);
-    } catch (err) {
-        localResponder({
-            statusCode: 400,
-            message: err.message,
-        });
-
-        return;
-    }
+    const body = req.body;
 
     try {
         const reviewData = await ReviewModel.findById(idToUpdate).exec();
