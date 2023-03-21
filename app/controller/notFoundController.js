@@ -1,4 +1,5 @@
-const { sendResponse, } = require('../../helper/responder');
+const { sendResponse, } = require('../helper/responder');
+const { NonExistentEndpoint, } = require('../util/messages');
 
 /** Handles a non existent endpoint being accessed
  * @param {Request} req Express request object
@@ -7,7 +8,7 @@ const { sendResponse, } = require('../../helper/responder');
 function NotFoundController(req, res) {
     sendResponse(res, {
         statusCode: 404,
-        message: `This endpoint does not exist.`,
+        message: NonExistentEndpoint,
     });
 }
 

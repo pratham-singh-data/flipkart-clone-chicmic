@@ -1,8 +1,7 @@
 const multer = require('multer');
-const { sendResponse, } = require('../../helper/responder');
-const { ImageDatabaseURL,
-    AllowedImageMimes, } = require('../../util/constants');
+const { ImageDatabaseURL, AllowedImageMimes, } = require('../util/constants');
 const uuid = require(`uuid`);
+const { sendResponse, } = require('../helper/responder');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {

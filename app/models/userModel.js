@@ -32,10 +32,8 @@ const userSchema = new Schema({
         type: String,
         default: `buyer`,
     },
-    memberSince: {
-        type: Date,
-        default: Date.now,
-    },
+}, {
+    timestamps: true,
 });
 
 const UserModel = model(`users`, userSchema);

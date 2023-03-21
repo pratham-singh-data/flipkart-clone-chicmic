@@ -13,15 +13,13 @@ const couponSchema = new Schema({
         type: Number,
         required: true,
     },
-    sinceWhen: {
-        type: Date,
-        required: true,
-    },
     discountPercentage: {
         type: Number,
         required: true,
     },
     applicability: [ ObjectId, ],
+}, {
+    timestamps: true,
 });
 
 const CouponModel = model(`coupons`, couponSchema);

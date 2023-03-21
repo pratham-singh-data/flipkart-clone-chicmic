@@ -34,4 +34,5 @@ module.exports = {
     IdCannotBeCast: `id in params cannot be cast into a MongoDB ObjectID`,
     EmptyCart: `No items in cart`,
     PaymentNotCompleted: `Payment not completed`,
+    NonExistentEndpoint: `This endpoint does not exist.`,
 };

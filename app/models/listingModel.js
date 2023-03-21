@@ -46,11 +46,9 @@ const listingSchema = new Schema({
         default: false,
     },
     deliveryTypes: [ deliverySchema, ],
-    sinceWhen: {
-        type: Date,
-        default: Date.now,
-    },
     category: [ ObjectId, ],
+}, {
+    timestamps: true,
 });
 
 const ListingModel = model(`listings`, listingSchema);

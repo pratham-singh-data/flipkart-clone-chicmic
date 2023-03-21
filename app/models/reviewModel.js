@@ -17,10 +17,8 @@ const reviewSchema = new Schema({
         type: String,
         default: 1,
     },
-    date: {
-        type: Date,
-        default: Date.now,
-    },
+}, {
+    timestamps: true,
 });
 
 const ReviewModel = model(`reviews`, reviewSchema);

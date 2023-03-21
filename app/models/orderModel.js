@@ -4,12 +4,10 @@ const { itemSchema, } = require('./itemSchema');
 const orderSchema = new Schema({
     buyer: ObjectId,
     items: [ itemSchema, ],
-    orderedWhen: {
-        type: Date,
-        default: Date.now,
-    },
     deliveryTime: Date,
     deliveryAgent: ObjectId,
+}, {
+    timestamps: true,
 });
 
 const OrderModel = model(`orders`, orderSchema);

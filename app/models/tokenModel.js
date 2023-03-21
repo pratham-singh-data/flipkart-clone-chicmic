@@ -9,10 +9,8 @@ const tokenSchema = new Schema({
         type: String,
         required: true,
     },
-    loginTime: {
-        type: Date,
-        default: Date.now,
-    },
+}, {
+    timestamps: true,
 });
 
 const TokenModel = model(`tokens`, tokenSchema);
