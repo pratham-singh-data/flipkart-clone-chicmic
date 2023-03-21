@@ -14,8 +14,9 @@ const { CouponModel, ListingModel, } = require(`../../models`);
 /** Creates a coupon in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function createCoupon(req, res) {
+async function createCoupon(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -61,42 +62,46 @@ async function createCoupon(req, res) {
     // generate data
     body.sinceWhen = Date.now();
 
-    // confirm that all items in applicability exiss in listings
-    const applyTargets = await ListingModel.find({
-        _id: {
-            $in: body.applicability,
-        },
-    });
-
-    if (applyTargets.length !== body.applicability.length) {
-        localResponder({
-            statusCode: 400,
-            message: InvalidListingsDetected,
+    try {
+        // confirm that all items in applicability exiss in listings
+        const applyTargets = await ListingModel.find({
+            _id: {
+                $in: body.applicability,
+            },
         });
 
-        return;
-    }
+        if (applyTargets.length !== body.applicability.length) {
+            localResponder({
+                statusCode: 400,
+                message: InvalidListingsDetected,
+            });
 
-    // only save if thecoupon code is unique
-    if (await CouponModel.find({
-        couponCode: body.couponCode,
-    }).exec()) {
+            return;
+        }
+
+        // only save if thecoupon code is unique
+        if (await CouponModel.find({
+            couponCode: body.couponCode,
+        }).exec()) {
+            localResponder({
+                statusCode: 400,
+                message: CouponCodeRegistered,
+            });
+
+            return;
+        }
+
+        // save to database
+        const savedData = await new CouponModel(body).save();
+
         localResponder({
-            statusCode: 400,
-            message: CouponCodeRegistered,
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // save to database
-    const savedData = await new CouponModel(body).save();
-
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
 }
 
 module.exports = {

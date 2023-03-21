@@ -12,8 +12,9 @@ const { createCategorySchema, } = require('../../validator');
 /** Creates a category in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function createCategory(req, res) {
+async function createCategory(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -56,24 +57,28 @@ async function createCategory(req, res) {
         return;
     }
 
-    // only create if a category of the same name does not already exist
-    if (await CategoryModel.findOne(body).exec()) {
+    try {
+        // only create if a category of the same name does not already exist
+        if (await CategoryModel.findOne(body).exec()) {
+            localResponder({
+                statusCode: 400,
+                message: `This category already exists.`,
+            });
+
+            return;
+        }
+
+        // save to database
+        const savedData = await new CategoryModel(body).save();
+
         localResponder({
-            statusCode: 400,
-            message: `This category already exists.`,
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // save to database
-    const savedData = await new CategoryModel(body).save();
-
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
 }
 
 module.exports = {

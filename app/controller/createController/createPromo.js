@@ -12,8 +12,9 @@ const { createPromoSchema, } = require('../../validator');
 /** Creates a promo in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function createPromo(req, res) {
+async function createPromo(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -60,14 +61,18 @@ async function createPromo(req, res) {
     body.clicks = body.views = 0;
     body.user = id;
 
-    // save to database
-    const savedData = await new PromoModel(body).save();
+    try {
+        // save to database
+        const savedData = await new PromoModel(body).save();
 
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
+        localResponder({
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
 }
 
 module.exports = {

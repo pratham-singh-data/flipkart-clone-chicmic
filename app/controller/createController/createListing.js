@@ -13,8 +13,9 @@ const { createListingSchema, } = require('../../validator');
 /** Creates a listing in database
  * @param {Request} req Express request object
  * @param {Response} res Express response object
+ * @param {Function} next Express next function
  */
-async function createListing(req, res) {
+async function createListing(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     // just in case the token expired between calls
@@ -57,34 +58,38 @@ async function createListing(req, res) {
         return;
     }
 
-    // confirm that all categories exist
-    const categories = await CategoryModel.find({
-        _id: {
-            $in: body.category,
-        },
-    }).exec();
+    try {
+        // confirm that all categories exist
+        const categories = await CategoryModel.find({
+            _id: {
+                $in: body.category,
+            },
+        }).exec();
 
-    if (categories.length !== body.category.length) {
+        if (categories.length !== body.category.length) {
+            localResponder({
+                statusCode: 400,
+                message: InvalidCategoriesDetected,
+            });
+
+            return;
+        }
+
+        // generate data
+        body.seller = id;
+        body.sinceWhen = Date.now();
+
+        // save to database
+        const savedData = await new ListingModel(body).save();
+
         localResponder({
-            statusCode: 400,
-            message: InvalidCategoriesDetected,
+            statusCode: 201,
+            message: DataSuccessfullyCreated,
+            savedData,
         });
-
-        return;
+    } catch (e) {
+        next(new Error(e.message));
     }
-
-    // generate data
-    body.seller = id;
-    body.sinceWhen = Date.now();
-
-    // save to database
-    const savedData = await new ListingModel(body).save();
-
-    localResponder({
-        statusCode: 201,
-        message: DataSuccessfullyCreated,
-        savedData,
-    });
 }
 
 module.exports = {
