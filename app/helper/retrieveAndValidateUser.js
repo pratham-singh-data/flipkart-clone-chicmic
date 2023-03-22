@@ -1,8 +1,8 @@
 const { UserValidationError, } = require('../classes/UserValidationError');
 const { UserModel, } = require('../models');
-const { BuyerDisallow,
-    AdminDisallow,
-    AgentDisallow, } = require('../util/messages');
+const { BUYERDISALLOW,
+    ADMINDISALLOW,
+    AGENTDISALLOW, } = require('../util/messages');
 
 /** Retrive user data and throw an error if the given permissions do not follow
  * @param {String} id id of user to retrieve
@@ -18,15 +18,15 @@ async function retrieveAndValidateUser(id,
     const userData = await UserModel.findById(id).exec();
 
     if (! allowBuyer && userData.type === `buyer`) {
-        throw new UserValidationError(BuyerDisallow);
+        throw new UserValidationError(BUYERDISALLOW);
     }
 
     if (! allowAdmin && userData.type === `admin`) {
-        throw new UserValidationError(AdminDisallow);
+        throw new UserValidationError(ADMINDISALLOW);
     }
 
     if (! allowAgent && userData.type === `agent`) {
-        throw new UserValidationError(AgentDisallow);
+        throw new UserValidationError(AGENTDISALLOW);
     }
 
     return userData;

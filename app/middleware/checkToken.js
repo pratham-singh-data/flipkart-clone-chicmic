@@ -2,8 +2,8 @@ const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { findFromUsersById, } = require('../service/findByIdServices');
-const { ValidTokenNeeded,
-    CredentialsCouldNotBeVerified, } = require('../util/messages');
+const { VALIDTOKENNEEDED,
+    CREDENTIALSCOULDNOTBEVERIFIED, } = require('../util/messages');
 
 /** Checks token send by request
  * @param {Request} req Express request object
@@ -17,7 +17,7 @@ async function checkToken(req, res, next) {
     if (! req.headers.token) {
         localResponder({
             statusCode: 403,
-            message: ValidTokenNeeded,
+            message: VALIDTOKENNEEDED,
         });
 
         return;
@@ -30,7 +30,7 @@ async function checkToken(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: ValidTokenNeeded,
+            message: VALIDTOKENNEEDED,
         });
 
         return;
@@ -42,7 +42,7 @@ async function checkToken(req, res, next) {
     if (! userData) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;

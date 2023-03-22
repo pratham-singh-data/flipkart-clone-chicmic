@@ -14,14 +14,14 @@ const { deleteFromUsersById,
     saveDocumentInOrders,
     updateUsersById,
     updateListingsById, } = require('../service');
-const { SuccessfulLogin,
-    CredentialsCouldNotBeVerified,
-    DataSuccessfullyCreated,
-    EmailOrPhoneNumberInUse,
-    PaymentNotCompleted,
-    EmptyCart,
-    DataSuccessfullyUpdated,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+const { SUCCESSFULLOGIN,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    DATASUCCESSFULLYCREATED,
+    EMAILORPHONENUMBERINUSE,
+    PAYMENTNOTCOMPLETED,
+    EMPTYCART,
+    DATASUCCESSFULLYUPDATED,
+    DATASUCCESSFULLYDELETED, } = require('../util/messages');
 
 /** Signs up a new user
  * @param {Request} req Express request object
@@ -51,7 +51,7 @@ async function signupUser(req, res, next) {
         })) {
             localResponder({
                 statusCode: 403,
-                message: EmailOrPhoneNumberInUse,
+                message: EMAILORPHONENUMBERINUSE,
             });
 
             return;
@@ -73,7 +73,7 @@ async function signupUser(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             token,
             savedData,
         });
@@ -102,7 +102,7 @@ async function loginUser(req, res, next) {
         if (! userData) {
             localResponder({
                 statusCode: 400,
-                message: CredentialsCouldNotBeVerified,
+                message: CREDENTIALSCOULDNOTBEVERIFIED,
             });
             return;
         }
@@ -120,7 +120,7 @@ async function loginUser(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: SuccessfulLogin,
+            message: SUCCESSFULLOGIN,
             token,
         });
     } catch (e) {
@@ -144,7 +144,7 @@ async function checkout(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -157,7 +157,7 @@ async function checkout(req, res, next) {
         if (userData.cart.length === 0) {
             localResponder({
                 statusCode: 400,
-                message: EmptyCart,
+                message: EMPTYCART,
             });
 
             return;
@@ -210,7 +210,7 @@ async function checkout(req, res, next) {
         if (! paymentGateway(paymentRequired)) {
             localResponder({
                 statusCode: 402,
-                message: PaymentNotCompleted,
+                message: PAYMENTNOTCOMPLETED,
             });
 
             return;
@@ -230,7 +230,7 @@ async function checkout(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -254,7 +254,7 @@ async function updateUser(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -282,7 +282,7 @@ async function updateUser(req, res, next) {
         })) {
             localResponder({
                 statusCode: 403,
-                message: EmailOrPhoneNumberInUse,
+                message: EMAILORPHONENUMBERINUSE,
             });
 
             return;
@@ -297,7 +297,7 @@ async function updateUser(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -320,7 +320,7 @@ async function deleteUser(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -331,7 +331,7 @@ async function deleteUser(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -354,7 +354,7 @@ async function readUser(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;

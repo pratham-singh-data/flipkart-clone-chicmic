@@ -10,14 +10,14 @@ const { deleteFromCouponsById,
     findOneFromCoupons,
     saveDocumentInCoupons,
     updateCouponsById, } = require('../service');
-const { CredentialsCouldNotBeVerified,
-    InvalidListingsDetected,
-    CouponCodeRegistered,
-    DataSuccessfullyUpdated,
-    DataSuccessfullyCreated,
-    DataSuccessfullyDeleted,
-    NonExistentPromo,
-    NonExistentCoupon, } = require('../util/messages');
+const { CREDENTIALSCOULDNOTBEVERIFIED,
+    INVALIDLISTINGSDETECTED,
+    COUPONCODEREGISTERED,
+    DATASUCCESSFULLYUPDATED,
+    DATASUCCESSFULLYCREATED,
+    DATASUCCESSFULLYDELETED,
+    NONEXISTENTPROMO,
+    NONEXISTENTCOUPON, } = require('../util/messages');
 
 /** Creates a coupon in database
  * @param {Request} req Express request object
@@ -35,7 +35,7 @@ async function createCoupon(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -67,7 +67,7 @@ async function createCoupon(req, res, next) {
         if (applyTargets.length !== body.applicability.length) {
             localResponder({
                 statusCode: 400,
-                message: InvalidListingsDetected,
+                message: INVALIDLISTINGSDETECTED,
             });
 
             return;
@@ -79,7 +79,7 @@ async function createCoupon(req, res, next) {
         })) {
             localResponder({
                 statusCode: 400,
-                message: CouponCodeRegistered,
+                message: COUPONCODEREGISTERED,
             });
 
             return;
@@ -90,7 +90,7 @@ async function createCoupon(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -115,7 +115,7 @@ async function updateCoupon(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -147,7 +147,7 @@ async function updateCoupon(req, res, next) {
         if (applyTargets.length !== body.applicability.length) {
             localResponder({
                 statusCode: 400,
-                message: InvalidListingsDetected,
+                message: INVALIDLISTINGSDETECTED,
             });
 
             return;
@@ -162,7 +162,7 @@ async function updateCoupon(req, res, next) {
         })) {
             localResponder({
                 statusCode: 400,
-                message: CouponCodeRegistered,
+                message: COUPONCODEREGISTERED,
             });
 
             return;
@@ -175,7 +175,7 @@ async function updateCoupon(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -199,7 +199,7 @@ async function deleteCoupon(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -221,7 +221,7 @@ async function deleteCoupon(req, res, next) {
         if (! await findFromCouponsById(idToDelete)) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -231,7 +231,7 @@ async function deleteCoupon(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -274,7 +274,7 @@ async function readCoupon(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentCoupon,
+                message: NONEXISTENTCOUPON,
             });
 
             return;

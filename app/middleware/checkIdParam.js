@@ -1,6 +1,6 @@
 const { isValidObjectId, } = require('mongoose');
 const { sendResponse, } = require('../helper/responder');
-const { IdCannotBeCast, } = require('../util/messages');
+const { IDCANNOTBECAST, } = require('../util/messages');
 
 /** Checks that the id in param can be cast to a mongodb ObjectId
  * @param {Request} req Express request object
@@ -13,7 +13,7 @@ async function checkIdParam(req, res, next) {
     if (! isValidObjectId(id)) {
         sendResponse(res, {
             statusCode: 403,
-            message: IdCannotBeCast,
+            message: IDCANNOTBECAST,
         });
 
         return;

@@ -1,14 +1,14 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { DataSuccessfullyUpdated,
-    ReviewDoesNotBelong,
-    NonExistentReview,
-    CredentialsCouldNotBeVerified,
-    CanOnlyReviewOnceBought,
-    DataSuccessfullyCreated,
-    NonExistentListing,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+const { DATASUCCESSFULLYUPDATED,
+    REVIEWDOESNOTBELONG,
+    NONEXISTENTREVIEW,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    CANONLYREVIEWONCEBOUGHT,
+    DATASUCCESSFULLYCREATED,
+    NONEXISTENTLISTING,
+    DATASUCCESSFULLYDELETED, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const { deleteFromReviewsById,
     findFromReviewsById,
@@ -36,7 +36,7 @@ async function updateReview(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -51,7 +51,7 @@ async function updateReview(req, res, next) {
         if (! reviewData) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentReview,
+                message: NONEXISTENTREVIEW,
             });
 
             return;
@@ -60,7 +60,7 @@ async function updateReview(req, res, next) {
         if (String(reviewData.user) !== id) {
             localResponder({
                 statusCode: 401,
-                message: ReviewDoesNotBelong,
+                message: REVIEWDOESNOTBELONG,
             });
 
             return;
@@ -72,7 +72,7 @@ async function updateReview(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -95,7 +95,7 @@ async function registerReview(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -119,7 +119,7 @@ async function registerReview(req, res, next) {
         if (! orderHistory) {
             localResponder({
                 statusCode: 403,
-                message: CanOnlyReviewOnceBought,
+                message: CANONLYREVIEWONCEBOUGHT,
             });
 
             return;
@@ -133,7 +133,7 @@ async function registerReview(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -154,7 +154,7 @@ async function readReviews(req, res, next) {
         if (! await findFromListingsById(listingId)) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
             return;
         }
@@ -185,7 +185,7 @@ async function readAverageRating(req, res, next) {
         if (! await findFromListingsById(listingId)) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
             return;
         }
@@ -233,7 +233,7 @@ async function deleteReview(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -245,7 +245,7 @@ async function deleteReview(req, res, next) {
         if (! reviewData) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentReview,
+                message: NONEXISTENTREVIEW,
             });
 
             return;
@@ -254,7 +254,7 @@ async function deleteReview(req, res, next) {
         if (String(reviewData.user) !== id) {
             localResponder({
                 statusCode: 401,
-                message: ReviewDoesNotBelong,
+                message: REVIEWDOESNOTBELONG,
             });
 
             return;
@@ -264,7 +264,7 @@ async function deleteReview(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));

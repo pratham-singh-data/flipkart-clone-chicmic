@@ -3,21 +3,21 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { ItemAddedToWishlist,
-    NonExistentListing,
-    CredentialsCouldNotBeVerified,
-    ItemAddedToCart,
-    CouponExpired,
-    CouponDoesNotApply,
-    NonExistentCoupon,
-    ItemOutOfStock,
-    DataSuccessfullyUpdated,
-    OrderAlreadyDelivered,
-    NonExistentOrder,
-    OrderDoesNotBelong,
-    DataSuccessfullyDeleted,
-    ItemRemovedFromWishlist,
-    ItemRemovedFromCart, } = require('../util/messages');
+const { ITEMADDEDTOWISHLIST,
+    NONEXISTENTLISTING,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    ITEMADDEDTOCART,
+    COUPONEXPIRED,
+    COUPONDOESNOTAPPLY,
+    NONEXISTENTCOUPON,
+    ITEMOUTOFSTOCK,
+    DATASUCCESSFULLYUPDATED,
+    ORDERALREADYDELIVERED,
+    NONEXISTENTORDER,
+    ORDERDOESNOTBELONG,
+    DATASUCCESSFULLYDELETED,
+    ITEMREMOVEDFROMWISHLIST,
+    ITEMREMOVEDFROMCART, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
 const { deleteFromOrdersById,
@@ -45,7 +45,7 @@ async function addToWishlist(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -58,7 +58,7 @@ async function addToWishlist(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
 
             return;
@@ -75,7 +75,7 @@ async function addToWishlist(req, res, next) {
 
         localResponder({
             statusCode: 400,
-            message: ItemAddedToWishlist,
+            message: ITEMADDEDTOWISHLIST,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -99,7 +99,7 @@ async function removeFromWishlist(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -115,7 +115,7 @@ async function removeFromWishlist(req, res, next) {
 
         localResponder({
             statusCode: 400,
-            message: ItemRemovedFromWishlist,
+            message: ITEMREMOVEDFROMWISHLIST,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -140,7 +140,7 @@ async function addToCart(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -155,7 +155,7 @@ async function addToCart(req, res, next) {
             if (! couponData) {
                 localResponder({
                     statusCode: 400,
-                    message: NonExistentCoupon,
+                    message: NONEXISTENTCOUPON,
                 });
 
                 return;
@@ -165,7 +165,7 @@ async function addToCart(req, res, next) {
             if (! couponData.applicability.includes(body.id)) {
                 localResponder({
                     statusCode: 400,
-                    message: CouponDoesNotApply,
+                    message: COUPONDOESNOTAPPLY,
                 });
 
                 return;
@@ -176,7 +176,7 @@ async function addToCart(req, res, next) {
                 couponData.validity) < Date.now()) {
                 localResponder({
                     statusCode: 400,
-                    message: CouponExpired,
+                    message: COUPONEXPIRED,
                 });
 
                 return;
@@ -189,7 +189,7 @@ async function addToCart(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
 
             return;
@@ -199,7 +199,7 @@ async function addToCart(req, res, next) {
         if (data.stock < body.count) {
             localResponder({
                 statusCode: 400,
-                message: ItemOutOfStock,
+                message: ITEMOUTOFSTOCK,
             });
 
             return;
@@ -214,7 +214,7 @@ async function addToCart(req, res, next) {
 
         localResponder({
             statusCode: 400,
-            message: ItemAddedToCart,
+            message: ITEMADDEDTOCART,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -238,7 +238,7 @@ async function removeFromCart(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -256,7 +256,7 @@ async function removeFromCart(req, res, next) {
 
         localResponder({
             statusCode: 400,
-            message: ItemRemovedFromCart,
+            message: ITEMREMOVEDFROMCART,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -280,7 +280,7 @@ async function registerDelivery(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -305,7 +305,7 @@ async function registerDelivery(req, res, next) {
         if (! orderData) {
             localResponder({
                 statusCode: 400,
-                message: NonExistentOrder,
+                message: NONEXISTENTORDER,
             });
 
             return;
@@ -315,7 +315,7 @@ async function registerDelivery(req, res, next) {
         if (orderData.deliveryTime) {
             localResponder({
                 statusCode: 400,
-                message: OrderAlreadyDelivered,
+                message: ORDERALREADYDELIVERED,
             });
 
             return;
@@ -331,7 +331,7 @@ async function registerDelivery(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -361,7 +361,7 @@ async function readAllOrders(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -417,7 +417,7 @@ async function readOrder(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentOrder,
+                message: NONEXISTENTORDER,
             });
 
             return;
@@ -449,7 +449,7 @@ async function deleteOrder(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -461,7 +461,7 @@ async function deleteOrder(req, res, next) {
         if (! orderData) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentOrder,
+                message: NONEXISTENTORDER,
             });
 
             return;
@@ -471,7 +471,7 @@ async function deleteOrder(req, res, next) {
         if (String(orderData.buyer) !== id) {
             localResponder({
                 statusCode: 401,
-                message: OrderDoesNotBelong,
+                message: ORDERDOESNOTBELONG,
             });
 
             return;
@@ -481,7 +481,7 @@ async function deleteOrder(req, res, next) {
         if (orderData.deliveryTime) {
             localResponder({
                 statusCode: 403,
-                message: OrderAlreadyDelivered,
+                message: ORDERALREADYDELIVERED,
             });
 
             return;
@@ -491,7 +491,7 @@ async function deleteOrder(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));

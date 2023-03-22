@@ -10,12 +10,12 @@ const { deleteFromPromoById,
     saveDocumentInPromos,
     updatePromoById, } = require('../service');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
-const { DataSuccessfullyUpdated,
-    PromoDoesNotBelong,
-    NonExistentPromo,
-    CredentialsCouldNotBeVerified,
-    DataSuccessfullyCreated,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+const { DATASUCCESSFULLYUPDATED,
+    PROMODOESNOTBELONG,
+    NONEXISTENTPROMO,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    DATASUCCESSFULLYCREATED,
+    DATASUCCESSFULLYDELETED, } = require('../util/messages');
 
 /** Updates an promo in the database; id from query
  * @param {Request} req Express request object
@@ -34,7 +34,7 @@ async function updatePromo(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -49,7 +49,7 @@ async function updatePromo(req, res, next) {
         if (! promoData) {
             localResponder({
                 statusCode: 400,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -59,7 +59,7 @@ async function updatePromo(req, res, next) {
         if (String(promoData.user) !== id) {
             localResponder({
                 statusCode: 401,
-                message: PromoDoesNotBelong,
+                message: PROMODOESNOTBELONG,
             });
 
             return;
@@ -72,7 +72,7 @@ async function updatePromo(req, res, next) {
         // update database
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -95,7 +95,7 @@ async function registerPromoClick(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -110,7 +110,7 @@ async function registerPromoClick(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -133,7 +133,7 @@ async function registerPromoView(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -148,7 +148,7 @@ async function registerPromoView(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -170,7 +170,7 @@ async function readPromo(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -221,7 +221,7 @@ async function createPromo(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -252,7 +252,7 @@ async function createPromo(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -302,7 +302,7 @@ async function deletePromo(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -324,7 +324,7 @@ async function deletePromo(req, res, next) {
         if (! await findFromPromoById(idToDelete)) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentPromo,
+                message: NONEXISTENTPROMO,
             });
 
             return;
@@ -334,7 +334,7 @@ async function deletePromo(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));

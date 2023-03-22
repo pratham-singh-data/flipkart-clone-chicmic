@@ -6,12 +6,12 @@ const { deleteFromAdressesById,
     findManyFromAdresses,
     saveDocumentInAddresses,
     updateAdressesById, } = require('../service');
-const { DataSuccessfullyUpdated,
-    AddressDoesNotBelong,
-    NonExistentAddress,
-    CredentialsCouldNotBeVerified,
-    DataSuccessfullyCreated,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+const { DATASUCCESSFULLYUPDATED,
+    ADDRESSDOESNOTBELONG,
+    NONEXISTENTADDRESS,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    DATASUCCESSFULLYCREATED,
+    DATASUCCESSFULLYDELETED, } = require('../util/messages');
 
 /** Updates an address in the database; id from query
  * @param {Request} req Express request object
@@ -30,7 +30,7 @@ async function updateAddress(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -45,7 +45,7 @@ async function updateAddress(req, res, next) {
         if (! addressData) {
             localResponder({
                 statusCode: 400,
-                message: NonExistentAddress,
+                message: NONEXISTENTADDRESS,
             });
 
             return;
@@ -55,7 +55,7 @@ async function updateAddress(req, res, next) {
         if (String(addressData.user) !== id) {
             localResponder({
                 statusCode: 401,
-                message: AddressDoesNotBelong,
+                message: ADDRESSDOESNOTBELONG,
             });
 
             return;
@@ -68,7 +68,7 @@ async function updateAddress(req, res, next) {
         // update database
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -91,7 +91,7 @@ async function registerAddress(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -107,7 +107,7 @@ async function registerAddress(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -131,7 +131,7 @@ async function readAllAddresses(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -166,7 +166,7 @@ async function readAddress(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentAddress,
+                message: NONEXISTENTADDRESS,
             });
 
             return;
@@ -198,7 +198,7 @@ async function deleteAddress(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -210,7 +210,7 @@ async function deleteAddress(req, res, next) {
         if (! addressData) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentAddress,
+                message: NONEXISTENTADDRESS,
             });
 
             return;
@@ -220,7 +220,7 @@ async function deleteAddress(req, res, next) {
         if (String(addressData.user) !== id) {
             localResponder({
                 statusCode: 401,
-                message: AddressDoesNotBelong,
+                message: ADDRESSDOESNOTBELONG,
             });
 
             return;
@@ -230,7 +230,7 @@ async function deleteAddress(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));

@@ -1,13 +1,13 @@
 const { generateLocalSendResponse, } = require('../helper/responder');
 const querystring = require(`querystring`);
 const { Types: { ObjectId, }, } = require(`mongoose`);
-const { InvalidCategoriesDetected,
-    CredentialsCouldNotBeVerified,
-    DataSuccessfullyCreated,
-    NonExistentListing,
-    DataSuccessfullyDeleted,
-    ListingDoesNotBelong,
-    DataSuccessfullyUpdated, } = require('../util/messages');
+const { INVALIDCATEGORIESDETECTED,
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    DATASUCCESSFULLYCREATED,
+    NONEXISTENTLISTING,
+    DATASUCCESSFULLYDELETED,
+    LISTINGDOESNOTBELONG,
+    DATASUCCESSFULLYUPDATED, } = require('../util/messages');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { SECRET_KEY, } = require('../../config');
@@ -87,7 +87,7 @@ async function createListing(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -119,7 +119,7 @@ async function createListing(req, res, next) {
         if (categories.length !== body.category.length) {
             localResponder({
                 statusCode: 400,
-                message: InvalidCategoriesDetected,
+                message: INVALIDCATEGORIESDETECTED,
             });
 
             return;
@@ -133,7 +133,7 @@ async function createListing(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
@@ -158,7 +158,7 @@ async function updateListing(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -174,7 +174,7 @@ async function updateListing(req, res, next) {
         if (! listingData) {
             localResponder({
                 statusCode: 400,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
 
             return;
@@ -184,7 +184,7 @@ async function updateListing(req, res, next) {
         if (String(listingData.seller) !== id) {
             localResponder({
                 statusCode: 401,
-                message: ListingDoesNotBelong,
+                message: LISTINGDOESNOTBELONG,
             });
 
             return;
@@ -200,7 +200,7 @@ async function updateListing(req, res, next) {
         if (categories.length !== body.category.length) {
             localResponder({
                 statusCode: 400,
-                message: InvalidCategoriesDetected,
+                message: INVALIDCATEGORIESDETECTED,
             });
 
             return;
@@ -212,7 +212,7 @@ async function updateListing(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyUpdated,
+            message: DATASUCCESSFULLYUPDATED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -234,7 +234,7 @@ async function readListing(req, res, next) {
         if (! data) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
 
             return;
@@ -266,7 +266,7 @@ async function deleteListing(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -291,7 +291,7 @@ async function deleteListing(req, res, next) {
         })) {
             localResponder({
                 statusCode: 404,
-                message: NonExistentListing,
+                message: NONEXISTENTLISTING,
             });
             return;
         }
@@ -300,7 +300,7 @@ async function deleteListing(req, res, next) {
 
         localResponder({
             statusCode: 200,
-            message: DataSuccessfullyDeleted,
+            message: DATASUCCESSFULLYDELETED,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -323,7 +323,7 @@ async function createCategory(req, res, next) {
     } catch (err) {
         localResponder({
             statusCode: 403,
-            message: CredentialsCouldNotBeVerified,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
         });
 
         return;
@@ -360,7 +360,7 @@ async function createCategory(req, res, next) {
 
         localResponder({
             statusCode: 201,
-            message: DataSuccessfullyCreated,
+            message: DATASUCCESSFULLYCREATED,
             savedData,
         });
     } catch (e) {
