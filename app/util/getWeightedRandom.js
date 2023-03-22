@@ -4,7 +4,6 @@
  * @return {String} A 24 length hexadecimal string
  */
 function getWeightedRandom(arr) {
-    // console.log(arr);
     if (arr.length === 0) {
         return `000000000000000000000000`;
     }

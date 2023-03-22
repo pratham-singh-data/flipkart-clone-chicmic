@@ -11,7 +11,6 @@ const { OrderModel,
  * @return {Object} data from database
  */
 async function findOne(model, searchQuery, projectionQuery) {
-    console.log(searchQuery);
     return await model.findOne(searchQuery, projectionQuery).exec();
 }
 

@@ -244,24 +244,12 @@ async function removeFromCart(req, res, next) {
         return;
     }
 
-    console.log(JSON.stringify({
-        $pull: {
-            cart: {
-                $elemMatch: {
-                    _id: idToRemove,
-                },
-            },
-        },
-    }));
-
     try {
         // update the database
         await updateUsersById(id, {
             $pull: {
                 cart: {
-                    $elemMatch: {
-                        _id: new ObjectId(idToRemove),
-                    },
+                    _id: idToRemove,
                 },
             },
         });

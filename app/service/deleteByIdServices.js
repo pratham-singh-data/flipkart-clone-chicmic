@@ -11,7 +11,6 @@ const { OrderModel,
  * @param {String} id id of element to delete
  */
 async function deleteById(model, id) {
-    console.log(id);
     await model.deleteOne({
         _id: id,
     }).exec();
