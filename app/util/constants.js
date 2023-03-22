@@ -1,7 +1,6 @@
 module.exports = {
     OBJECTIDREGEX: /^[0-9a-fA-F]{24}$/,
     PHONENUMBERREGEX: /^[0-9]{10}$/,
-    IMAGEDATABASEURL: `./database/images`,
     STRINGLENGTHMIN: 1,
     STRINGLENGTHMAX: {
         NORMAL: 1000,

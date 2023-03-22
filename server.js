@@ -22,4 +22,4 @@ startupServer().then(() => {
 
 process.on(`uncaughtException`, loggingErrorHandler);
 process.on(`unhandledRejection`, loggingErrorHandler);
-throw new Error(`test`);
+

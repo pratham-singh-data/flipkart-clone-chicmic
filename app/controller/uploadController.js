@@ -1,7 +1,8 @@
 const multer = require('multer');
-const { IMAGEDATABASEURL, ALLOWEDIMAGEMIMES, } = require('../util/constants');
+const { ALLOWEDIMAGEMIMES, } = require('../util/constants');
 const uuid = require(`uuid`);
 const { sendResponse, } = require('../helper/responder');
+const { FILESIZEMAX, IMAGEDATABASEURL, } = require('../../config');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -30,6 +31,10 @@ const upload = multer({
         }
 
         cb(null, true);
+    },
+
+    limits: {
+        fileSize: FILESIZEMAX,
     },
 });
 
