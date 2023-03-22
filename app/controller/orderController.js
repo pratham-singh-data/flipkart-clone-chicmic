@@ -3,7 +3,6 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { OrderModel, } = require('../models');
 const { ItemAddedToWishlist,
     NonExistentListing,
     CredentialsCouldNotBeVerified,
@@ -25,6 +24,7 @@ const { findFromListingsById,
     findFromOrdersById, } = require('../service/findByIdService');
 const { updateOrdersById,
     updateUsersById, } = require('../service/updateByIdService');
+const { runAggregateOnOrders, } = require('../service/aggregateRunner');
 
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object
@@ -284,17 +284,19 @@ async function readAllOrders(req, res, next) {
     }
 
     try {
-        const agg = OrderModel.aggregate();
+        const pipeline = [];
 
         // filter category
         if (user !== `false`) {
-            agg.match({
-                buyer: new ObjectId(id),
+            pipeline.append({
+                $match: {
+                    buyer: new ObjectId(id),
+                },
             });
         }
 
         // pagination
-        agg.append([
+        pipeline.append([
             {
                 $skip: parseInt(skip),
             },
@@ -305,7 +307,7 @@ async function readAllOrders(req, res, next) {
         ]);
 
         // execute query
-        const data = await agg.exec();
+        const data = await runAggregateOnOrders(pipeline);
 
         localResponder({
             statusCode: 200,

@@ -1,7 +1,7 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { UserModel, } = require('../models');
+const { findFromUsersById, } = require('../service/findByIdService');
 const { ValidTokenNeeded,
     CredentialsCouldNotBeVerified, } = require('../util/messages');
 
@@ -37,7 +37,7 @@ async function checkToken(req, res, next) {
     }
 
     // confirm a corresponding user exists
-    const userData = await UserModel.findById(id);
+    const userData = await findFromUsersById(id);
 
     if (! userData) {
         localResponder({

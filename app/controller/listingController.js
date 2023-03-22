@@ -1,5 +1,4 @@
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { ListingModel, } = require('../models');
 const querystring = require(`querystring`);
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const { InvalidCategoriesDetected,
@@ -18,6 +17,7 @@ const { saveDocumentInListings,
     saveDocumentInCategories, } = require('../service/saveDocumentService');
 const { findOneFromListings,
     findOneFromCategories, } = require('../service/findOneServices');
+const { runAggregateOnListings, } = require('../service/aggregateRunner');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -34,17 +34,19 @@ async function readAllListings(req, res, next) {
     const limit = query.limit ?? 10;
 
     try {
-        const agg = ListingModel.aggregate();
+        const pipeline = [];
 
         // filter category
         if (query.category) {
-            agg.match({
-                category: new ObjectId(query.category),
+            pipeline.append({
+                $match: {
+                    category: new ObjectId(query.category),
+                },
             });
         }
 
         // pagination
-        agg.append([
+        pipeline.append([
             {
                 $skip: parseInt(skip),
             },
@@ -55,7 +57,7 @@ async function readAllListings(req, res, next) {
         ]);
 
         // execute query
-        const data = await agg.exec();
+        const data = await runAggregateOnListings(pipeline);
 
         localResponder({
             statusCode: 200,

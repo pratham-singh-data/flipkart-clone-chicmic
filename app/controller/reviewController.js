@@ -1,7 +1,6 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { ReviewModel, } = require('../models');
 const { DataSuccessfullyUpdated,
     ReviewDoesNotBelong,
     NonExistentReview,
@@ -18,6 +17,7 @@ const { updateReviewsById, } = require('../service/updateByIdService');
 const { findManyFromReviews, } = require('../service/findManyService');
 const { saveDocumentInReviews, } = require('../service/saveDocumentService');
 const { findOneFromOrders, } = require('../service/findOneServices');
+const { runAggregateOnReviews, } = require('../service/aggregateRunner');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -190,7 +190,7 @@ async function readAverageRating(req, res, next) {
             return;
         }
 
-        const average = (await ReviewModel.aggregate([
+        const average = (await runAggregateOnReviews([
             {
                 $match: {
                     listing: new ObjectId(listingId),
