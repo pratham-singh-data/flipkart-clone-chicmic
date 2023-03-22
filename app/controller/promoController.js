@@ -6,6 +6,7 @@ const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { PromoModel, } = require('../models');
 const { deleteFromPromoById, } = require('../service/deleteByIdService');
+const { findFromPromoById, } = require('../service/findByIdService');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
     PromoDoesNotBelong,
@@ -41,7 +42,7 @@ async function updatePromo(req, res, next) {
     const body = req.body;
 
     try {
-        const promoData = await PromoModel.findById(idToUpdate).exec();
+        const promoData = await findFromPromoById(idToUpdate);
 
         if (! promoData) {
             localResponder({
@@ -89,7 +90,7 @@ async function registerPromoClick(req, res, next) {
 
     try {
         // check that promo exists
-        const data = await PromoModel.findById(id).exec();
+        const data = await findFromPromoById(id);
 
         if (! data) {
             localResponder({
@@ -129,7 +130,7 @@ async function registerPromoView(req, res, next) {
 
     try {
         // check that promo exists
-        const data = await PromoModel.findById(id).exec();
+        const data = await findFromPromoById(id);
 
         if (! data) {
             localResponder({
@@ -168,7 +169,7 @@ async function readPromo(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        const data = await PromoModel.findById(id).exec();
+        const data = await findFromPromoById(id);
 
         if (! data) {
             localResponder({
@@ -281,7 +282,7 @@ async function readRandomPromo(req, res, next) {
 
         sendResponse(req.res, {
             statusCode: 200,
-            data: await PromoModel.findById(randomId),
+            data: await findFromPromoById(randomId),
         });
     } catch (err) {
         next(new Error(err.message));
@@ -324,7 +325,7 @@ async function deletePromo(req, res, next) {
     }
 
     try {
-        if (! await PromoModel.findById(idToDelete).exec()) {
+        if (! await findFromPromoById(idToDelete)) {
             localResponder({
                 statusCode: 404,
                 message: NonExistentPromo,

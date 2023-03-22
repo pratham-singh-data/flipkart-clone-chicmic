@@ -4,8 +4,6 @@ const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { UserModel,
-    ListingModel,
-    CouponModel,
     OrderModel, } = require('../models');
 const { ItemAddedToWishlist,
     NonExistentListing,
@@ -23,6 +21,9 @@ const { ItemAddedToWishlist,
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
 const { deleteFromOrdersById, } = require('../service/deleteByIdService');
+const { findFromListingsById,
+    findFromCouponsById,
+    findFromOrdersById, } = require('../service/findByIdService');
 
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object
@@ -49,7 +50,7 @@ async function addToWishlist(req, res, next) {
 
     try {
         // check that listing exists
-        const data = await ListingModel.findById(idToAdd).exec();
+        const data = await findFromListingsById(idToAdd);
 
         if (! data) {
             localResponder({
@@ -107,7 +108,7 @@ async function addToCart(req, res, next) {
     try {
         // verify coupon if given
         if (body.coupon) {
-            const couponData = await CouponModel.findById(body.coupon).exec();
+            const couponData = await findFromCouponsById(body.coupon);
 
             // if coupon doex not exist
             if (! couponData) {
@@ -142,7 +143,7 @@ async function addToCart(req, res, next) {
         }
 
         // check that listing exists
-        const data = await ListingModel.findById(body.id).exec();
+        const data = await findFromListingsById(body.id);
 
         if (! data) {
             localResponder({
@@ -217,7 +218,7 @@ async function registerDelivery(req, res, next) {
     }
 
     try {
-        const orderData = await OrderModel.findById(orderId).exec();
+        const orderData = await findFromOrdersById(orderId);
 
         // check that the corresponding order exists
         if (! orderData) {
@@ -330,7 +331,7 @@ async function readOrder(req, res, next) {
     const id = req.params.id;
 
     try {
-        const data = await OrderModel.findById(id).exec();
+        const data = await findFromOrdersById(id);
 
         if (! data) {
             localResponder({
@@ -374,7 +375,7 @@ async function deleteOrder(req, res, next) {
     }
 
     try {
-        const orderData = await OrderModel.findById(idToDelete).exec();
+        const orderData = await findFromOrdersById(idToDelete);
 
         if (! orderData) {
             localResponder({

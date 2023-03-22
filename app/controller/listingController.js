@@ -12,6 +12,7 @@ const { retrieveAndValidateUser, } =
 const { SECRET_KEY, } = require('../../config');
 const { verify, } = require('jsonwebtoken');
 const { deleteFromListingsById, } = require('../service/deleteByIdService');
+const { findFromListingsById, } = require('../service/findByIdService');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -140,7 +141,7 @@ async function readListing(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        const data = await ListingModel.findById(id).exec();
+        const data = await findFromListingsById(id);
 
         if (! data) {
             localResponder({

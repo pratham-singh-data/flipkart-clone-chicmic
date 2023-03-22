@@ -3,6 +3,7 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { AddressModel, } = require('../models');
 const { deleteFromAdressesById, } = require('../service/deleteByIdService');
+const { findFromAdressesById, } = require('../service/findByIdService');
 const { DataSuccessfullyUpdated,
     AddressDoesNotBelong,
     NonExistentAddress,
@@ -37,7 +38,7 @@ async function updateAddress(req, res, next) {
     const body = req.body;
 
     try {
-        const addressData = await AddressModel.findById(idToUpdate).exec();
+        const addressData = await findFromAdressesById(idToUpdate);
 
         if (! addressData) {
             localResponder({
@@ -160,7 +161,7 @@ async function readAddress(req, res, next) {
     const id = req.params.id;
 
     try {
-        const data = await AddressModel.findById(id).exec();
+        const data = await findFromAdressesById(id);
 
         if (! data) {
             localResponder({
@@ -204,7 +205,7 @@ async function deleteAddress(req, res, next) {
     }
 
     try {
-        const addressData = await AddressModel.findById(idToDelete).exec();
+        const addressData = await findFromAdressesById(idToDelete);
 
         if (! addressData) {
             localResponder({

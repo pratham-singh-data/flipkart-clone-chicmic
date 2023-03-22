@@ -8,9 +8,10 @@ const { retrieveAndValidateUser, } =
 const { TokenModel,
     UserModel,
     OrderModel,
-    ListingModel,
-    CouponModel, } = require('../models');
+    ListingModel, } = require('../models');
 const { deleteFromUsersById, } = require('../service/deleteByIdService');
+const { findFromListingsById,
+    findFromCouponsById, } = require('../service/findByIdService');
 const { SuccessfulLogin,
     CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated,
@@ -164,7 +165,7 @@ async function checkout(req, res, next) {
         let index = 0;
 
         for (const item of userData.cart) {
-            const listingData = await ListingModel.findById(item.id);
+            const listingData = await findFromListingsById(item.id);
 
             // if listing no longer exists then skip
             if (! listingData) {
@@ -182,7 +183,7 @@ async function checkout(req, res, next) {
             listingData.stock -= item.count;
 
             // reduce price by coupon
-            const couponData = await CouponModel.findById(item.coupon);
+            const couponData = await findFromCouponsById(item.coupon);
 
             if (couponData) {
                 listingData.price -= (listingData.price *

@@ -5,6 +5,7 @@ const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { ListingModel, CouponModel, } = require('../models');
 const { deleteFromCouponsById, } = require('../service/deleteByIdService');
+const { findFromCouponsById, } = require('../service/findByIdService');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered,
@@ -215,7 +216,7 @@ async function deleteCoupon(req, res, next) {
     }
 
     try {
-        if (! await CouponModel.findById(idToDelete).exec()) {
+        if (! await findFromCouponsById(idToDelete)) {
             localResponder({
                 statusCode: 404,
                 message: NonExistentPromo,
@@ -266,7 +267,7 @@ async function readCoupon(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        const data = await CouponModel.findById(id).exec();
+        const data = await findFromCouponsById(id);
 
         if (! data) {
             localResponder({

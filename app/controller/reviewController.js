@@ -1,7 +1,7 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { ReviewModel, OrderModel, ListingModel, } = require('../models');
+const { ReviewModel, OrderModel, } = require('../models');
 const { DataSuccessfullyUpdated,
     ReviewDoesNotBelong,
     NonExistentReview,
@@ -12,6 +12,8 @@ const { DataSuccessfullyUpdated,
     DataSuccessfullyDeleted, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const { deleteFromReviewsById, } = require('../service/deleteByIdService');
+const { findFromReviewsById,
+    findFromListingsById, } = require('../service/findByIdService');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -40,7 +42,7 @@ async function updateReview(req, res, next) {
     const body = req.body;
 
     try {
-        const reviewData = await ReviewModel.findById(idToUpdate).exec();
+        const reviewData = await findFromReviewsById(idToUpdate);
 
         if (! reviewData) {
             localResponder({
@@ -147,7 +149,7 @@ async function readReviews(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        if (! await ListingModel.findById(listingId).exec()) {
+        if (! await findFromListingsById(listingId)) {
             localResponder({
                 statusCode: 404,
                 message: NonExistentListing,
@@ -178,7 +180,7 @@ async function readAverageRating(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        if (! await ListingModel.findById(listingId).exec()) {
+        if (! await findFromListingsById(listingId)) {
             localResponder({
                 statusCode: 404,
                 message: NonExistentListing,
@@ -236,7 +238,7 @@ async function deleteReview(req, res, next) {
     }
 
     try {
-        const reviewData = await ReviewModel.findById(idToDelete).exec();
+        const reviewData = await findFromReviewsById(idToDelete);
 
         if (! reviewData) {
             localResponder({
