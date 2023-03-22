@@ -20,7 +20,7 @@ orderRouter.patch(`/addToCart`, checkToken,
     validateBody(addToCartSchema),
     addToCart);
 
-orderRouter.patch(`/addToWishlist`, checkToken, addToWishlist);
+orderRouter.patch(`/addToWishlist/:id`, checkToken, addToWishlist);
 
 orderRouter.delete(`/:id`, checkToken, deleteOrder);
 

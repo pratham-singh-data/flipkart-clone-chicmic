@@ -110,7 +110,7 @@ async function registerReview(req, res, next) {
             'buyer': id,
             'items': {
                 $elemMatch: {
-                    item: body.listing,
+                    id: body.listing,
                 },
             },
         });
@@ -205,7 +205,7 @@ async function readAverageRating(req, res, next) {
                     },
                 },
             },
-        ]).exec())[0].average;
+        ]))[0].average;
 
         localResponder({
             statusCode: 200,

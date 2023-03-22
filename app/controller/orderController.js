@@ -288,7 +288,7 @@ async function readAllOrders(req, res, next) {
 
         // filter category
         if (user !== `false`) {
-            pipeline.append({
+            pipeline.push({
                 $match: {
                     buyer: new ObjectId(id),
                 },
@@ -296,7 +296,7 @@ async function readAllOrders(req, res, next) {
         }
 
         // pagination
-        pipeline.append([
+        pipeline.push(...[
             {
                 $skip: parseInt(skip),
             },

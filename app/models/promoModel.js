@@ -26,6 +26,8 @@ const promoSchema = new Schema({
         type: Number,
         default: 1,
     },
+}, {
+    timestamps: true,
 });
 
 const PromoModel = model(`promos`, promoSchema);

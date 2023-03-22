@@ -5,6 +5,8 @@ const categorySchema = new Schema({
         type: String,
         required: true,
     },
+}, {
+    timestamps: true,
 });
 
 const CategoryModel = model(`categories`, categorySchema);

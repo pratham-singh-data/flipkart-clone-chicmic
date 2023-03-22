@@ -1,4 +1,5 @@
 const { Schema, Types: { ObjectId, }, } = require(`mongoose`);
+const { deliverySchema, } = require('./deliverySchema');
 
 const itemSchema = new Schema({
     id: {
@@ -10,6 +11,9 @@ const itemSchema = new Schema({
         default: 1,
     },
     coupon: ObjectId,
+    deliveryType: deliverySchema,
+}, {
+    timestamps: true,
 });
 
 module.exports = {

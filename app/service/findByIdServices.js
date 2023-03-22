@@ -9,58 +9,66 @@ const { OrderModel,
 /** finds id element from given model
  * @param {Model} model Mongoose compiled model
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findById(model, id) {
-    await model.findById(id).exec();
+    return await model.findById(id).exec();
 }
 
 /** finds id element from orders collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromOrdersById(id) {
-    await findById(OrderModel, id);
+    return await findById(OrderModel, id);
 }
 
 /** finds id element from users collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromUsersById(id) {
-    await findById(UserModel, id);
+    return await findById(UserModel, id);
 }
 
 /** finds id element from listings collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromListingsById(id) {
-    await findById(ListingModel, id);
+    return await findById(ListingModel, id);
 }
 
 /** finds id element from listings collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromCouponsById(id) {
-    await findById(CouponModel, id);
+    return await findById(CouponModel, id);
 }
 
 /** finds id element from reviews collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromReviewsById(id) {
-    await findById(ReviewModel, id);
+    return await findById(ReviewModel, id);
 }
 
 /** finds id element from promos collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromPromoById(id) {
-    await findById(PromoModel, id);
+    return await findById(PromoModel, id);
 }
 
 /** finds id element from addresses collection
  * @param {String} id id of element to find
+ * @return {Object} data from database
  */
 async function findFromAdressesById(id) {
-    await findById(AddressModel, id);
+    return await findById(AddressModel, id);
 }
 
 module.exports = {

@@ -9,58 +9,66 @@ const { OrderModel,
 /** Runs an aggregation pipeline on the given model
  * @param {Model} model Model to run aggregation pipeline on
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregate(model, pipeline) {
-    await model.aggregate(pipeline).exec();
+    return await model.aggregate(pipeline).exec();
 }
 
 /** Runs an aggregation pipeline on orders model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnOrders(pipeline) {
-    await runAggregate(OrderModel, pipeline);
+    return await runAggregate(OrderModel, pipeline);
 }
 
 /** Runs an aggregation pipeline on users model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnUsers(pipeline) {
-    await runAggregate(UserModel, pipeline);
+    return await runAggregate(UserModel, pipeline);
 }
 
 /** Runs an aggregation pipeline on listings model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnListings(pipeline) {
-    await runAggregate(ListingModel, pipeline);
+    return await runAggregate(ListingModel, pipeline);
 }
 
 /** Runs an aggregation pipeline on coupons model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnCoupons(pipeline) {
-    await runAggregate(CouponModel, pipeline);
+    return await runAggregate(CouponModel, pipeline);
 }
 
 /** Runs an aggregation pipeline on reviews model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnReviews(pipeline) {
-    await runAggregate(ReviewModel, pipeline);
+    return await runAggregate(ReviewModel, pipeline);
 }
 
 /** Runs an aggregation pipeline on promo model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnPromos(pipeline) {
-    await runAggregate(PromoModel, pipeline);
+    return await runAggregate(PromoModel, pipeline).exec();
 }
 
 /** Runs an aggregation pipeline on address model
  * @param {Array} pipeline aggregation pipeline to run
+ * @return {Object} Result of operation
  */
 async function runAggregateOnAdresses(pipeline) {
-    await runAggregate(AddressModel, pipeline);
+    return await runAggregate(AddressModel, pipeline);
 }
 
 module.exports = {

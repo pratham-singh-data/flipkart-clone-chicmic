@@ -38,6 +38,17 @@ async function signupUser(req, res, next) {
 
     try {
         // check that both phone number and email are unique
+        console.log(await findOneFromUsers({
+            $or: [
+                {
+                    phoneNumber: body.phoneNumber,
+                },
+
+                {
+                    email: body.email,
+                },
+            ],
+        }));
         if (await findOneFromUsers({
             $or: [
                 {
@@ -59,6 +70,7 @@ async function signupUser(req, res, next) {
 
         // save in database
         const savedData = await saveDocumentInUsers(body);
+        console.log(savedData);
 
         const token = sign({
             id: savedData._id,
@@ -184,6 +196,9 @@ async function checkout(req, res, next) {
             // reduce stock
             listingData.stock -= item.count;
 
+            // get actual price
+            listingData.price *= item.count;
+
             // reduce price by coupon
             const couponData = await findFromCouponsById(item.coupon);
 
@@ -193,6 +208,7 @@ async function checkout(req, res, next) {
             }
 
             paymentRequired += listingData.price;
+            paymentRequired += item.deliveryType.deliveryCharge;
 
             await updateListingsById(item.id, {
                 $set: {
@@ -215,6 +231,7 @@ async function checkout(req, res, next) {
         const savedData = saveDocumentInOrders({
             buyer: id,
             items: userData.cart,
+            cost: paymentRequired,
         });
 
         await updateUsersById(id, {

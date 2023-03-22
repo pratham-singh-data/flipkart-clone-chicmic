@@ -38,7 +38,7 @@ async function readAllListings(req, res, next) {
 
         // filter category
         if (query.category) {
-            pipeline.append({
+            pipeline.push({
                 $match: {
                     category: new ObjectId(query.category),
                 },
@@ -46,7 +46,7 @@ async function readAllListings(req, res, next) {
         }
 
         // pagination
-        pipeline.append([
+        pipeline.push(...[
             {
                 $skip: parseInt(skip),
             },

@@ -13,6 +13,7 @@ const { createListingSchema, createCategorySchema, } = require('../validator');
 const listingRouter = Router();
 
 listingRouter.get(`/`, readAllListings);
+listingRouter.get(`/categories`, readCategories);
 listingRouter.get(`/:id`, readListing);
 
 listingRouter.post(`/`, checkToken,
@@ -21,7 +22,6 @@ listingRouter.post(`/`, checkToken,
 
 listingRouter.delete(`/:id`, checkToken, deleteListing);
 
-listingRouter.get(`/categories`, readCategories);
 
 listingRouter.post(`/category`, checkToken,
     validateBody(createCategorySchema),

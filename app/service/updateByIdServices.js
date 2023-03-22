@@ -12,7 +12,7 @@ const { OrderModel,
  * @param {Object} updateQuery update query for collection
  */
 async function updateById(model, id, updateQuery) {
-    await model.updateById({
+    await model.updateOne({
         _id: id,
     }, updateQuery).exec();
 }

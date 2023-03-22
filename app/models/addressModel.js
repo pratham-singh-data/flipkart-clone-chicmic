@@ -13,6 +13,8 @@ const addressSchema = new Schema({
         type: String,
         required: true,
     },
+}, {
+    timestamps: true,
 });
 
 const AddressModel = model(`addresses`, addressSchema);

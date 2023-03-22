@@ -226,7 +226,7 @@ async function deleteAddress(req, res, next) {
             return;
         }
 
-        await deleteFromAdressesById(id);
+        await deleteFromAdressesById(idToDelete);
 
         localResponder({
             statusCode: 200,
