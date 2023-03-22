@@ -1,7 +1,7 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { ReviewModel, OrderModel, } = require('../models');
+const { ReviewModel, } = require('../models');
 const { DataSuccessfullyUpdated,
     ReviewDoesNotBelong,
     NonExistentReview,
@@ -17,6 +17,7 @@ const { findFromReviewsById,
 const { updateReviewsById, } = require('../service/updateByIdService');
 const { findManyFromReviews, } = require('../service/findManyService');
 const { saveDocumentInReviews, } = require('../service/saveDocumentService');
+const { findOneFromOrders, } = require('../service/findOneServices');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -105,7 +106,7 @@ async function registerReview(req, res, next) {
 
     try {
         // check that the user has bought this product
-        const orderHistory = await OrderModel.findOne({
+        const orderHistory = await findOneFromOrders({
             'buyer': id,
             'items': {
                 $elemMatch: {

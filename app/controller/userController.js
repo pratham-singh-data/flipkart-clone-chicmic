@@ -5,10 +5,10 @@ const { hashPassword, } = require('../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { UserModel, } = require('../models');
 const { deleteFromUsersById, } = require('../service/deleteByIdService');
 const { findFromListingsById,
     findFromCouponsById, } = require('../service/findByIdService');
+const { findOneFromUsers, } = require('../service/findOneServices');
 const { saveDocumentInUsers,
     saveDocumentInTokens,
     saveDocumentInOrders, } = require('../service/saveDocumentService');
@@ -38,7 +38,7 @@ async function signupUser(req, res, next) {
 
     try {
         // check that both phone number and email are unique
-        if (await UserModel.findOne({
+        if (await findOneFromUsers({
             $or: [
                 {
                     phoneNumber: body.phoneNumber,
@@ -48,7 +48,7 @@ async function signupUser(req, res, next) {
                     email: body.email,
                 },
             ],
-        }).exec()) {
+        })) {
             localResponder({
                 statusCode: 403,
                 message: EmailOrPhoneNumberInUse,
@@ -97,7 +97,7 @@ async function loginUser(req, res, next) {
 
     try {
         // get user data
-        const userData = await UserModel.findOne(body).exec();
+        const userData = await findOneFromUsers(body);
 
         if (! userData) {
             localResponder({
@@ -260,7 +260,7 @@ async function updateUser(req, res, next) {
 
     try {
         // check that both phone number and email are unique
-        if (await UserModel.findOne({
+        if (await findOneFromUsers({
             $or: [
                 {
                     phoneNumber: body.phoneNumber,
@@ -274,7 +274,7 @@ async function updateUser(req, res, next) {
             _id: {
                 $ne: id,
             },
-        }).exec()) {
+        })) {
             localResponder({
                 statusCode: 403,
                 message: EmailOrPhoneNumberInUse,

@@ -1,5 +1,5 @@
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { ListingModel, CategoryModel, } = require('../models');
+const { ListingModel, } = require('../models');
 const querystring = require(`querystring`);
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const { InvalidCategoriesDetected,
@@ -16,6 +16,8 @@ const { findFromListingsById, } = require('../service/findByIdService');
 const { findManyFromCategories, } = require('../service/findManyService');
 const { saveDocumentInListings,
     saveDocumentInCategories, } = require('../service/saveDocumentService');
+const { findOneFromListings,
+    findOneFromCategories, } = require('../service/findOneServices');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -200,10 +202,10 @@ async function deleteListing(req, res, next) {
     }
 
     try {
-        if (! await ListingModel.findOne({
+        if (! await findOneFromListings({
             _id: idToDelete,
             seller: id,
-        }).exec()) {
+        })) {
             localResponder({
                 statusCode: 404,
                 message: NonExistentListing,
@@ -261,7 +263,7 @@ async function createCategory(req, res, next) {
 
     try {
         // only create if a category of the same name does not already exist
-        if (await CategoryModel.findOne(body).exec()) {
+        if (await findOneFromCategories(body)) {
             localResponder({
                 statusCode: 400,
                 message: `This category already exists.`,

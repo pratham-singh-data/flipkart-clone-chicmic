@@ -3,11 +3,11 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { CouponModel, } = require('../models');
 const { deleteFromCouponsById, } = require('../service/deleteByIdService');
 const { findFromCouponsById, } = require('../service/findByIdService');
 const { findManyFromListings,
     findManyFromCoupons, } = require('../service/findManyService');
+const { findOneFromCoupons, } = require('../service/findOneServices');
 const { saveDocumentInCoupons, } = require('../service/saveDocumentService');
 const { updateCouponsById, } = require('../service/updateByIdService');
 const { CredentialsCouldNotBeVerified,
@@ -74,9 +74,9 @@ async function createCoupon(req, res, next) {
         }
 
         // only save if thecoupon code is unique
-        if (await CouponModel.findOne({
+        if (await findOneFromCoupons({
             couponCode: body.couponCode,
-        }).exec()) {
+        })) {
             localResponder({
                 statusCode: 400,
                 message: CouponCodeRegistered,
@@ -154,12 +154,12 @@ async function updateCoupon(req, res, next) {
         }
 
         // only save if thecoupon code is unique
-        if (await CouponModel.findOne({
+        if (await findOneFromCoupons({
             couponCode: body.couponCode,
             _id: {
                 $ne: idToUpdate,
             },
-        }).exec()) {
+        })) {
             localResponder({
                 statusCode: 400,
                 message: CouponCodeRegistered,
