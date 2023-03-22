@@ -11,6 +11,7 @@ const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { SECRET_KEY, } = require('../../config');
 const { verify, } = require('jsonwebtoken');
+const { deleteFromListingsById, } = require('../service/deleteByIdService');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -206,9 +207,7 @@ async function deleteListing(req, res, next) {
             return;
         }
 
-        await ListingModel.deleteOne({
-            _id: idToDelete,
-        });
+        await deleteFromListingsById(idToDelete);
 
         localResponder({
             statusCode: 200,

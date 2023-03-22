@@ -4,6 +4,7 @@ const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { ListingModel, CouponModel, } = require('../models');
+const { deleteFromCouponsById, } = require('../service/deleteByIdService');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered,
@@ -223,9 +224,7 @@ async function deleteCoupon(req, res, next) {
             return;
         }
 
-        await CouponModel.deleteOne({
-            _id: idToDelete,
-        }).exec();
+        await deleteFromCouponsById(idToDelete);
 
         localResponder({
             statusCode: 200,

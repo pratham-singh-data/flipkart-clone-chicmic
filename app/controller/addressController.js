@@ -2,6 +2,7 @@ const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { AddressModel, } = require('../models');
+const { deleteFromAdressesById, } = require('../service/deleteByIdService');
 const { DataSuccessfullyUpdated,
     AddressDoesNotBelong,
     NonExistentAddress,
@@ -224,9 +225,7 @@ async function deleteAddress(req, res, next) {
             return;
         }
 
-        await AddressModel.deleteOne({
-            _id: idToDelete,
-        }).exec();
+        await deleteFromAdressesById(id);
 
         localResponder({
             statusCode: 200,

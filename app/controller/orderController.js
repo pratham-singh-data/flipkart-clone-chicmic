@@ -22,6 +22,7 @@ const { ItemAddedToWishlist,
     DataSuccessfullyDeleted, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
+const { deleteFromOrdersById, } = require('../service/deleteByIdService');
 
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object
@@ -404,9 +405,7 @@ async function deleteOrder(req, res, next) {
             return;
         }
 
-        await OrderModel.deleteOne({
-            _id: idToDelete,
-        }).exec();
+        await deleteFromOrdersById(idToDelete);
 
         localResponder({
             statusCode: 200,

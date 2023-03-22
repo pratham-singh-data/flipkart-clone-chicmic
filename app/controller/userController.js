@@ -10,6 +10,7 @@ const { TokenModel,
     OrderModel,
     ListingModel,
     CouponModel, } = require('../models');
+const { deleteFromUsersById, } = require('../service/deleteByIdService');
 const { SuccessfulLogin,
     CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated,
@@ -324,9 +325,7 @@ async function deleteUser(req, res, next) {
     }
 
     try {
-        await UserModel.deleteOne({
-            _id: id,
-        }).exec();
+        await deleteFromUsersById(id);
 
         localResponder({
             statusCode: 200,

@@ -5,6 +5,7 @@ const { generateLocalSendResponse,
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { PromoModel, } = require('../models');
+const { deleteFromPromoById, } = require('../service/deleteByIdService');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
     PromoDoesNotBelong,
@@ -332,9 +333,7 @@ async function deletePromo(req, res, next) {
             return;
         }
 
-        await PromoModel.deleteOne({
-            _id: idToDelete,
-        }).exec();
+        await deleteFromPromoById(idToDelete);
 
         localResponder({
             statusCode: 200,

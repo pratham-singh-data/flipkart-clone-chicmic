@@ -11,6 +11,7 @@ const { DataSuccessfullyUpdated,
     NonExistentListing,
     DataSuccessfullyDeleted, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
+const { deleteFromReviewsById, } = require('../service/deleteByIdService');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -255,9 +256,7 @@ async function deleteReview(req, res, next) {
             return;
         }
 
-        await ReviewModel.deleteOne({
-            _id: idToDelete,
-        }).exec();
+        await deleteFromReviewsById(idToDelete);
 
         localResponder({
             statusCode: 200,
