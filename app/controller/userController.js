@@ -1,5 +1,5 @@
 const { sign, verify, } = require('jsonwebtoken');
-const { TokenExpiryTime, SECRET_KEY, } = require('../../config');
+const { TOKENEXPIRYTIME, SECRET_KEY, } = require('../../config');
 const { paymentGateway, } = require('../../emulators/paymentGateway');
 const { hashPassword, } = require('../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../helper/responder');
@@ -63,7 +63,7 @@ async function signupUser(req, res, next) {
         const token = sign({
             id: savedData._id,
         }, SECRET_KEY, {
-            expiresIn: TokenExpiryTime,
+            expiresIn: TOKENEXPIRYTIME,
         });
 
         await saveDocumentInTokens({
@@ -110,7 +110,7 @@ async function loginUser(req, res, next) {
         const token = sign({
             id: userData._id,
         }, SECRET_KEY, {
-            expiresIn: TokenExpiryTime,
+            expiresIn: TOKENEXPIRYTIME,
         });
 
         await saveDocumentInTokens({
