@@ -16,7 +16,8 @@ const { ItemAddedToWishlist,
     NonExistentOrder,
     OrderDoesNotBelong,
     DataSuccessfullyDeleted,
-    ItemRemovedFromWishlist, } = require('../util/messages');
+    ItemRemovedFromWishlist,
+    ItemRemovedFromCart, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
 const { deleteFromOrdersById,
@@ -27,7 +28,7 @@ const { deleteFromOrdersById,
     updateUsersById,
     runAggregateOnOrders, } = require('../service');
 
-/** Adds the listing id to wishlisy
+/** Adds the listing id to wishlist
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  * @param {Function} next Express next function
@@ -81,7 +82,7 @@ async function addToWishlist(req, res, next) {
     }
 }
 
-/** Remove the listing id from wishlisy
+/** Remove the listing id from wishlist
  * @param {Request} req Express request object
  * @param {Response} res Express response object
  * @param {Function} next Express next function
@@ -214,6 +215,60 @@ async function addToCart(req, res, next) {
         localResponder({
             statusCode: 400,
             message: ItemAddedToCart,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
+}
+
+/** Remove the item id from wishlist
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @param {Function} next Express next function
+ */
+async function removeFromCart(req, res, next) {
+    const localResponder = generateLocalSendResponse(res);
+    const idToRemove = req.params.id;
+
+    // just in case the token expired between calls
+    let id;
+
+    try {
+        ({ id, } = verify(req.headers.token, SECRET_KEY));
+    } catch (err) {
+        localResponder({
+            statusCode: 403,
+            message: CredentialsCouldNotBeVerified,
+        });
+
+        return;
+    }
+
+    console.log(JSON.stringify({
+        $pull: {
+            cart: {
+                $elemMatch: {
+                    _id: idToRemove,
+                },
+            },
+        },
+    }));
+
+    try {
+        // update the database
+        await updateUsersById(id, {
+            $pull: {
+                cart: {
+                    $elemMatch: {
+                        _id: idToRemove,
+                    },
+                },
+            },
+        });
+
+        localResponder({
+            statusCode: 400,
+            message: ItemRemovedFromCart,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -459,6 +514,7 @@ module.exports = {
     addToWishlist,
     removeFromWishlist,
     addToCart,
+    removeFromCart,
     registerDelivery,
     readAllOrders,
     readOrder,

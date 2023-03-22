@@ -21,6 +21,7 @@ module.exports = {
     NonExistentReview: `Specified review does not exist.`,
     ItemOutOfStock: `Item out of stock.`,
     ItemAddedToCart: `Item added to cart.`,
+    ItemRemovedFromCart: `Item removed from cart.`,
     ItemAddedToWishlist: `Item added to wishlist.`,
     ItemRemovedFromWishlist: `Item removed from wishlist.`,
     CouponDoesNotApply: `This coupon does not apply to this listing.`,
