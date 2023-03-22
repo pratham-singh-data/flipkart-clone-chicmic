@@ -16,6 +16,7 @@ const { findFromReviewsById,
     findFromListingsById, } = require('../service/findByIdService');
 const { updateReviewsById, } = require('../service/updateByIdService');
 const { findManyFromReviews, } = require('../service/findManyService');
+const { saveDocumentInReviews, } = require('../service/saveDocumentService');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -127,7 +128,7 @@ async function registerReview(req, res, next) {
         body.user = id;
 
         // save to database
-        const savedData = await new ReviewModel(body).save();
+        const savedData = await saveDocumentInReviews(body);
 
         localResponder({
             statusCode: 200,

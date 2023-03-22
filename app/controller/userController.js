@@ -5,12 +5,13 @@ const { hashPassword, } = require('../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { TokenModel,
-    UserModel,
-    OrderModel, } = require('../models');
+const { UserModel, } = require('../models');
 const { deleteFromUsersById, } = require('../service/deleteByIdService');
 const { findFromListingsById,
     findFromCouponsById, } = require('../service/findByIdService');
+const { saveDocumentInUsers,
+    saveDocumentInTokens,
+    saveDocumentInOrders, } = require('../service/saveDocumentService');
 const { updateUsersById,
     updateListingsById, } = require('../service/updateByIdService');
 const { SuccessfulLogin,
@@ -57,7 +58,7 @@ async function signupUser(req, res, next) {
         }
 
         // save in database
-        const savedData = await new UserModel(body).save();
+        const savedData = await saveDocumentInUsers(body);
 
         const token = sign({
             id: savedData._id,
@@ -65,10 +66,10 @@ async function signupUser(req, res, next) {
             expiresIn: TokenExpiryTime,
         });
 
-        await new TokenModel({
+        await saveDocumentInTokens({
             user: savedData._id,
             token,
-        }).save();
+        });
 
         localResponder({
             statusCode: 201,
@@ -112,10 +113,10 @@ async function loginUser(req, res, next) {
             expiresIn: TokenExpiryTime,
         });
 
-        await new TokenModel({
+        await saveDocumentInTokens({
             user: userData._id,
             token,
-        }).save();
+        });
 
         localResponder({
             statusCode: 200,
@@ -211,10 +212,10 @@ async function checkout(req, res, next) {
             return;
         }
 
-        const savedData = await new OrderModel({
+        const savedData = saveDocumentInOrders({
             buyer: id,
             items: userData.cart,
-        }).save();
+        });
 
         await updateUsersById(id, {
             $set: {

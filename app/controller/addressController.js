@@ -1,10 +1,10 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { AddressModel, } = require('../models');
 const { deleteFromAdressesById, } = require('../service/deleteByIdService');
 const { findFromAdressesById, } = require('../service/findByIdService');
 const { findManyFromAdresses, } = require('../service/findManyService');
+const { saveDocumentInAddresses, } = require('../service/saveDocumentService');
 const { updateAdressesById, } = require('../service/updateByIdService');
 const { DataSuccessfullyUpdated,
     AddressDoesNotBelong,
@@ -103,7 +103,7 @@ async function registerAddress(req, res, next) {
     try {
         // add to database
         body.user = id;
-        const savedData = await new AddressModel(body).save();
+        const savedData = await saveDocumentInAddresses(body);
 
         localResponder({
             statusCode: 201,

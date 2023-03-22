@@ -4,10 +4,10 @@ const { generateLocalSendResponse,
     sendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { PromoModel, } = require('../models');
 const { deleteFromPromoById, } = require('../service/deleteByIdService');
 const { findFromPromoById, } = require('../service/findByIdService');
 const { findManyFromPromo, } = require('../service/findManyService');
+const { saveDocumentInPromos, } = require('../service/saveDocumentService');
 const { updatePromoById, } = require('../service/updateByIdService');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
@@ -248,7 +248,7 @@ async function createPromo(req, res, next) {
 
     try {
         // save to database
-        const savedData = await new PromoModel(body).save();
+        const savedData = await saveDocumentInPromos(body);
 
         localResponder({
             statusCode: 201,

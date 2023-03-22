@@ -14,6 +14,8 @@ const { verify, } = require('jsonwebtoken');
 const { deleteFromListingsById, } = require('../service/deleteByIdService');
 const { findFromListingsById, } = require('../service/findByIdService');
 const { findManyFromCategories, } = require('../service/findManyService');
+const { saveDocumentInListings,
+    saveDocumentInCategories, } = require('../service/saveDocumentService');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -120,7 +122,7 @@ async function createListing(req, res, next) {
         body.seller = id;
 
         // save to database
-        const savedData = await new ListingModel(body).save();
+        const savedData = await saveDocumentInListings(body);
 
         localResponder({
             statusCode: 201,
@@ -269,7 +271,7 @@ async function createCategory(req, res, next) {
         }
 
         // save to database
-        const savedData = await new CategoryModel(body).save();
+        const savedData = await saveDocumentInCategories(body);
 
         localResponder({
             statusCode: 201,

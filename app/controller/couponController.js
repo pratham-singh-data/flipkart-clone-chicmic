@@ -8,6 +8,7 @@ const { deleteFromCouponsById, } = require('../service/deleteByIdService');
 const { findFromCouponsById, } = require('../service/findByIdService');
 const { findManyFromListings,
     findManyFromCoupons, } = require('../service/findManyService');
+const { saveDocumentInCoupons, } = require('../service/saveDocumentService');
 const { updateCouponsById, } = require('../service/updateByIdService');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
@@ -85,7 +86,7 @@ async function createCoupon(req, res, next) {
         }
 
         // save to database
-        const savedData = await new CouponModel(body).save();
+        const savedData = await saveDocumentInCoupons(body);
 
         localResponder({
             statusCode: 201,
