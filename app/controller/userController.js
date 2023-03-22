@@ -5,15 +5,15 @@ const { hashPassword, } = require('../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { deleteFromUsersById, } = require('../service/deleteByIdService');
-const { findFromListingsById,
-    findFromCouponsById, } = require('../service/findByIdService');
-const { findOneFromUsers, } = require('../service/findOneServices');
-const { saveDocumentInUsers,
+const { deleteFromUsersById,
+    findFromListingsById,
+    findFromCouponsById,
+    findOneFromUsers,
+    saveDocumentInUsers,
     saveDocumentInTokens,
-    saveDocumentInOrders, } = require('../service/saveDocumentService');
-const { updateUsersById,
-    updateListingsById, } = require('../service/updateByIdService');
+    saveDocumentInOrders,
+    updateUsersById,
+    updateListingsById, } = require('../service');
 const { SuccessfulLogin,
     CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated,

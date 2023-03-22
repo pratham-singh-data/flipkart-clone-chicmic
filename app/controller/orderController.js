@@ -18,13 +18,13 @@ const { ItemAddedToWishlist,
     DataSuccessfullyDeleted, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
-const { deleteFromOrdersById, } = require('../service/deleteByIdService');
-const { findFromListingsById,
+const { deleteFromOrdersById,
+    findFromListingsById,
     findFromCouponsById,
-    findFromOrdersById, } = require('../service/findByIdService');
-const { updateOrdersById,
-    updateUsersById, } = require('../service/updateByIdService');
-const { runAggregateOnOrders, } = require('../service/aggregateRunner');
+    findFromOrdersById,
+    updateOrdersById,
+    updateUsersById,
+    runAggregateOnOrders, } = require('../service');
 
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object

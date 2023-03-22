@@ -4,11 +4,11 @@ const { generateLocalSendResponse,
     sendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { deleteFromPromoById, } = require('../service/deleteByIdService');
-const { findFromPromoById, } = require('../service/findByIdService');
-const { findManyFromPromo, } = require('../service/findManyService');
-const { saveDocumentInPromos, } = require('../service/saveDocumentService');
-const { updatePromoById, } = require('../service/updateByIdService');
+const { deleteFromPromoById,
+    findFromPromoById,
+    findManyFromPromo,
+    saveDocumentInPromos,
+    updatePromoById, } = require('../service');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
     PromoDoesNotBelong,

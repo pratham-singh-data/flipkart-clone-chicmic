@@ -10,14 +10,14 @@ const { DataSuccessfullyUpdated,
     NonExistentListing,
     DataSuccessfullyDeleted, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
-const { deleteFromReviewsById, } = require('../service/deleteByIdService');
-const { findFromReviewsById,
-    findFromListingsById, } = require('../service/findByIdService');
-const { updateReviewsById, } = require('../service/updateByIdService');
-const { findManyFromReviews, } = require('../service/findManyService');
-const { saveDocumentInReviews, } = require('../service/saveDocumentService');
-const { findOneFromOrders, } = require('../service/findOneServices');
-const { runAggregateOnReviews, } = require('../service/aggregateRunner');
+const { deleteFromReviewsById,
+    findFromReviewsById,
+    findFromListingsById,
+    updateReviewsById,
+    findManyFromReviews,
+    saveDocumentInReviews,
+    findOneFromOrders,
+    runAggregateOnReviews, } = require('../service');
 
 /** Update review of given id in database
  * @param {Request} req Express request object

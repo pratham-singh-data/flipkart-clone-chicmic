@@ -10,14 +10,14 @@ const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { SECRET_KEY, } = require('../../config');
 const { verify, } = require('jsonwebtoken');
-const { deleteFromListingsById, } = require('../service/deleteByIdService');
-const { findFromListingsById, } = require('../service/findByIdService');
-const { findManyFromCategories, } = require('../service/findManyService');
-const { saveDocumentInListings,
-    saveDocumentInCategories, } = require('../service/saveDocumentService');
-const { findOneFromListings,
-    findOneFromCategories, } = require('../service/findOneServices');
-const { runAggregateOnListings, } = require('../service/aggregateRunner');
+const { deleteFromListingsById,
+    findFromListingsById,
+    findManyFromCategories,
+    saveDocumentInListings,
+    saveDocumentInCategories,
+    findOneFromListings,
+    findOneFromCategories,
+    runAggregateOnListings, } = require('../service');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query

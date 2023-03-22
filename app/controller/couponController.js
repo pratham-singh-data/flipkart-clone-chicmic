@@ -3,13 +3,13 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { deleteFromCouponsById, } = require('../service/deleteByIdService');
-const { findFromCouponsById, } = require('../service/findByIdService');
-const { findManyFromListings,
-    findManyFromCoupons, } = require('../service/findManyService');
-const { findOneFromCoupons, } = require('../service/findOneServices');
-const { saveDocumentInCoupons, } = require('../service/saveDocumentService');
-const { updateCouponsById, } = require('../service/updateByIdService');
+const { deleteFromCouponsById,
+    findFromCouponsById,
+    findManyFromListings,
+    findManyFromCoupons,
+    findOneFromCoupons,
+    saveDocumentInCoupons,
+    updateCouponsById, } = require('../service');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered,
