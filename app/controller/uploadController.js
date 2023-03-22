@@ -11,11 +11,6 @@ const storage = multer.diskStorage({
         const fileName = uuid.v4();
 
         cb(undefined, fileName);
-
-        sendResponse(req.res, {
-            statusCode: 201,
-            fileName: `${IMAGEDATABASEURL}/${fileName}`,
-        });
     },
 });
 

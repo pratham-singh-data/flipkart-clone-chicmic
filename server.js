@@ -16,7 +16,7 @@ const { handleError, } = require('./app/middleware');
 const app = express();
 
 app.use(express.json());
-app.use(`/static`, express.static(`./database`));
+
 app.use(`/address`, addressRouter);
 app.use(`/coupon`, couponRouter);
 app.use(`/listing`, listingRouter);
