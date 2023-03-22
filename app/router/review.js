@@ -4,8 +4,7 @@ const { deleteReview,
     registerReview,
     readReviews,
     readAverageRating, } = require('../controller/reviewController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { updateReviewSchema, registerReviewSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

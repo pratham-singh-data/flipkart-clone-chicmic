@@ -7,8 +7,7 @@ const { readOrder,
     deleteOrder,
     removeFromWishlist,
     removeFromCart, } = require('../controller/orderController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { addToCartSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

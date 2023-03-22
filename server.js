@@ -1,7 +1,6 @@
 require(`dotenv`).config();
 const mongoConnect = require('./app/startup/mongoStartup');
 const express = require(`express`);
-const { handleError, } = require('./app/middleware/globalErrorHandler');
 const { loggingErrorHandler, } = require('./app/util/loggingErrorHandler');
 const { addressRouter,
     couponRouter,
@@ -12,6 +11,7 @@ const { addressRouter,
     uploadRouter,
     userRouter, } = require('./app/router');
 const { NotFoundController, } = require('./app/controller/notFoundController');
+const { handleError, } = require('./app/middleware');
 
 const app = express();
 app.use(express.json());

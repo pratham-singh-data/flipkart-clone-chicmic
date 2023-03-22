@@ -4,8 +4,7 @@ const { updateCoupon,
     readCoupon,
     readAllCoupons,
     deleteCoupon, } = require('../controller/couponController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { validateBody, checkToken, } = require('../middleware');
 const { createCouponSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

@@ -6,8 +6,7 @@ const { readAllListings,
     readCategories,
     createCategory,
     updateListing, } = require('../controller/listingController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { createListingSchema, createCategorySchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

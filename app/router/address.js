@@ -4,8 +4,7 @@ const { registerAddress,
     readAddress,
     readAllAddresses,
     deleteAddress, } = require('../controller/addressController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { registerAddressSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

@@ -7,8 +7,7 @@ const { readAllPromos,
     createPromo,
     registerPromoView,
     registerPromoClick, } = require('../controller/promoController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { createPromoSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap

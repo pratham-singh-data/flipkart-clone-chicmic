@@ -5,8 +5,7 @@ const { loginUser,
     updateUser,
     deleteUser,
     readUser, } = require('../controller/userController');
-const { checkToken, } = require('../middleware/checkToken');
-const { validateBody, } = require('../middleware/validateBody');
+const { checkToken, validateBody, } = require('../middleware');
 const { signupSchema,
     loginSchema, } = require('../validator');
 

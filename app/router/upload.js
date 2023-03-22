@@ -1,6 +1,6 @@
 const { Router, } = require(`express`);
 const { uploadImageController, } = require('../controller/uploadController');
-const { checkToken, } = require('../middleware/checkToken');
+const { checkToken, } = require('../middleware');
 
 // eslint-disable-next-line new-cap
 const uploadRouter = Router();
