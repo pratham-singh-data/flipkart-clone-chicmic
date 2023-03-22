@@ -5,7 +5,9 @@ const { InvalidCategoriesDetected,
     CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated,
     NonExistentListing,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+    DataSuccessfullyDeleted,
+    ListingDoesNotBelong,
+    DataSuccessfullyUpdated, } = require('../util/messages');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { SECRET_KEY, } = require('../../config');
@@ -17,7 +19,8 @@ const { deleteFromListingsById,
     saveDocumentInCategories,
     findOneFromListings,
     findOneFromCategories,
-    runAggregateOnListings, } = require('../service');
+    runAggregateOnListings,
+    updateListingsById, } = require('../service');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -132,6 +135,84 @@ async function createListing(req, res, next) {
             statusCode: 201,
             message: DataSuccessfullyCreated,
             savedData,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
+}
+
+/** Updates a listing in database
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @param {Function} next Express next function
+ */
+async function updateListing(req, res, next) {
+    const localResponder = generateLocalSendResponse(res);
+    const idToUpdate = req.params.id;
+
+    // just in case the token expired between calls
+    let id;
+
+    try {
+        ({ id, } = verify(req.headers.token, SECRET_KEY));
+    } catch (err) {
+        localResponder({
+            statusCode: 403,
+            message: CredentialsCouldNotBeVerified,
+        });
+
+        return;
+    }
+
+    // get data from body
+    const body = req.body;
+
+    try {
+        // get data of specified listing
+        const listingData = await findFromListingsById(idToUpdate);
+
+        if (! listingData) {
+            localResponder({
+                statusCode: 400,
+                message: NonExistentListing,
+            });
+
+            return;
+        }
+
+        // can only update listing belonging to the current user
+        if (String(listingData.seller) !== id) {
+            localResponder({
+                statusCode: 403,
+                message: ListingDoesNotBelong,
+            });
+
+            return;
+        }
+
+        // confirm that all categories exist
+        const categories = await findManyFromCategories({
+            _id: {
+                $in: body.category,
+            },
+        });
+
+        if (categories.length !== body.category.length) {
+            localResponder({
+                statusCode: 400,
+                message: InvalidCategoriesDetected,
+            });
+
+            return;
+        }
+
+        updateListingsById(idToUpdate, {
+            $set: body,
+        });
+
+        localResponder({
+            statusCode: 201,
+            message: DataSuccessfullyUpdated,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -315,6 +396,7 @@ module.exports = {
     readAllListings,
     readListing,
     createListing,
+    updateListing,
     deleteListing,
     createCategory,
     readCategories,

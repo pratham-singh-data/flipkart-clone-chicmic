@@ -4,7 +4,8 @@ const { readAllListings,
     createListing,
     deleteListing,
     readCategories,
-    createCategory, } = require('../controller/listingController');
+    createCategory,
+    updateListing, } = require('../controller/listingController');
 const { checkToken, } = require('../middleware/checkToken');
 const { validateBody, } = require('../middleware/validateBody');
 const { createListingSchema, createCategorySchema, } = require('../validator');
@@ -21,6 +22,10 @@ listingRouter.post(`/`, checkToken,
     createListing);
 
 listingRouter.delete(`/:id`, checkToken, deleteListing);
+
+listingRouter.put(`/:id`, checkToken,
+    validateBody(createListingSchema),
+    updateListing);
 
 
 listingRouter.post(`/category`, checkToken,

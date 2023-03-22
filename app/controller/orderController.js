@@ -260,7 +260,7 @@ async function removeFromCart(req, res, next) {
             $pull: {
                 cart: {
                     $elemMatch: {
-                        _id: idToRemove,
+                        _id: new ObjectId(idToRemove),
                     },
                 },
             },
