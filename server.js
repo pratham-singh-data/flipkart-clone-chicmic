@@ -14,8 +14,9 @@ const { NotFoundController, } = require('./app/controller/notFoundController');
 const { handleError, } = require('./app/middleware');
 
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
+app.use(`/static`, express.static(`./database`));
 app.use(`/address`, addressRouter);
 app.use(`/coupon`, couponRouter);
 app.use(`/listing`, listingRouter);
@@ -24,8 +25,8 @@ app.use(`/promo`, promoRouter);
 app.use(`/review`, reviewRouter);
 app.use(`/upload`, uploadRouter);
 app.use(`/user`, userRouter);
-
 app.all(`*`, NotFoundController);
+
 app.use(handleError);
 
 /** Initialises server */

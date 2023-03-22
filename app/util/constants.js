@@ -1,21 +1,21 @@
 module.exports = {
-    ObjectIDRegex: /^[0-9a-fA-F]{24}$/,
-    PhoneNumberRegex: /^[0-9]{10}$/,
-    ImageDatabaseURL: `./database/images`,
-    StringLengthMin: 1,
-    StringLengthMax: {
-        Normal: 1000,
-        Long: 99999,
+    OBJECTIDREGEX: /^[0-9a-fA-F]{24}$/,
+    PHONENUMBERREGEX: /^[0-9]{10}$/,
+    IMAGEDATABASEURL: `./database/images`,
+    STRINGLENGTHMIN: 1,
+    STRINGLENGTHMAX: {
+        NORMAL: 1000,
+        LONG: 99999,
     },
-    Rating: {
-        Min: 0,
-        Max: 10,
+    REVIEWRATING: {
+        MIN: 0,
+        MAX: 10,
     },
-    Priority: {
-        Min: 0,
-        Max: 10,
+    PROMOPRIORITY: {
+        MIN: 0,
+        MAX: 10,
     },
-    AllowedImageMimes: [ `image/png`,
+    ALLOWEDIMAGEMIMES: [ `image/png`,
         `image/jpeg`,
         `image/webp`,
         `image/gif`, ],

@@ -1,10 +1,10 @@
 const Joi = require('joi');
-const { StringLengthMin, StringLengthMax, } = require('../util/constants');
+const { STRINGLENGTHMIN, STRINGLENGTHMAX, } = require('../util/constants');
 
 const deliveryTypeSchema = Joi.object({
     type: Joi.string().
-        min(StringLengthMin).
-        max(StringLengthMax.Normal).
+        min(STRINGLENGTHMIN).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
     deliveryCharge: Joi.number().min(0).required(),
     deliveryTime: Joi.number().min(1).required(),

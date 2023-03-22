@@ -1,11 +1,11 @@
 const multer = require('multer');
-const { ImageDatabaseURL, AllowedImageMimes, } = require('../util/constants');
+const { IMAGEDATABASEURL, ALLOWEDIMAGEMIMES, } = require('../util/constants');
 const uuid = require(`uuid`);
 const { sendResponse, } = require('../helper/responder');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(undefined, ImageDatabaseURL);
+        cb(undefined, IMAGEDATABASEURL);
     },
     filename: function(req, file, cb) {
         const fileName = uuid.v4();
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
         sendResponse(req.res, {
             statusCode: 201,
-            fileName: `${ImageDatabaseURL}/${fileName}`,
+            fileName: `${IMAGEDATABASEURL}/${fileName}`,
         });
     },
 });
@@ -23,7 +23,7 @@ const upload = multer({
     storage,
 
     fileFilter: (req, file, cb) => {
-        if (! AllowedImageMimes.includes(file.mimetype)) {
+        if (! ALLOWEDIMAGEMIMES.includes(file.mimetype)) {
             cb(null, false);
 
             sendResponse(req.res, {

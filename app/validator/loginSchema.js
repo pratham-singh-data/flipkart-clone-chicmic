@@ -1,12 +1,12 @@
 const Joi = require(`joi`);
 const passwordComplexity = require(`joi-password-complexity`);
-const { StringLengthMax, } = require('../util/constants');
+const { STRINGLENGTHMAX, } = require('../util/constants');
 
 const loginSchema = Joi.object({
     email: Joi.string().
         email().
         lowercase().
-        max(StringLengthMax.Normal).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
     password: passwordComplexity({
         min: 8,

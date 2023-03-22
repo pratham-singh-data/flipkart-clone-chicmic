@@ -1,10 +1,10 @@
 const Joi = require(`joi`);
-const { StringLengthMin, StringLengthMax, } = require('../util/constants');
+const { STRINGLENGTHMIN, STRINGLENGTHMAX, } = require('../util/constants');
 
 const createCategorySchema = Joi.object({
     name: Joi.string().
-        min(StringLengthMin).
-        max(StringLengthMax.Normal).
+        min(STRINGLENGTHMIN).
+        max(STRINGLENGTHMAX.NORMAL).
         lowercase().
         required(),
 });

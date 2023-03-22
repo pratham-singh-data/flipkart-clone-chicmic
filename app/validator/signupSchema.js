@@ -1,25 +1,25 @@
 const Joi = require(`joi`);
 const passwordComplexity = require(`joi-password-complexity`);
-const { StringLengthMin,
-    StringLengthMax,
-    PhoneNumberRegex, } = require('../util/constants');
+const { STRINGLENGTHMIN,
+    PHONENUMBERREGEX,
+    STRINGLENGTHMAX, } = require('../util/constants');
 
 const signupSchema = Joi.object({
     firstName: Joi.string().
-        min(StringLengthMin).
-        max(StringLengthMax.Normal).
+        min(STRINGLENGTHMIN).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
     lastName: Joi.string().
-        min(StringLengthMin).
-        max(StringLengthMax.Normal).
+        min(STRINGLENGTHMIN).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
     gender: Joi.string().valid(`M`, `F`).required(),
     email: Joi.string().
         email().
         lowercase().
-        max(StringLengthMax.Normal).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
-    phoneNumber: Joi.string().regex(PhoneNumberRegex).required(),
+    phoneNumber: Joi.string().regex(PHONENUMBERREGEX).required(),
     type: Joi.string().valid(`buyer`, `admin`, `agent`).required(),
     password: passwordComplexity({
         min: 8,

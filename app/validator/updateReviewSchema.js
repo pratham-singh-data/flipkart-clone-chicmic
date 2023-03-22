@@ -1,14 +1,14 @@
 const Joi = require(`joi`);
-const { StringLengthMax,
-    StringLengthMin,
-    Rating, } = require('../util/constants');
+const { STRINGLENGTHMIN,
+    STRINGLENGTHMAX,
+    REVIEWRATING, } = require('../util/constants');
 
 const updateReviewSchema = Joi.object({
     review: Joi.string().
-        min(StringLengthMin).
-        max(StringLengthMax.Normal).
+        min(STRINGLENGTHMIN).
+        max(STRINGLENGTHMAX.NORMAL).
         required(),
-    rating: Joi.number().min(Rating.Min).max(Rating.Max).required(),
+    rating: Joi.number().min(REVIEWRATING.MIN).max(REVIEWRATING.MAX).required(),
 });
 
 module.exports = {
