@@ -59,7 +59,7 @@ async function updateReview(req, res, next) {
 
         if (String(reviewData.user) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: ReviewDoesNotBelong,
             });
 
@@ -253,7 +253,7 @@ async function deleteReview(req, res, next) {
 
         if (String(reviewData.user) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: ReviewDoesNotBelong,
             });
 

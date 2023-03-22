@@ -482,7 +482,7 @@ async function deleteOrder(req, res, next) {
         // do not permit if order does not belong to current user
         if (String(orderData.buyer) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: OrderDoesNotBelong,
             });
 

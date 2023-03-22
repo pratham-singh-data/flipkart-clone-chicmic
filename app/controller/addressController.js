@@ -54,7 +54,7 @@ async function updateAddress(req, res, next) {
         // can only update if address belongs to current user
         if (String(addressData.user) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: AddressDoesNotBelong,
             });
 
@@ -219,7 +219,7 @@ async function deleteAddress(req, res, next) {
         // do not permit if order does not belong to current user
         if (String(addressData.user) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: AddressDoesNotBelong,
             });
 

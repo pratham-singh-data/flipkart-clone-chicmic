@@ -183,7 +183,7 @@ async function updateListing(req, res, next) {
         // can only update listing belonging to the current user
         if (String(listingData.seller) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: ListingDoesNotBelong,
             });
 

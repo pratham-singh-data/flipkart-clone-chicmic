@@ -58,7 +58,7 @@ async function updatePromo(req, res, next) {
         // can only update if address belongs to current user
         if (String(promoData.user) !== id) {
             localResponder({
-                statusCode: 403,
+                statusCode: 401,
                 message: PromoDoesNotBelong,
             });
 
