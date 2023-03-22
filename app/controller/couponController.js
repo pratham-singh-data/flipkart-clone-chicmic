@@ -3,9 +3,11 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { ListingModel, CouponModel, } = require('../models');
+const { CouponModel, } = require('../models');
 const { deleteFromCouponsById, } = require('../service/deleteByIdService');
 const { findFromCouponsById, } = require('../service/findByIdService');
+const { findManyFromListings,
+    findManyFromCoupons, } = require('../service/findManyService');
 const { updateCouponsById, } = require('../service/updateByIdService');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
@@ -55,7 +57,7 @@ async function createCoupon(req, res, next) {
 
     try {
         // confirm that all items in applicability exiss in listings
-        const applyTargets = await ListingModel.find({
+        const applyTargets = await findManyFromListings({
             _id: {
                 $in: body.applicability,
             },
@@ -134,8 +136,8 @@ async function updateCoupon(req, res, next) {
     const body = req.body;
 
     try {
-        // confirm that all items in applicability exiss in listings
-        const applyTargets = await ListingModel.find({
+        // confirm that all items in applicability exist in listings
+        const applyTargets = await findManyFromListings({
             _id: {
                 $in: body.applicability,
             },
@@ -245,7 +247,7 @@ async function readAllCoupons(req, res, next) {
 
     try {
         // save to database
-        const data = await CouponModel.find().exec();
+        const data = await findManyFromCoupons();
 
         localResponder({
             statusCode: 200,

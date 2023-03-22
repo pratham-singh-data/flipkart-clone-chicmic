@@ -13,6 +13,7 @@ const { SECRET_KEY, } = require('../../config');
 const { verify, } = require('jsonwebtoken');
 const { deleteFromListingsById, } = require('../service/deleteByIdService');
 const { findFromListingsById, } = require('../service/findByIdService');
+const { findManyFromCategories, } = require('../service/findManyService');
 
 /** Reads all listings in database; accepts skip, limit and category from query
  * you may send next, skip and category id in query
@@ -100,11 +101,11 @@ async function createListing(req, res, next) {
 
     try {
         // confirm that all categories exist
-        const categories = await CategoryModel.find({
+        const categories = await findManyFromCategories({
             _id: {
                 $in: body.category,
             },
-        }).exec();
+        });
 
         if (categories.length !== body.category.length) {
             localResponder({
@@ -290,10 +291,10 @@ async function readCategories(req, res, next) {
 
     try {
         // read from database
-        const data = (await CategoryModel.find({}, {
+        const data = (await findManyFromCategories({}, {
             _id: false,
             name: true,
-        }).exec()).map((inp) => inp.name);
+        })).map((inp) => inp.name);
 
         localResponder({
             statusCode: 200,

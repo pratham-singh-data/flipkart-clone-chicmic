@@ -15,6 +15,7 @@ const { deleteFromReviewsById, } = require('../service/deleteByIdService');
 const { findFromReviewsById,
     findFromListingsById, } = require('../service/findByIdService');
 const { updateReviewsById, } = require('../service/updateByIdService');
+const { findManyFromReviews, } = require('../service/findManyService');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -156,7 +157,7 @@ async function readReviews(req, res, next) {
             return;
         }
 
-        const data = await ReviewModel.find({
+        const data = await findManyFromReviews({
             listing: listingId,
         });
 

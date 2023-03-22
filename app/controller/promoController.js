@@ -7,6 +7,7 @@ const { retrieveAndValidateUser, } =
 const { PromoModel, } = require('../models');
 const { deleteFromPromoById, } = require('../service/deleteByIdService');
 const { findFromPromoById, } = require('../service/findByIdService');
+const { findManyFromPromo, } = require('../service/findManyService');
 const { updatePromoById, } = require('../service/updateByIdService');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
@@ -193,7 +194,7 @@ async function readAllPromos(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
     try {
-        const data = await PromoModel.find().exec();
+        const data = await findManyFromPromo();
 
         localResponder({
             statusCode: 400,
@@ -266,10 +267,10 @@ async function createPromo(req, res, next) {
  */
 async function readRandomPromo(req, res, next) {
     try {
-        const promos = await PromoModel.find({}, {
+        const promos = await findManyFromPromo({}, {
             _id: true,
             priority: true,
-        }).exec();
+        });
 
         const randomId = getWeightedRandom(promos.map((inp) => {
             return [ String(inp._id), inp.priority, ];

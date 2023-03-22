@@ -4,6 +4,7 @@ const { generateLocalSendResponse, } = require('../helper/responder');
 const { AddressModel, } = require('../models');
 const { deleteFromAdressesById, } = require('../service/deleteByIdService');
 const { findFromAdressesById, } = require('../service/findByIdService');
+const { findManyFromAdresses, } = require('../service/findManyService');
 const { updateAdressesById, } = require('../service/updateByIdService');
 const { DataSuccessfullyUpdated,
     AddressDoesNotBelong,
@@ -137,9 +138,9 @@ async function readAllAddresses(req, res, next) {
     }
 
     try {
-        const data = await AddressModel.find({
+        const data = await findManyFromAdresses({
             user: id,
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,
