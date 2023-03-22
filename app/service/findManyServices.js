@@ -1,6 +1,4 @@
-const { OrderModel,
-    UserModel,
-    ListingModel,
+const { ListingModel,
     CouponModel,
     ReviewModel,
     PromoModel,
@@ -15,24 +13,6 @@ const { OrderModel,
  */
 async function findMany(model, searchQuery, projectionQuery) {
     return await model.find(searchQuery, projectionQuery).exec();
-}
-
-/** executes searchQuery on orders collection
- * @param {Object} searchQuery search query to execute on collection
- * @param {Object} projectionQuery projection query to execute on collection
- * @return {Object} data from database
- */
-async function findManyFromOrders(searchQuery, projectionQuery) {
-    return await findMany(OrderModel, searchQuery, projectionQuery);
-}
-
-/** executes searchQuery on users collection
- * @param {Object} searchQuery search query to execute on collection
- * @param {Object} projectionQuery projection query to execute on collection
- * @return {Object} data from database
- */
-async function findManyFromUsers(searchQuery, projectionQuery) {
-    return await findMany(UserModel, searchQuery, projectionQuery);
 }
 
 /** executes searchQuery on listings collection
@@ -90,8 +70,6 @@ async function findManyFromCategories(searchQuery, projectionQuery) {
 }
 
 module.exports = {
-    findManyFromOrders,
-    findManyFromUsers,
     findManyFromListings,
     findManyFromCoupons,
     findManyFromReviews,

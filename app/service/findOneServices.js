@@ -2,9 +2,6 @@ const { OrderModel,
     UserModel,
     ListingModel,
     CouponModel,
-    ReviewModel,
-    PromoModel,
-    AddressModel,
     CategoryModel, } = require('../models');
 
 /** executes searchQuery on given model
@@ -54,33 +51,6 @@ async function findOneFromCoupons(searchQuery, projectionQuery) {
     return await findOne(CouponModel, searchQuery, projectionQuery);
 }
 
-/** executes searchQuery on reviews collection
- * @param {Object} searchQuery search query to execute on collection
- * @param {Object} projectionQuery projection query to execute on collection
- * @return {Object} data from database
- */
-async function findOneFromReviews(searchQuery, projectionQuery) {
-    return await findOne(ReviewModel, searchQuery, projectionQuery);
-}
-
-/** executes searchQuery on promos collection
- * @param {Object} searchQuery search query to execute on collection
- * @param {Object} projectionQuery projection query to execute on collection
- * @return {Object} data from database
- */
-async function findOneFromPromo(searchQuery, projectionQuery) {
-    return await findOne(PromoModel, searchQuery, projectionQuery);
-}
-
-/** executes searchQuery on addresses collection
- * @param {Object} searchQuery search query to execute on collection
- * @param {Object} projectionQuery projection query to execute on collection
- * @return {Object} data from database
- */
-async function findOneFromAdresses(searchQuery, projectionQuery) {
-    return await findOne(AddressModel, searchQuery, projectionQuery);
-}
-
 /** executes searchQuery on categories collection
  * @param {Object} searchQuery search query to execute on collection
  * @param {Object} projectionQuery projection query to execute on collection
@@ -95,8 +65,5 @@ module.exports = {
     findOneFromUsers,
     findOneFromListings,
     findOneFromCoupons,
-    findOneFromReviews,
-    findOneFromPromo,
-    findOneFromAdresses,
     findOneFromCategories,
 };
