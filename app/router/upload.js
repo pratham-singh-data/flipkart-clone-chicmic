@@ -9,4 +9,6 @@ const uploadRouter = Router();
 uploadRouter.post(`/image`, checkToken, uploadImageController(`file`),
     () => {});
 
-module.exports = uploadRouter;
+module.exports = {
+    uploadRouter,
+};

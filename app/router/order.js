@@ -12,17 +12,17 @@ const { addToCartSchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const orderRouter = Router();
 
-orderRouter.get(`/read/:id`, readOrder);
-orderRouter.get(`/read`, checkToken, readAllOrders);
+orderRouter.get(`/:id`, readOrder);
+orderRouter.get(`/`, checkToken, readAllOrders);
 orderRouter.patch(`/delivery/:id`, checkToken, registerDelivery);
 
 orderRouter.patch(`/addToCart`, checkToken,
     validateBody(addToCartSchema),
     addToCart);
 
-orderRouter.patch(`/addToWishlist/:id`, checkToken, addToWishlist);
+orderRouter.patch(`/addToWishlist`, checkToken, addToWishlist);
 
-orderRouter.delete(`/order/:id`, checkToken, deleteOrder);
+orderRouter.delete(`/:id`, checkToken, deleteOrder);
 
 module.exports = {
     orderRouter,

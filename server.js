@@ -1,27 +1,29 @@
 require(`dotenv`).config();
 const mongoConnect = require('./app/startup/mongoStartup');
 const express = require(`express`);
-const { userRouter,
-    createRouter,
-    readRouter,
-    registerRouter,
-    updateRouter,
-    deleteRouter,
-    uploadRouter, } = require('./app/router');
 const { handleError, } = require('./app/middleware/globalErrorHandler');
-const { NotFoundController, } = require('./app/controller/globals');
 const { loggingErrorHandler, } = require('./app/util/loggingErrorHandler');
+const { addressRouter,
+    couponRouter,
+    listingRouter,
+    orderRouter,
+    promoRouter,
+    reviewRouter,
+    uploadRouter,
+    userRouter, } = require('./app/router');
+const { NotFoundController, } = require('./app/controller/notFoundController');
 
 const app = express();
 app.use(express.json());
 
-app.use(`/user`, userRouter);
-app.use(`/create`, createRouter);
-app.use(`/read`, readRouter);
-app.use(`/register`, registerRouter);
-app.use(`/update`, updateRouter);
-app.use(`/delete`, deleteRouter);
+app.use(`/address`, addressRouter);
+app.use(`/coupon`, couponRouter);
+app.use(`/listing`, listingRouter);
+app.use(`/order`, orderRouter);
+app.use(`/promo`, promoRouter);
+app.use(`/review`, reviewRouter);
 app.use(`/upload`, uploadRouter);
+app.use(`/user`, userRouter);
 
 app.all(`*`, NotFoundController);
 app.use(handleError);

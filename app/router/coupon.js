@@ -11,7 +11,7 @@ const { createCouponSchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const couponRouter = Router();
 
-couponRouter.put(`/update/:id`, checkToken,
+couponRouter.put(`/:id`, checkToken,
     validateBody(createCouponSchema),
     updateCoupon);
 
@@ -19,9 +19,11 @@ couponRouter.post(`/`, checkToken,
     validateBody(createCouponSchema),
     createCoupon);
 
-couponRouter.delete(`/delete/:id`, checkToken, deleteCoupon);
-couponRouter.get(`/read/:id`, readCoupon);
-couponRouter.get(`/read`, readAllCoupons);
+couponRouter.delete(`/:id`, checkToken, deleteCoupon);
+couponRouter.get(`/:id`, readCoupon);
+couponRouter.get(`/`, readAllCoupons);
 
 
-module.exports = couponRouter;
+module.exports = {
+    couponRouter,
+};

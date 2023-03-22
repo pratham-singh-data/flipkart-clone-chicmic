@@ -11,18 +11,18 @@ const { updateReviewSchema, registerReviewSchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const reviewRouter = Router();
 
-reviewRouter.delete(`/review/:id`, checkToken, deleteReview);
+reviewRouter.delete(`/:id`, checkToken, deleteReview);
 
-reviewRouter.put(`/review/:id`, checkToken,
+reviewRouter.put(`/:id`, checkToken,
     validateBody(updateReviewSchema),
     updateReview);
 
-reviewRouter.post(`/review`, checkToken,
+reviewRouter.post(`/`, checkToken,
     validateBody(registerReviewSchema),
     registerReview);
 
-reviewRouter.get(`/reviews/:id`, readReviews);
-reviewRouter.get(`/averageRating/:id`, readAverageRating);
+reviewRouter.get(`/:id`, readReviews);
+reviewRouter.get(`/:id/averageRating`, readAverageRating);
 
 module.exports = {
     reviewRouter,

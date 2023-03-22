@@ -14,22 +14,22 @@ const { createPromoSchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const promoRouter = Router();
 
-promoRouter.get(`/promo/random`, readRandomPromo);
-promoRouter.get(`/promo/:id`, readPromo);
-promoRouter.get(`/promos`, readAllPromos);
-promoRouter.delete(`/promo/:id`, checkToken, deletePromo);
+promoRouter.get(`/random`, readRandomPromo);
+promoRouter.get(`/:id`, readPromo);
+promoRouter.get(`/`, readAllPromos);
+promoRouter.delete(`/:id`, checkToken, deletePromo);
 
-promoRouter.put(`/promo/:id`, checkToken,
+promoRouter.put(`/:id`, checkToken,
     validateBody(createPromoSchema),
     updatePromo);
 
-promoRouter.post(`/promo`, checkToken,
+promoRouter.post(`/`, checkToken,
     validateBody(createPromoSchema),
     createPromo);
 
-promoRouter.patch(`/promoClick/:id`, registerPromoClick);
+promoRouter.patch(`/click/:id`, registerPromoClick);
 
-promoRouter.patch(`/promoView/:id`, registerPromoView);
+promoRouter.patch(`/view/:id`, registerPromoView);
 
 module.exports = {
     promoRouter,

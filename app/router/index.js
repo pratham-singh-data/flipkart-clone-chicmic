@@ -1,17 +1,19 @@
-const userRouter = require(`./user`);
-const createRouter = require(`./create`);
-const readRouter = require(`./read`);
-const registerRouter = require(`./register`);
-const updateRouter = require(`./update`);
-const deleteRouter = require(`./delete`);
-const uploadRouter = require(`./upload`);
+const { addressRouter, } = require(`./address`);
+const { couponRouter, } = require(`./coupon`);
+const { listingRouter, } = require(`./listing`);
+const { orderRouter, } = require(`./order`);
+const { promoRouter, } = require(`./promo`);
+const { reviewRouter, } = require(`./review`);
+const { uploadRouter, } = require(`./upload`);
+const { userRouter, } = require(`./user`);
 
 module.exports = {
-    userRouter,
-    createRouter,
-    readRouter,
-    registerRouter,
-    updateRouter,
-    deleteRouter,
+    addressRouter,
+    couponRouter,
+    listingRouter,
+    orderRouter,
+    promoRouter,
+    reviewRouter,
     uploadRouter,
+    userRouter,
 };

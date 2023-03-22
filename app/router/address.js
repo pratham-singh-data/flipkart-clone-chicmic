@@ -19,9 +19,9 @@ addressRouter.put(`/:id`, checkToken,
     validateBody(registerAddressSchema),
     updateAddress);
 
-addressRouter.get(`/addresses`, checkToken, readAllAddresses);
-addressRouter.get(`/address/:id`, checkToken, readAddress);
-addressRouter.delete(`/address/:id`, checkToken, deleteAddress);
+addressRouter.get(`/`, checkToken, readAllAddresses);
+addressRouter.get(`/:id`, checkToken, readAddress);
+addressRouter.delete(`/:id`, checkToken, deleteAddress);
 
 module.exports = {
     addressRouter,

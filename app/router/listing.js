@@ -12,14 +12,14 @@ const { createListingSchema, createCategorySchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const listingRouter = Router();
 
-listingRouter.get(`/read`, readAllListings);
-listingRouter.get(`/read/:id`, readListing);
+listingRouter.get(`/`, readAllListings);
+listingRouter.get(`/:id`, readListing);
 
 listingRouter.post(`/`, checkToken,
     validateBody(createListingSchema),
     createListing);
 
-listingRouter.delete(`/delete/:id`, checkToken, deleteListing);
+listingRouter.delete(`/:id`, checkToken, deleteListing);
 
 listingRouter.get(`/categories`, readCategories);
 
@@ -27,4 +27,6 @@ listingRouter.post(`/category`, checkToken,
     validateBody(createCategorySchema),
     createCategory);
 
-module.exports = listingRouter;
+module.exports = {
+    listingRouter,
+};
