@@ -4,7 +4,8 @@ const { readOrder,
     registerDelivery,
     addToWishlist,
     addToCart,
-    deleteOrder, } = require('../controller/orderController');
+    deleteOrder,
+    removeFromWishlist, } = require('../controller/orderController');
 const { checkToken, } = require('../middleware/checkToken');
 const { validateBody, } = require('../middleware/validateBody');
 const { addToCartSchema, } = require('../validator');
@@ -21,6 +22,7 @@ orderRouter.patch(`/addToCart`, checkToken,
     addToCart);
 
 orderRouter.patch(`/addToWishlist/:id`, checkToken, addToWishlist);
+orderRouter.patch(`/removeFromWishlist/:id`, checkToken, removeFromWishlist);
 
 orderRouter.delete(`/:id`, checkToken, deleteOrder);
 

@@ -22,6 +22,7 @@ module.exports = {
     ItemOutOfStock: `Item out of stock.`,
     ItemAddedToCart: `Item added to cart.`,
     ItemAddedToWishlist: `Item added to wishlist.`,
+    ItemRemovedFromWishlist: `Item removed from wishlist.`,
     CouponDoesNotApply: `This coupon does not apply to this listing.`,
     CouponExpired: `This coupon has expired.`,
     OrderAlreadyDelivered: `This order has already been delivered.`,

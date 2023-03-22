@@ -15,7 +15,8 @@ const { ItemAddedToWishlist,
     OrderAlreadyDelivered,
     NonExistentOrder,
     OrderDoesNotBelong,
-    DataSuccessfullyDeleted, } = require('../util/messages');
+    DataSuccessfullyDeleted,
+    ItemRemovedFromWishlist, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const querystring = require(`querystring`);
 const { deleteFromOrdersById,
@@ -74,6 +75,46 @@ async function addToWishlist(req, res, next) {
         localResponder({
             statusCode: 400,
             message: ItemAddedToWishlist,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
+}
+
+/** Remove the listing id from wishlisy
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @param {Function} next Express next function
+ */
+async function removeFromWishlist(req, res, next) {
+    const localResponder = generateLocalSendResponse(res);
+    const idToRemove = req.params.id;
+
+    // just in case the token expired between calls
+    let id;
+
+    try {
+        ({ id, } = verify(req.headers.token, SECRET_KEY));
+    } catch (err) {
+        localResponder({
+            statusCode: 403,
+            message: CredentialsCouldNotBeVerified,
+        });
+
+        return;
+    }
+
+    try {
+        // update the database
+        await updateUsersById(id, {
+            $pull: {
+                wishlist: idToRemove,
+            },
+        });
+
+        localResponder({
+            statusCode: 400,
+            message: ItemRemovedFromWishlist,
         });
     } catch (e) {
         next(new Error(e.message));
@@ -416,6 +457,7 @@ async function deleteOrder(req, res, next) {
 
 module.exports = {
     addToWishlist,
+    removeFromWishlist,
     addToCart,
     registerDelivery,
     readAllOrders,

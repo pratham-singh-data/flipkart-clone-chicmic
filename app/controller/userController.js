@@ -228,7 +228,7 @@ async function checkout(req, res, next) {
             return;
         }
 
-        const savedData = saveDocumentInOrders({
+        const savedData = await saveDocumentInOrders({
             buyer: id,
             items: userData.cart,
             cost: paymentRequired,
