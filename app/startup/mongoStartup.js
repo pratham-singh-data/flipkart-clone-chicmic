@@ -5,7 +5,7 @@ const { MongoURL, } = require('../../config');
  */
 async function mongoConnect() {
     await mongoose.connect(MongoURL);
-    console.log(`Successfully connected to mongoose at ${MongoURL}`);
+    console.log(`Successfully connected to MongoDB at ${MongoURL}`);
 }
 
 module.exports = mongoConnect;
