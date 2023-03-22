@@ -1,4 +1,5 @@
 const { Router, static, } = require(`express`);
+const { IMAGEDATABASEURL, } = require('../../config');
 const { uploadImageController, } = require('../controller/uploadController');
 const { sendResponse, } = require('../helper/responder');
 const { checkToken, } = require('../middleware');
@@ -6,7 +7,7 @@ const { checkToken, } = require('../middleware');
 // eslint-disable-next-line new-cap
 const uploadRouter = Router();
 
-uploadRouter.use(`/static`, static(`./database`));
+uploadRouter.use(`/image`, static(IMAGEDATABASEURL));
 
 // empty callback added to prevent an error due to setting response twice
 uploadRouter.post(`/image`, checkToken, uploadImageController(`file`),
@@ -17,7 +18,7 @@ uploadRouter.post(`/image`, checkToken, uploadImageController(`file`),
 
         sendResponse(res, {
             statusCode: 200,
-            message: req.file.path,
+            message: `${req.baseUrl}/image/${req.file.filename}`,
         });
     });
 

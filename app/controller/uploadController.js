@@ -9,7 +9,10 @@ const storage = multer.diskStorage({
         cb(undefined, IMAGEDATABASEURL);
     },
     filename: function(req, file, cb) {
-        const fileName = uuid.v4();
+        const fileExtension = file.originalname.
+            slice(file.originalname.lastIndexOf(`.`));
+
+        const fileName = `${uuid.v4()}${fileExtension}`;
 
         cb(undefined, fileName);
     },
