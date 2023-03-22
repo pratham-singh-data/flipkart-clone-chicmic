@@ -4,6 +4,7 @@ const { generateLocalSendResponse, } = require('../helper/responder');
 const { AddressModel, } = require('../models');
 const { deleteFromAdressesById, } = require('../service/deleteByIdService');
 const { findFromAdressesById, } = require('../service/findByIdService');
+const { updateAdressesById, } = require('../service/updateByIdService');
 const { DataSuccessfullyUpdated,
     AddressDoesNotBelong,
     NonExistentAddress,
@@ -59,11 +60,9 @@ async function updateAddress(req, res, next) {
             return;
         }
 
-        await AddressModel.updateOne({
-            _id: idToUpdate,
-        }, {
+        await updateAdressesById(idToUpdate, {
             $set: body,
-        }).exec(),
+        });
 
         // update database
         localResponder({

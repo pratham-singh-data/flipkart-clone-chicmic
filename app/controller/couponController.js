@@ -6,6 +6,7 @@ const { retrieveAndValidateUser, } =
 const { ListingModel, CouponModel, } = require('../models');
 const { deleteFromCouponsById, } = require('../service/deleteByIdService');
 const { findFromCouponsById, } = require('../service/findByIdService');
+const { updateCouponsById, } = require('../service/updateByIdService');
 const { CredentialsCouldNotBeVerified,
     InvalidListingsDetected,
     CouponCodeRegistered,
@@ -165,11 +166,9 @@ async function updateCoupon(req, res, next) {
         }
 
         // save to database
-        await CouponModel.updateOne({
-            _id: idToUpdate,
-        }, {
+        await updateCouponsById(idToUpdate, {
             $set: body,
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,

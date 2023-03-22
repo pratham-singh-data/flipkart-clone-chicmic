@@ -7,11 +7,12 @@ const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
 const { TokenModel,
     UserModel,
-    OrderModel,
-    ListingModel, } = require('../models');
+    OrderModel, } = require('../models');
 const { deleteFromUsersById, } = require('../service/deleteByIdService');
 const { findFromListingsById,
     findFromCouponsById, } = require('../service/findByIdService');
+const { updateUsersById,
+    updateListingsById, } = require('../service/updateByIdService');
 const { SuccessfulLogin,
     CredentialsCouldNotBeVerified,
     DataSuccessfullyCreated,
@@ -192,13 +193,11 @@ async function checkout(req, res, next) {
 
             paymentRequired += listingData.price;
 
-            await ListingModel.updateOne({
-                _id: item.id,
-            }, {
+            await updateListingsById(item.id, {
                 $set: {
                     stock: listingData.stock,
                 },
-            }).exec();
+            });
 
             index++;
         }
@@ -217,13 +216,11 @@ async function checkout(req, res, next) {
             items: userData.cart,
         }).save();
 
-        await UserModel.updateOne({
-            _id: id,
-        }, {
+        await updateUsersById(id, {
             $set: {
                 cart: [],
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 201,
@@ -285,14 +282,12 @@ async function updateUser(req, res, next) {
             return;
         }
 
-        await UserModel.updateOne({
-            _id: id,
-        }, {
+        await updateUsersById(id, {
             $set: {
                 ...body,
                 password: hashPassword(body.password),
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,

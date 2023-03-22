@@ -7,6 +7,7 @@ const { retrieveAndValidateUser, } =
 const { PromoModel, } = require('../models');
 const { deleteFromPromoById, } = require('../service/deleteByIdService');
 const { findFromPromoById, } = require('../service/findByIdService');
+const { updatePromoById, } = require('../service/updateByIdService');
 const { getWeightedRandom, } = require('../util/getWeightedRandom');
 const { DataSuccessfullyUpdated,
     PromoDoesNotBelong,
@@ -63,11 +64,9 @@ async function updatePromo(req, res, next) {
             return;
         }
 
-        await PromoModel.updateOne({
-            _id: idToUpdate,
-        }, {
+        await updatePromoById(idToUpdate, {
             $set: body,
-        }).exec(),
+        });
 
         // update database
         localResponder({
@@ -102,13 +101,11 @@ async function registerPromoClick(req, res, next) {
         }
 
         // update database
-        await PromoModel.updateOne({
-            _id: id,
-        }, {
+        await updatePromoById(id, {
             $set: {
                 clicks: data.clicks + 1,
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,
@@ -142,13 +139,11 @@ async function registerPromoView(req, res, next) {
         }
 
         // update database
-        await PromoModel.updateOne({
-            _id: id,
-        }, {
+        await updatePromoById(id, {
             $set: {
                 views: data.views + 1,
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,

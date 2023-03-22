@@ -14,6 +14,7 @@ const { Types: { ObjectId, }, } = require(`mongoose`);
 const { deleteFromReviewsById, } = require('../service/deleteByIdService');
 const { findFromReviewsById,
     findFromListingsById, } = require('../service/findByIdService');
+const { updateReviewsById, } = require('../service/updateByIdService');
 
 /** Update review of given id in database
  * @param {Request} req Express request object
@@ -62,9 +63,7 @@ async function updateReview(req, res, next) {
             return;
         }
 
-        await ReviewModel.updateOne({
-            _id: idToUpdate,
-        }, {
+        await updateReviewsById(idToUpdate, {
             $set: body,
         });
 

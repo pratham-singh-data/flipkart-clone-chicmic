@@ -3,8 +3,7 @@ const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { retrieveAndValidateUser, } =
     require('../helper/retrieveAndValidateUser');
-const { UserModel,
-    OrderModel, } = require('../models');
+const { OrderModel, } = require('../models');
 const { ItemAddedToWishlist,
     NonExistentListing,
     CredentialsCouldNotBeVerified,
@@ -24,6 +23,8 @@ const { deleteFromOrdersById, } = require('../service/deleteByIdService');
 const { findFromListingsById,
     findFromCouponsById,
     findFromOrdersById, } = require('../service/findByIdService');
+const { updateOrdersById,
+    updateUsersById, } = require('../service/updateByIdService');
 
 /** Adds the listing id to wishlisy
  * @param {Request} req Express request object
@@ -64,13 +65,11 @@ async function addToWishlist(req, res, next) {
         // out of stock items may be added to wishlist
 
         // register in database
-        await UserModel.updateOne({
-            _id: id,
-        }, {
+        await updateUsersById(id, {
             $addToSet: {
                 wishlist: idToAdd,
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 400,
@@ -165,13 +164,11 @@ async function addToCart(req, res, next) {
         }
 
         // register in database; stock will only reduce on checkout
-        await UserModel.updateOne({
-            _id: id,
-        }, {
+        await updateUsersById(id, {
             $push: {
                 cart: body,
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 400,
@@ -241,14 +238,12 @@ async function registerDelivery(req, res, next) {
         }
 
         // update order
-        await OrderModel.updateOne({
-            _id: orderId,
-        }, {
+        await updateOrdersById(orderId, {
             $set: {
                 deliveryTime: Date.now(),
                 deliveryAgent: id,
             },
-        }).exec();
+        });
 
         localResponder({
             statusCode: 200,
