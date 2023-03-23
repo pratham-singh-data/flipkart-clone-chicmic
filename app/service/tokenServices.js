@@ -1,5 +1,14 @@
 const { TokenModel, } = require('../models');
-const { saveDocument, findOne, } = require('./operators/serviceOperators');
+const { saveDocument,
+    findOne,
+    deleteMany, } = require('./operators/serviceOperators');
+
+/** Deletes multiple elements from tokens model based on the given query
+ * @param {Object} deleteFilter filter by which to delete data
+ */
+async function deleteManyFromTokens(deleteFilter) {
+    await deleteMany(TokenModel, deleteFilter);
+}
 
 /** executes searchQuery on tokens collection
  * @param {Object} searchQuery search query to execute on collection
@@ -19,6 +28,7 @@ async function saveDocumentInTokens(doc) {
 }
 
 module.exports = {
+    deleteManyFromTokens,
     findOneFromTokens,
     saveDocumentInTokens,
 };

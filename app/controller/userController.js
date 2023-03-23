@@ -15,7 +15,9 @@ const { deleteFromUsersById,
     saveDocumentInTokens,
     saveDocumentInOrders,
     updateUsersById,
-    updateListingsById, } = require('../service');
+    updateListingsById,
+    findFromUsersById,
+    deleteManyFromTokens, } = require('../service');
 const { TOKENTYPES, } = require('../util/constants');
 const { SUCCESSFULLOGIN,
     CREDENTIALSCOULDNOTBEVERIFIED,
@@ -24,7 +26,8 @@ const { SUCCESSFULLOGIN,
     PAYMENTNOTCOMPLETED,
     EMPTYCART,
     DATASUCCESSFULLYUPDATED,
-    DATASUCCESSFULLYDELETED, } = require('../util/messages');
+    DATASUCCESSFULLYDELETED,
+    PHONENUMBERINUSE, } = require('../util/messages');
 
 /** Signs up a new user
  * @param {Request} req Express request object
@@ -273,44 +276,97 @@ async function updateUser(req, res, next) {
     const body = req.body;
 
     try {
-        // check that both phone number and email are unique
-        if (await findOneFromUsers({
-            $or: [
-                {
-                    phoneNumber: body.phoneNumber,
-                },
+        // get data of current user
+        const userData = await findFromUsersById(id);
 
-                {
-                    email: body.email,
-                },
-            ],
+        // check if user is trying to update email
+        if (userData.email !== body.email) {
+            // check that both phone number and email are unique
+            if (await findOneFromUsers({
+                $or: [
+                    {
+                        phoneNumber: body.phoneNumber,
+                    },
 
-            _id: {
-                $ne: id,
-            },
-        })) {
-            localResponder({
-                statusCode: 403,
-                message: EMAILORPHONENUMBERINUSE,
+                    {
+                        email: body.email,
+                    },
+                ],
+
+                _id: {
+                    $ne: id,
+                },
+            })) {
+                localResponder({
+                    statusCode: 403,
+                    message: EMAILORPHONENUMBERINUSE,
+                });
+
+                return;
+            }
+
+            // delete all tokens assignede to this user
+            await deleteManyFromTokens({
+                user: id,
             });
 
-            return;
+            // update user data but also mark email as not validated
+            await updateUsersById(id, {
+                $set: {
+                    ...body,
+                    emailValidated: false,
+                    password: hashPassword(body.password),
+                },
+            });
+
+            // create and send a temp token
+            const token = sign({
+                id,
+            }, SECRET_KEY, {
+                expiresIn: TEMPTOKENEXPIRYTIME,
+            });
+
+            await saveDocumentInTokens({
+                user: id,
+                tokenType: TOKENTYPES.TEMP,
+                token,
+            });
+
+            localResponder({
+                statusCode: 200,
+                message: DATASUCCESSFULLYUPDATED,
+                token,
+            });
+        } else {
+            // check only phone number is unique
+            if (await findOneFromUsers({
+                phoneNumber: body.phoneNumber,
+                _id: {
+                    $ne: id,
+                },
+            })) {
+                localResponder({
+                    statusCode: 403,
+                    message: PHONENUMBERINUSE,
+                });
+
+                return;
+            }
+
+            await updateUsersById(id, {
+                $set: {
+                    ...body,
+                    password: hashPassword(body.password),
+                },
+            });
+
+            localResponder({
+                statusCode: 200,
+                message: DATASUCCESSFULLYUPDATED,
+            });
         }
 
-        // email can never be updated
-        delete body.email;
-
-        await updateUsersById(id, {
-            $set: {
-                ...body,
-                password: hashPassword(body.password),
-            },
-        });
-
-        localResponder({
-            statusCode: 200,
-            message: DATASUCCESSFULLYUPDATED,
-        });
+        // will never reach here
     } catch (e) {
         next(new Error(e.message));
     }
@@ -430,7 +486,7 @@ async function loginUserAndValidate(req, res, next) {
         }
 
         // update document
-        updateUsersById(id, {
+        await updateUsersById(id, {
             $set: {
                 emailValidated: true,
             },

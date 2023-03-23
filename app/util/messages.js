@@ -39,4 +39,5 @@ module.exports = {
     PAYMENTNOTCOMPLETED: `Payment not completed`,
     NONEXISTENTENDPOINT: `This endpoint does not exist.`,
     INVALIDTOKENTYPE: `Invalid token type`,
+    PHONENUMBERINUSE: `Phone number is already in use.`,
 };

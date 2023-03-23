@@ -17,6 +17,14 @@ async function deleteById(model, id) {
     }).exec();
 }
 
+/** Deletes elements from given model by given query
+ * @param {Model} model Mongoose compiled model
+ * @param {Object} deleteFilter deleteFilter to run on model
+ */
+async function deleteMany(model, deleteFilter) {
+    await model.deleteMany(deleteFilter).exec();
+}
+
 /** finds id element from given model
  * @param {Model} model Mongoose compiled model
  * @param {String} id id of element to find
@@ -69,6 +77,7 @@ async function updateById(model, id, updateQuery) {
 module.exports = {
     runAggregate,
     deleteById,
+    deleteMany,
     findById,
     findMany,
     findOne,
