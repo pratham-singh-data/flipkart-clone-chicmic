@@ -18,4 +18,7 @@ module.exports = {
         `image/jpeg`,
         `image/webp`,
         `image/gif`, ],
+    TOKENTYPES: {
+        LOGIN: 0,
+    },
 };

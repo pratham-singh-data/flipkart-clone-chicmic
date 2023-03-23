@@ -14,6 +14,7 @@ const { deleteFromUsersById,
     saveDocumentInOrders,
     updateUsersById,
     updateListingsById, } = require('../service');
+const { TOKENTYPES, } = require('../util/constants');
 const { SUCCESSFULLOGIN,
     CREDENTIALSCOULDNOTBEVERIFIED,
     DATASUCCESSFULLYCREATED,
@@ -68,6 +69,7 @@ async function signupUser(req, res, next) {
 
         await saveDocumentInTokens({
             user: savedData._id,
+            type: TOKENTYPES.LOGIN,
             token,
         });
 
@@ -115,6 +117,7 @@ async function loginUser(req, res, next) {
 
         await saveDocumentInTokens({
             user: userData._id,
+            type: TOKENTYPES.LOGIN,
             token,
         });
 

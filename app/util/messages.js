@@ -38,4 +38,5 @@ module.exports = {
     EMPTYCART: `No items in cart`,
     PAYMENTNOTCOMPLETED: `Payment not completed`,
     NONEXISTENTENDPOINT: `This endpoint does not exist.`,
+    ONLYLOGINTOKENSALLOWED: `Only login tokens are allowed.`,
 };

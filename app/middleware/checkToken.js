@@ -1,9 +1,11 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { findFromUsersById, } = require('../service');
+const { findFromUsersById, findOneFromTokens, } = require('../service');
+const { TOKENTYPES, } = require('../util/constants');
 const { VALIDTOKENNEEDED,
-    CREDENTIALSCOULDNOTBEVERIFIED, } = require('../util/messages');
+    CREDENTIALSCOULDNOTBEVERIFIED,
+    ONLYLOGINTOKENSALLOWED, } = require('../util/messages');
 
 /** Checks token send by request
  * @param {Request} req Express request object
@@ -18,6 +20,30 @@ async function checkToken(req, res, next) {
         localResponder({
             statusCode: 403,
             message: VALIDTOKENNEEDED,
+        });
+
+        return;
+    }
+
+    const tokenData = await findOneFromTokens({
+        token: req.headers.token,
+    });
+
+    // check that token recieved was from your system
+    if (! tokenData) {
+        localResponder({
+            statusCode: 403,
+            message: VALIDTOKENNEEDED,
+        });
+
+        return;
+    }
+
+    // check that given is a login token
+    if (tokenData.type !== TOKENTYPES.LOGIN) {
+        localResponder({
+            statusCode: 403,
+            message: ONLYLOGINTOKENSALLOWED,
         });
 
         return;
