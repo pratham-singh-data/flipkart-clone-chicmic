@@ -6,6 +6,11 @@ const { sendResponse, } = require('../helper/responder');
  * @return {Function} Middleware function that validates via given schema
  */
 function validateBody(schema) {
+    /** Middleware to validate body
+     * @param {Request} req Express request object
+     * @param {Response} res Express response object
+     * @param {Function} next Express next function
+     */
     return (req, res, next) => {
         // validate and update request body
         try {

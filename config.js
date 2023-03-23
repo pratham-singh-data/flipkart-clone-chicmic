@@ -3,6 +3,7 @@ module.exports = {
     SECRET_KEY: process.env.SECRET_KEY,
     MONGOURL: process.env.MONGOURL,
     TOKENEXPIRYTIME: 31536000, // 24 * 60 * 60 * 365; Seconds in a year
+    TEMPTOKENEXPIRYTIME: 1800, // 30 * 60; 30 minutes
     HITLOGFILEURL: `./database/logs/hits.log`,
     ERRORLOGDIRECTORYURL: `./database/logs/errors`,
     IMAGEDATABASEURL: `./database/images`,

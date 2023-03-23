@@ -1,5 +1,7 @@
 const { sign, verify, } = require('jsonwebtoken');
-const { TOKENEXPIRYTIME, SECRET_KEY, } = require('../../config');
+const { TOKENEXPIRYTIME,
+    SECRET_KEY,
+    TEMPTOKENEXPIRYTIME, } = require('../../config');
 const { paymentGateway, } = require('../../emulators/paymentGateway');
 const { hashPassword, } = require('../helper/hashPassword');
 const { generateLocalSendResponse, } = require('../helper/responder');
@@ -58,18 +60,21 @@ async function signupUser(req, res, next) {
             return;
         }
 
+        // generate data
+        body.emailValidated = false;
+
         // save in database
         const savedData = await saveDocumentInUsers(body);
 
         const token = sign({
             id: savedData._id,
         }, SECRET_KEY, {
-            expiresIn: TOKENEXPIRYTIME,
+            expiresIn: TEMPTOKENEXPIRYTIME,
         });
 
         await saveDocumentInTokens({
             user: savedData._id,
-            type: TOKENTYPES.TEMP,
+            tokenType: TOKENTYPES.TEMP,
             token,
         });
 
@@ -96,6 +101,7 @@ async function loginUser(req, res, next) {
     const body = req.body;
 
     body.password = hashPassword(body.password);
+    body.emailValidated = true;
 
     try {
         // get user data
@@ -117,7 +123,7 @@ async function loginUser(req, res, next) {
 
         await saveDocumentInTokens({
             user: userData._id,
-            type: TOKENTYPES.LOGIN,
+            tokenType: TOKENTYPES.LOGIN,
             token,
         });
 
@@ -375,6 +381,80 @@ async function readUser(req, res, next) {
     }
 }
 
+/** Logs in an existing user and validates their email
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @param {Function} next Express next function
+ */
+async function loginUserAndValidate(req, res, next) {
+    const localResponder = generateLocalSendResponse(res);
+    const body = req.body;
+    body.password = hashPassword(body.password);
+
+    // get id from token
+    let id;
+
+    try {
+        ({ id, } = verify(req.headers.token, SECRET_KEY));
+    } catch (err) {
+        localResponder({
+            statusCode: 403,
+            message: CREDENTIALSCOULDNOTBEVERIFIED,
+        });
+
+        return;
+    }
+
+    try {
+        // get user data
+        const userData = await findOneFromUsers(body);
+
+        if (! userData) {
+            localResponder({
+                statusCode: 400,
+                message: CREDENTIALSCOULDNOTBEVERIFIED,
+            });
+            return;
+        }
+
+        // confirm that data in userData and token belong to the same user
+        if (String(userData._id) !== id) {
+            localResponder({
+                statusCode: 400,
+                message: CREDENTIALSCOULDNOTBEVERIFIED,
+            });
+            return;
+        }
+
+        // update document
+        updateUsersById(id, {
+            $set: {
+                emailValidated: true,
+            },
+        });
+
+        const token = sign({
+            id: userData._id,
+        }, SECRET_KEY, {
+            expiresIn: TOKENEXPIRYTIME,
+        });
+
+        await saveDocumentInTokens({
+            user: userData._id,
+            tokenType: TOKENTYPES.LOGIN,
+            token,
+        });
+
+        localResponder({
+            statusCode: 200,
+            message: SUCCESSFULLOGIN,
+            token,
+        });
+    } catch (e) {
+        next(new Error(e.message));
+    }
+}
+
 module.exports = {
     loginUser,
     signupUser,
@@ -382,4 +462,5 @@ module.exports = {
     updateUser,
     deleteUser,
     readUser,
+    loginUserAndValidate,
 };

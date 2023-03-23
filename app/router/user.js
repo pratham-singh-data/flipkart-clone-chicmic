@@ -4,7 +4,8 @@ const { loginUser,
     checkout,
     updateUser,
     deleteUser,
-    readUser, } = require('../controller/userController');
+    readUser,
+    loginUserAndValidate, } = require('../controller/userController');
 const { checkToken, validateBody, } = require('../middleware');
 const { TOKENTYPES, } = require('../util/constants');
 const { signupSchema,
@@ -21,6 +22,10 @@ userRouter.put(`/`, checkToken(TOKENTYPES.LOGIN),
     updateUser);
 userRouter.delete(`/`, checkToken(TOKENTYPES.LOGIN), deleteUser);
 userRouter.get(`/`, checkToken(TOKENTYPES.LOGIN), readUser);
+userRouter.post(`/validate`,
+    checkToken(TOKENTYPES.TEMP),
+    validateBody(loginSchema),
+    loginUserAndValidate);
 
 module.exports = {
     userRouter,
