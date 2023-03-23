@@ -2,6 +2,7 @@ const addressServices = require(`./addressServices`);
 const categoryServices = require(`./categoryServices`);
 const couponServices = require(`./couponServices`);
 const listingServices = require(`./listingServices`);
+const logServices = require(`./logServices`);
 const orderServices = require(`./orderServices`);
 const promoServices = require(`./promoServices`);
 const reviewServices = require(`./reviewServices`);
@@ -18,4 +19,5 @@ module.exports = {
     ...reviewServices,
     ...tokenServices,
     ...userServices,
+    ...logServices,
 };
