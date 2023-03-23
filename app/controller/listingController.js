@@ -30,18 +30,16 @@ const { deleteFromListingsById,
 async function readAllListings(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
-    const query = req.query;
-    const skip = query.skip ?? 0;
-    const limit = query.limit ?? 10;
+    const { skip, limit, category, } = req.query;
 
     try {
         const pipeline = [];
 
         // filter category
-        if (query.category) {
+        if (category) {
             pipeline.push({
                 $match: {
-                    category: new ObjectId(query.category),
+                    category: new ObjectId(category),
                 },
             });
         }
@@ -49,11 +47,11 @@ async function readAllListings(req, res, next) {
         // pagination
         pipeline.push(...[
             {
-                $skip: parseInt(skip),
+                $skip: skip,
             },
 
             {
-                $limit: parseInt(limit),
+                $limit: limit,
             },
         ]);
 

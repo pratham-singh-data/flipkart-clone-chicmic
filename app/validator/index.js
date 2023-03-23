@@ -8,6 +8,8 @@ const { addToCartSchema, } = require(`./addToCartSchema`);
 const { registerAddressSchema, } = require(`./registerAdddressSchema`);
 const { registerReviewSchema, } = require(`./registerReviewSchema`);
 const { updateReviewSchema, } = require(`./updateReviewSchema`);
+const { listingQuerySchema, } = require(`./listingQuerySchema`);
+const { orderQuerySchema, } = require(`./orderQuerySchema`);
 
 module.exports = {
     signupSchema,
@@ -20,4 +22,6 @@ module.exports = {
     registerAddressSchema,
     registerReviewSchema,
     updateReviewSchema,
+    listingQuerySchema,
+    orderQuerySchema,
 };

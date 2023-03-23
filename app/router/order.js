@@ -7,14 +7,16 @@ const { readOrder,
     deleteOrder,
     removeFromWishlist,
     removeFromCart, } = require('../controller/orderController');
-const { checkToken, validateBody, } = require('../middleware');
-const { addToCartSchema, } = require('../validator');
+const { checkToken, validateBody, validateQuery, } = require('../middleware');
+const { addToCartSchema, orderQuerySchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap
 const orderRouter = Router();
 
 orderRouter.get(`/:id`, readOrder);
-orderRouter.get(`/`, checkToken, readAllOrders);
+orderRouter.get(`/`, checkToken,
+    validateQuery(orderQuerySchema),
+    readAllOrders);
 orderRouter.patch(`/delivery/:id`, checkToken, registerDelivery);
 
 orderRouter.patch(`/addToCart`, checkToken,

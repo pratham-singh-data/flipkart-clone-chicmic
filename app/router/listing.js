@@ -6,13 +6,15 @@ const { readAllListings,
     readCategories,
     createCategory,
     updateListing, } = require('../controller/listingController');
-const { checkToken, validateBody, } = require('../middleware');
-const { createListingSchema, createCategorySchema, } = require('../validator');
+const { checkToken, validateBody, validateQuery, } = require('../middleware');
+const { createListingSchema,
+    createCategorySchema,
+    listingQuerySchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap
 const listingRouter = Router();
 
-listingRouter.get(`/`, readAllListings);
+listingRouter.get(`/`, validateQuery(listingQuerySchema), readAllListings);
 listingRouter.get(`/categories`, readCategories);
 listingRouter.get(`/:id`, readListing);
 

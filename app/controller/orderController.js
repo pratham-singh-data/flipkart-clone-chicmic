@@ -346,10 +346,7 @@ async function registerDelivery(req, res, next) {
 async function readAllOrders(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
-    const query = req.query;
-    const skip = Number(query.skip ?? 0);
-    const limit = Number(query.limit ?? 10);
-    const user = query.user;
+    const { skip, limit, user, } = req.query;
 
     // just in case the token expired between calls
     let id;
@@ -380,11 +377,11 @@ async function readAllOrders(req, res, next) {
         // pagination
         pipeline.push(...[
             {
-                $skip: parseInt(skip),
+                $skip: skip,
             },
 
             {
-                $limit: parseInt(limit),
+                $limit: limit,
             },
         ]);
 

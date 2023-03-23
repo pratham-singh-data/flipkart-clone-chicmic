@@ -1,15 +1,15 @@
 const Joi = require('joi');
 const { sendResponse, } = require('../helper/responder');
 
-/** validates body of request
+/** Validates query of request
  * @param {Object} schema Joi validation schema
- * @return {Function} Middleware function that validates via given schema
+ * @return {Function} Middleware t=function that validates via given schema
  */
-function validateBody(schema) {
+function validateQuery(schema) {
     return (req, res, next) => {
-        // validate and update request body
+        // validate and update request query
         try {
-            req.body = Joi.attempt(req.body, schema);
+            req.query = Joi.attempt(req.query, schema);
         } catch (err) {
             sendResponse(res, {
                 statusCode: 400,
@@ -25,5 +25,5 @@ function validateBody(schema) {
 }
 
 module.exports = {
-    validateBody,
+    validateQuery,
 };
