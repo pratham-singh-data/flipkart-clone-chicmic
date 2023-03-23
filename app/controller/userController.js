@@ -297,6 +297,9 @@ async function updateUser(req, res, next) {
             return;
         }
 
+        // email can never be updated
+        delete body.email;
+
         await updateUsersById(id, {
             $set: {
                 ...body,
