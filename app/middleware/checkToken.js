@@ -7,10 +7,10 @@ const { VALIDTOKENNEEDED,
     INVALIDTOKENTYPE, } = require('../util/messages');
 
 /** Returns a token checking middleware function
- * @param {Number} type type of token to validate
+ * @param {Array} types array of types of token to validate
  * @return {Function} token validation function
  */
-function checkToken(type) {
+function checkToken(...types) {
     /** Checks token send by request
      * @param {Request} req Express request object
      * @param {Response} res Express response object
@@ -44,7 +44,7 @@ function checkToken(type) {
         }
 
         // check that given is a login token
-        if (tokenData.tokenType !== type) {
+        if (! types.includes(tokenData.tokenType)) {
             localResponder({
                 statusCode: 403,
                 message: INVALIDTOKENTYPE,

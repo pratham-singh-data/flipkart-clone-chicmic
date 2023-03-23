@@ -305,25 +305,24 @@ async function updateUser(req, res, next) {
                 return;
             }
 
-            // delete all tokens assignede to this user
-            await deleteManyFromTokens({
-                user: id,
+            // create and send a temp token
+            const token = sign({
+                id,
+                email: body.email,
+                oldEmail: userData.email,
+            }, SECRET_KEY, {
+                expiresIn: TEMPTOKENEXPIRYTIME,
             });
+
+            // remove email from data being updated
+            delete body.email;
 
             // update user data but also mark email as not validated
             await updateUsersById(id, {
                 $set: {
                     ...body,
-                    emailValidated: false,
                     password: hashPassword(body.password),
                 },
-            });
-
-            // create and send a temp token
-            const token = sign({
-                id,
-            }, SECRET_KEY, {
-                expiresIn: TEMPTOKENEXPIRYTIME,
             });
 
             await saveDocumentInTokens({
@@ -452,9 +451,13 @@ async function loginUserAndValidate(req, res, next) {
 
     // get id from token
     let id;
+    let tokenEmail;
+    let oldEmail;
 
     try {
-        ({ id, } = verify(req.headers.token, SECRET_KEY));
+        ({ id,
+            email: tokenEmail,
+            oldEmail, } = verify(req.headers.token, SECRET_KEY));
     } catch (err) {
         localResponder({
             statusCode: 403,
@@ -466,9 +469,32 @@ async function loginUserAndValidate(req, res, next) {
 
     try {
         // get user data
-        const userData = await findOneFromUsers(body);
+        let userData;
+
+        if (! oldEmail) {
+            // not an update token
+            userData = await findOneFromUsers(body);
+        } else {
+            // update token
+            userData = await findOneFromUsers({
+                email: oldEmail,
+                password: body.password,
+            });
+        }
+
+        console.log(userData, oldEmail);
 
         if (! userData) {
+            localResponder({
+                statusCode: 400,
+                message: CREDENTIALSCOULDNOTBEVERIFIED,
+            });
+            return;
+        }
+
+        // if updation token then confirm that email
+        // in body is same as the email in token
+        if (body.email !== tokenEmail) {
             localResponder({
                 statusCode: 400,
                 message: CREDENTIALSCOULDNOTBEVERIFIED,
@@ -485,11 +511,17 @@ async function loginUserAndValidate(req, res, next) {
             return;
         }
 
+        const updateExpression = {
+            emailValidated: true,
+        };
+
+        if (tokenEmail) {
+            updateExpression.email = tokenEmail;
+        }
+
         // update document
         await updateUsersById(id, {
-            $set: {
-                emailValidated: true,
-            },
+            $set: updateExpression,
         });
 
         const token = sign({
@@ -498,11 +530,17 @@ async function loginUserAndValidate(req, res, next) {
             expiresIn: TOKENEXPIRYTIME,
         });
 
+        // delete all other tokens assignede to this user
+        await deleteManyFromTokens({
+            user: userData._id,
+        });
+
         await saveDocumentInTokens({
             user: userData._id,
             tokenType: TOKENTYPES.LOGIN,
             token,
         });
+
 
         localResponder({
             statusCode: 200,
