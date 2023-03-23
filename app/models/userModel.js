@@ -1,5 +1,5 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
-const { itemSchema, } = require('./itemSchema');
+const { itemSchema, } = require('./schemas/itemSchema');
 
 const userSchema = new Schema({
     firstName: {

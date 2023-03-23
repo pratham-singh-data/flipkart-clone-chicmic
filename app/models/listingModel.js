@@ -1,5 +1,5 @@
 const { Schema, model, Types: { ObjectId, }, } = require(`mongoose`);
-const { deliverySchema, } = require('./deliverySchema');
+const { deliverySchema, } = require('./schemas/deliverySchema');
 
 const listingSchema = new Schema({
     seller: {
