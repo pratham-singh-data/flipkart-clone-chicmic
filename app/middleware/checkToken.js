@@ -1,7 +1,7 @@
 const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
-const { findFromUsersById, } = require('../service/findByIdServices');
+const { findFromUsersById, } = require('../service');
 const { VALIDTOKENNEEDED,
     CREDENTIALSCOULDNOTBEVERIFIED, } = require('../util/messages');
 
