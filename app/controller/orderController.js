@@ -19,7 +19,6 @@ const { ITEMADDEDTOWISHLIST,
     ITEMREMOVEDFROMWISHLIST,
     ITEMREMOVEDFROMCART, } = require('../util/messages');
 const { Types: { ObjectId, }, } = require(`mongoose`);
-const querystring = require(`querystring`);
 const { deleteFromOrdersById,
     findFromListingsById,
     findFromCouponsById,
@@ -347,8 +346,7 @@ async function registerDelivery(req, res, next) {
 async function readAllOrders(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
-    const query = querystring.parse(req.originalUrl.slice(
-        req.originalUrl.indexOf(`orders?`) + 7), `&`, `=`);
+    const query = req.query;
     const skip = Number(query.skip ?? 0);
     const limit = Number(query.limit ?? 10);
     const user = query.user;

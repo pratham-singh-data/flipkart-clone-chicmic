@@ -1,5 +1,4 @@
 const { generateLocalSendResponse, } = require('../helper/responder');
-const querystring = require(`querystring`);
 const { Types: { ObjectId, }, } = require(`mongoose`);
 const { INVALIDCATEGORIESDETECTED,
     CREDENTIALSCOULDNOTBEVERIFIED,
@@ -31,8 +30,7 @@ const { deleteFromListingsById,
 async function readAllListings(req, res, next) {
     const localResponder = generateLocalSendResponse(res);
 
-    const query = querystring.parse(req.originalUrl.slice(
-        req.originalUrl.indexOf(`listings?`) + 9), `&`, `=`);
+    const query = req.query;
     const skip = query.skip ?? 0;
     const limit = query.limit ?? 10;
 
