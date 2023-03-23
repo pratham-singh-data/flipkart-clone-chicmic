@@ -494,7 +494,7 @@ async function loginUserAndValidate(req, res, next) {
 
         // if updation token then confirm that email
         // in body is same as the email in token
-        if (body.email !== tokenEmail) {
+        if (oldEmail && body.email !== tokenEmail) {
             localResponder({
                 statusCode: 400,
                 message: CREDENTIALSCOULDNOTBEVERIFIED,
