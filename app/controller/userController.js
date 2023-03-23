@@ -69,7 +69,7 @@ async function signupUser(req, res, next) {
 
         await saveDocumentInTokens({
             user: savedData._id,
-            type: TOKENTYPES.LOGIN,
+            type: TOKENTYPES.TEMP,
             token,
         });
 

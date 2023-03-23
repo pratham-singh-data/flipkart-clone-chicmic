@@ -12,7 +12,7 @@ const tokenSchema = new Schema({
     },
     tokenType: {
         type: Number,
-        default: TOKENTYPES.LOGIN,
+        default: TOKENTYPES.TEMP,
     },
 }, {
     timestamps: true,

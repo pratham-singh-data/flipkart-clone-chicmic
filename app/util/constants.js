@@ -20,5 +20,6 @@ module.exports = {
         `image/gif`, ],
     TOKENTYPES: {
         LOGIN: 0,
+        TEMP: 1,
     },
 };

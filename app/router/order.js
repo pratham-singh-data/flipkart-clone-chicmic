@@ -8,26 +8,35 @@ const { readOrder,
     removeFromWishlist,
     removeFromCart, } = require('../controller/orderController');
 const { checkToken, validateBody, validateQuery, } = require('../middleware');
+const { TOKENTYPES, } = require('../util/constants');
 const { addToCartSchema, orderQuerySchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap
 const orderRouter = Router();
 
 orderRouter.get(`/:id`, readOrder);
-orderRouter.get(`/`, checkToken,
+orderRouter.get(`/`, checkToken(TOKENTYPES.LOGIN),
     validateQuery(orderQuerySchema),
     readAllOrders);
-orderRouter.patch(`/delivery/:id`, checkToken, registerDelivery);
+orderRouter.patch(`/delivery/:id`,
+    checkToken(TOKENTYPES.LOGIN),
+    registerDelivery);
 
-orderRouter.patch(`/addToCart`, checkToken,
+orderRouter.patch(`/addToCart`, checkToken(TOKENTYPES.LOGIN),
     validateBody(addToCartSchema),
     addToCart);
 
-orderRouter.patch(`/addToWishlist/:id`, checkToken, addToWishlist);
-orderRouter.patch(`/removeFromWishlist/:id`, checkToken, removeFromWishlist);
-orderRouter.patch(`/removeFromCart/:id`, checkToken, removeFromCart);
+orderRouter.patch(`/addToWishlist/:id`,
+    checkToken(TOKENTYPES.LOGIN),
+    addToWishlist);
+orderRouter.patch(`/removeFromWishlist/:id`,
+    checkToken(TOKENTYPES.LOGIN),
+    removeFromWishlist);
+orderRouter.patch(`/removeFromCart/:id`,
+    checkToken(TOKENTYPES.LOGIN),
+    removeFromCart);
 
-orderRouter.delete(`/:id`, checkToken, deleteOrder);
+orderRouter.delete(`/:id`, checkToken(TOKENTYPES.LOGIN), deleteOrder);
 
 module.exports = {
     orderRouter,

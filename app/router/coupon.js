@@ -5,20 +5,21 @@ const { updateCoupon,
     readAllCoupons,
     deleteCoupon, } = require('../controller/couponController');
 const { validateBody, checkToken, } = require('../middleware');
+const { TOKENTYPES, } = require('../util/constants');
 const { createCouponSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap
 const couponRouter = Router();
 
-couponRouter.put(`/:id`, checkToken,
+couponRouter.put(`/:id`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createCouponSchema),
     updateCoupon);
 
-couponRouter.post(`/`, checkToken,
+couponRouter.post(`/`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createCouponSchema),
     createCoupon);
 
-couponRouter.delete(`/:id`, checkToken, deleteCoupon);
+couponRouter.delete(`/:id`, checkToken(TOKENTYPES.LOGIN), deleteCoupon);
 couponRouter.get(`/:id`, readCoupon);
 couponRouter.get(`/`, readAllCoupons);
 

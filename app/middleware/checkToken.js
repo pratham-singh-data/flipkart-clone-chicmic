@@ -2,80 +2,85 @@ const { verify, } = require('jsonwebtoken');
 const { SECRET_KEY, } = require('../../config');
 const { generateLocalSendResponse, } = require('../helper/responder');
 const { findFromUsersById, findOneFromTokens, } = require('../service');
-const { TOKENTYPES, } = require('../util/constants');
 const { VALIDTOKENNEEDED,
     CREDENTIALSCOULDNOTBEVERIFIED,
-    ONLYLOGINTOKENSALLOWED, } = require('../util/messages');
+    INVALIDTOKENTYPE, } = require('../util/messages');
 
-/** Checks token send by request
- * @param {Request} req Express request object
- * @param {Response} res Express response object
- * @param {Function} next Express next function
+/** Returns a token checking middleware function
+ * @param {Number} type type of token to validate
+ * @return {Function} token validation function
  */
-async function checkToken(req, res, next) {
-    const localResponder = generateLocalSendResponse(res);
+function checkToken(type) {
+    /** Checks token send by request
+     * @param {Request} req Express request object
+     * @param {Response} res Express response object
+     * @param {Function} next Express next function
+     */
+    return async function(req, res, next) {
+        const localResponder = generateLocalSendResponse(res);
 
-    // check that token was sent
-    if (! req.headers.token) {
-        localResponder({
-            statusCode: 403,
-            message: VALIDTOKENNEEDED,
+        // check that token was sent
+        if (! req.headers.token) {
+            localResponder({
+                statusCode: 403,
+                message: VALIDTOKENNEEDED,
+            });
+
+            return;
+        }
+
+        const tokenData = await findOneFromTokens({
+            token: req.headers.token,
         });
 
-        return;
-    }
+        // check that token recieved was from your system
+        if (! tokenData) {
+            localResponder({
+                statusCode: 403,
+                message: VALIDTOKENNEEDED,
+            });
 
-    const tokenData = await findOneFromTokens({
-        token: req.headers.token,
-    });
+            return;
+        }
 
-    // check that token recieved was from your system
-    if (! tokenData) {
-        localResponder({
-            statusCode: 403,
-            message: VALIDTOKENNEEDED,
-        });
+        // check that given is a login token
+        if (tokenData.type !== type) {
+            localResponder({
+                statusCode: 403,
+                message: INVALIDTOKENTYPE,
+            });
 
-        return;
-    }
+            return;
+        }
 
-    // check that given is a login token
-    if (tokenData.type !== TOKENTYPES.LOGIN) {
-        localResponder({
-            statusCode: 403,
-            message: ONLYLOGINTOKENSALLOWED,
-        });
+        let id;
 
-        return;
-    }
+        try {
+            ({ id, } = verify(req.headers.token, SECRET_KEY));
+        } catch (err) {
+            localResponder({
+                statusCode: 403,
+                message: VALIDTOKENNEEDED,
+            });
 
-    let id;
+            return;
+        }
 
-    try {
-        ({ id, } = verify(req.headers.token, SECRET_KEY));
-    } catch (err) {
-        localResponder({
-            statusCode: 403,
-            message: VALIDTOKENNEEDED,
-        });
+        // confirm a corresponding user exists
+        const userData = await findFromUsersById(id);
 
-        return;
-    }
+        if (! userData) {
+            localResponder({
+                statusCode: 403,
+                message: CREDENTIALSCOULDNOTBEVERIFIED,
+            });
 
-    // confirm a corresponding user exists
-    const userData = await findFromUsersById(id);
+            return;
+        }
 
-    if (! userData) {
-        localResponder({
-            statusCode: 403,
-            message: CREDENTIALSCOULDNOTBEVERIFIED,
-        });
-
-        return;
-    }
-
-    // user is valid if they are here
-    next();
+        // user is valid if they are here
+        next();
+    };
 }
 
 module.exports = {

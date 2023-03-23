@@ -7,6 +7,7 @@ const { readAllListings,
     createCategory,
     updateListing, } = require('../controller/listingController');
 const { checkToken, validateBody, validateQuery, } = require('../middleware');
+const { TOKENTYPES, } = require('../util/constants');
 const { createListingSchema,
     createCategorySchema,
     listingQuerySchema, } = require('../validator');
@@ -18,18 +19,18 @@ listingRouter.get(`/`, validateQuery(listingQuerySchema), readAllListings);
 listingRouter.get(`/categories`, readCategories);
 listingRouter.get(`/:id`, readListing);
 
-listingRouter.post(`/`, checkToken,
+listingRouter.post(`/`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createListingSchema),
     createListing);
 
-listingRouter.delete(`/:id`, checkToken, deleteListing);
+listingRouter.delete(`/:id`, checkToken(TOKENTYPES.LOGIN), deleteListing);
 
-listingRouter.put(`/:id`, checkToken,
+listingRouter.put(`/:id`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createListingSchema),
     updateListing);
 
 
-listingRouter.post(`/category`, checkToken,
+listingRouter.post(`/category`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createCategorySchema),
     createCategory);
 

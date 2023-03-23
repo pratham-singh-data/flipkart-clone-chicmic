@@ -8,6 +8,7 @@ const { readAllPromos,
     registerPromoView,
     registerPromoClick, } = require('../controller/promoController');
 const { checkToken, validateBody, } = require('../middleware');
+const { TOKENTYPES, } = require('../util/constants');
 const { createPromoSchema, } = require('../validator');
 
 // eslint-disable-next-line new-cap
@@ -16,13 +17,13 @@ const promoRouter = Router();
 promoRouter.get(`/random`, readRandomPromo);
 promoRouter.get(`/:id`, readPromo);
 promoRouter.get(`/`, readAllPromos);
-promoRouter.delete(`/:id`, checkToken, deletePromo);
+promoRouter.delete(`/:id`, checkToken(TOKENTYPES.LOGIN), deletePromo);
 
-promoRouter.put(`/:id`, checkToken,
+promoRouter.put(`/:id`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createPromoSchema),
     updatePromo);
 
-promoRouter.post(`/`, checkToken,
+promoRouter.post(`/`, checkToken(TOKENTYPES.LOGIN),
     validateBody(createPromoSchema),
     createPromo);
 
