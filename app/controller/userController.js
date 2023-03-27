@@ -482,8 +482,6 @@ async function loginUserAndValidate(req, res, next) {
             });
         }
 
-        console.log(userData, oldEmail);
-
         if (! userData) {
             localResponder({
                 statusCode: 400,

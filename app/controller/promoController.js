@@ -177,7 +177,7 @@ async function readPromo(req, res, next) {
         }
 
         localResponder({
-            statusCode: 400,
+            statusCode: 200,
             data,
         });
     } catch (e) {
@@ -197,7 +197,7 @@ async function readAllPromos(req, res, next) {
         const data = await findManyFromPromo();
 
         localResponder({
-            statusCode: 400,
+            statusCode: 200,
             data,
         });
     } catch (e) {
