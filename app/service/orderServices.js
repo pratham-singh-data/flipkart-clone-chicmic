@@ -3,7 +3,8 @@ const { runAggregate,
     deleteById,
     findOne,
     saveDocument,
-    updateById, } = require('./operators/serviceOperators');
+    updateById,
+    findById, } = require('./operators/serviceOperators');
 
 /** Runs an aggregation pipeline on orders model
  * @param {Array} pipeline aggregation pipeline to run
@@ -29,6 +30,13 @@ async function findOneFromOrders(searchQuery, projectionQuery) {
     return await findOne(OrderModel, searchQuery, projectionQuery);
 }
 
+/** Finds id element from orders collection
+ * @param {String} id id of element to find
+ */
+async function findFromOrdersById(id) {
+    return await findById(OrderModel, id);
+}
+
 /** Deletes id element from orders collection
  * @param {String} id id of element to delete
  * @return {Object} data from database
@@ -49,6 +57,7 @@ module.exports = {
     runAggregateOnOrders,
     deleteFromOrdersById,
     findOneFromOrders,
+    findFromOrdersById,
     saveDocumentInOrders,
     updateOrdersById,
 };
