@@ -1,21 +1,11 @@
 const multer = require('multer');
 const { ALLOWEDIMAGEMIMES, } = require('../util/constants');
-const uuid = require(`uuid`);
 const { sendResponse, } = require('../helper/responder');
-const { FILESIZEMAX, IMAGEDATABASEURL, } = require('../../config');
+const { FILESIZEMAX, MONGOURL, } = require('../../config');
+const { GridFsStorage, } = require('multer-gridfs-storage');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(undefined, IMAGEDATABASEURL);
-    },
-    filename: function(req, file, cb) {
-        const fileExtension = file.originalname.
-            slice(file.originalname.lastIndexOf(`.`));
-
-        const fileName = `${uuid.v4()}${fileExtension}`;
-
-        cb(undefined, fileName);
-    },
+const storage = new GridFsStorage({
+    url: MONGOURL,
 });
 
 const upload = multer({

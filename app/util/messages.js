@@ -17,6 +17,7 @@ module.exports = {
     NONEXISTENTCOUPON: `Specified coupon does not exist.`,
     NONEXISTENTORDER: `Specified order does not exist.`,
     NONEXISTENTPROMO: `Specified promo does not exist.`,
+    NONEXISTENTFILE: `Specified file does not exist.`,
     NONEXISTENTADDRESS: `Specified address does not exist.`,
     NONEXISTENTREVIEW: `Specified review does not exist.`,
     ITEMOUTOFSTOCK: `Item out of stock.`,

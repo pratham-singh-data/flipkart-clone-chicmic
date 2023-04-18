@@ -6,7 +6,6 @@ module.exports = {
     TEMPTOKENEXPIRYTIME: 1800, // 30 * 60; 30 minutes
     HITLOGFILEURL: `./database/logs/hits.log`,
     ERRORLOGDIRECTORYURL: `./database/logs/errors`,
-    IMAGEDATABASEURL: `./database/images`,
     FILESIZEMAX: 5242880, // in bytes, 5 MB; 1024 * 1024 * 5
     LOCALLOGGINGDATALIMIT: 10485760, // in bytes, 10 MB, 1024 * 1024 * 10
 };
