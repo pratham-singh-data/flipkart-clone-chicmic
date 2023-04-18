@@ -39,7 +39,10 @@ uploadRouter.get(`/image/:filename`,
             res.status(404).send(NONEXISTENTFILE);
         });
 
-        res.set('Content-Type', 'image/jpeg');
+        downloadStream.on('file', (file) => {
+            res.set('Content-Type', file.contentType);
+        });
+
         res.set('Content-Disposition', `inline; filename='${filename}'`);
 
         downloadStream.pipe(res);
