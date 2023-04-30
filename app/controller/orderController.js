@@ -366,10 +366,10 @@ async function readAllOrders(req, res, next) {
         const pipeline = [];
 
         // filter category
-        if (user !== `false`) {
+        if (user) {
             pipeline.push({
                 $match: {
-                    buyer: new ObjectId(id),
+                    buyer: new ObjectId(user),
                 },
             });
         }

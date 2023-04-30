@@ -14,7 +14,7 @@ const { addToCartSchema, orderQuerySchema, } = require('../validator');
 // eslint-disable-next-line new-cap
 const orderRouter = Router();
 
-orderRouter.get(`/:id`, readOrder);
+orderRouter.get(`/:id`, checkToken(TOKENTYPES.LOGIN), readOrder);
 orderRouter.get(`/`, checkToken(TOKENTYPES.LOGIN),
     validateQuery(orderQuerySchema),
     readAllOrders);
